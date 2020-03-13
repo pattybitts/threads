@@ -25,9 +25,3 @@ def check_syntax(cmd_string):
 
 if __name__ == '__main__':
    app.run()
-
-"""
-action, data = process_cmd("disp_char=Rand")
-print(action)
-print(data)
-"""
