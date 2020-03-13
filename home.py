@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect
-import ret
+import ret, ValidCommands
 app = Flask(__name__)
 
 @app.route('/')
@@ -21,7 +21,11 @@ def process_cmd(cmd_string):
         return ret.HOME, "Valid command entry: " + cmd_string
 
 def check_syntax(cmd_string):
-    return cmd_string.find('=') >= 0
+    if cmd_string.find('=') < 0:
+        return False
+    cmd_parts = cmd_string.split("=")
+    if not ValidCommands.is_valid(cmd_parts[0]):
+        return False
 
 if __name__ == '__main__':
    app.run()
