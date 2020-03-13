@@ -1,16 +1,27 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Threads of the Pattern</title>
-	</head>
-	
-	<body>
-		<h2>Welcome! Please enter a character's name below.</h2>
-		<form action="/disp_char_info" method="post">
-			<input type="text" name="char_name_box"></input>
-			<input type="submit" value="Submit"></input>
-		</form>
-	<body>
+﻿<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threads of the Pattern</title>
+</head>
+<body class="default">
+    <h2>Welcome to Threads of the Pattern! Enter a command below.</h2>
+    <p><b>Valid commands:</b><br />
+        add_char=&lt;Character Name&gt;: Presents form to add new character to library<br />
+        edit_char=&lt;Character Name&gt;: Presents form to edit character info in library. Accepts aliases.<br />
+        disp_char=&lt;Character Name&gt;: Displays character info currently in library. Accepts aliases.
+    </p>
+    <form action="/new_cmd" method="post">
+        <input type="text" name="cmd_box">
+        <input type="submit" value="Submit">
+    </form>
+    <h3>{{ cmd_out }}</h3>
+</body>
 </html>
+<style>
+    .default {
+        font-family: 'Courier New';
+        font-size: medium;
+    }
+</style>
