@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect
-import ret, ValidCommands
+import ret
+from cmd import ValidCommands
+from Series import Series
 app = Flask(__name__)
 
 @app.route('/')
@@ -15,17 +17,24 @@ def new_cmd_in():
         return render_template('index_home.html', cmd_out=data)
     
 def process_cmd(cmd_string):
-    if not check_syntax(cmd_string):
-        return ret.HOME, "Invalid command entry: " + cmd_string
-    else:
-        return ret.HOME, "Valid command entry: " + cmd_string
-
-def check_syntax(cmd_string):
+    #check syntax
     if cmd_string.find('=') < 0:
-        return False
-    cmd_parts = cmd_string.split("=")
+        return ret.HOME, "Invalid command entry: " + cmd_string
+    #check command supported
+    cmd_parts = cmd_string.split('=')
     if not ValidCommands.is_valid(cmd_parts[0]):
-        return False
+        return ret.HOME, "Command not supported: " + cmd_parts[0]
+    return ret.HOME, "Valid command entry: " + cmd_string
 
+"""
 if __name__ == '__main__':
    app.run()
+"""
+
+"""
+action, data = process_cmd("disp_chare=Rand")
+print(action)
+print(data)
+"""
+
+s = Series("characters.json")
