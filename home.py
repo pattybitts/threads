@@ -26,15 +26,13 @@ def process_cmd(cmd_string):
         return ret.HOME, "Command not supported: " + cmd_parts[0]
     return ret.HOME, "Valid command entry: " + cmd_string
 
-"""
-if __name__ == '__main__':
+if __name__ == '__main__' and 0:
    app.run()
-"""
 
-"""
-action, data = process_cmd("disp_chare=Rand")
-print(action)
-print(data)
-"""
+if 0:
+    action, data = process_cmd("disp_chare=Rand")
+    print(action)
+    print(data)
 
-s = Series("characters.json")
+if 1:
+    s = Series("characters.json")

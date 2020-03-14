@@ -9,6 +9,6 @@ class Series:
     def populate_characters(self, json_file):
         with open(json_file) as file:
             full_text = file.read()
-        print(full_text)
+        
 
             
