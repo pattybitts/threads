@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect
-import ret
+import ret, data_storage, log
 from cmd import ValidCommands
 from Series import Series
 app = Flask(__name__)
@@ -26,13 +26,21 @@ def process_cmd(cmd_string):
         return ret.HOME, "Command not supported: " + cmd_parts[0]
     return ret.HOME, "Valid command entry: " + cmd_string
 
-if __name__ == '__main__' and 0:
-   app.run()
+if __name__ == '__main__':
+    if 0:
+        app.run()
 
-if 0:
-    action, data = process_cmd("disp_chare=Rand")
-    print(action)
-    print(data)
+    if 0:
+        action, data = process_cmd("disp_chare=Rand")
+        print(action)
+        print(data)
 
-if 1:
-    s = Series("characters.json")
+    if 1:
+        with open("characters.json") as file:
+            full_text = file.read()
+            character_list = data_storage.create_array(full_text, "Characters")
+            log.db("full LT", character_list[0])
+            lt_name = data_storage.create_array(character_list[0], "Name")
+            log.db("name LT", lt_name[0])
+            lt_aliases = data_storage.create_array(character_list[0], "Aliases")
+            log.db("aliases LT", lt_aliases[1])
