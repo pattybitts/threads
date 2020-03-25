@@ -1,4 +1,4 @@
-import ret, log
+import ret
 
 def create_array(array_text, target):
     out_array = []
