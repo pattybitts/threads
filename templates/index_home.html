@@ -16,12 +16,19 @@
         <input type="text" name="cmd_box">
         <input type="submit" value="Submit">
     </form>
-    <h3>{{ cmd_out }}</h3>
+    <h3>Command Output:</h3>
+    <textarea readonly>{{  cmd_out  }}</textarea>
 </body>
 </html>
 <style>
     .default {
         font-family: 'Courier New';
         font-size: medium;
+    }
+    textarea {
+        overflow-y: scroll;
+        height: 350px;
+        width: 30%;
+        resize: none;
     }
 </style>
