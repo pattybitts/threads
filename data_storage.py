@@ -1,4 +1,4 @@
-import ret
+import ret, pickle
 
 def create_array(array_text, target):
     out_array = []
@@ -60,3 +60,14 @@ def find_next_bracket(text):
             or char == '[' or char == ']':
             return char
     return ret.ERROR
+
+def dump_pickle(object, filename):
+    pfile = open(filename, 'ab')
+    pickle.dump(object, pfile)
+    pfile.close()
+
+def load_pickle(filename):
+    pfile = open(filename, 'rb')
+    object = pickle.load(pfile)
+    pfile.close()
+    return object

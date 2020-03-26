@@ -25,6 +25,7 @@ def process_cmd(cmd_string):
     cmd_parts = cmd_string.split('=')
     if not ValidCommands.is_valid(cmd_parts[0]):
         return ret.HOME, "Command not supported: " + cmd_parts[0]
+
     return ret.HOME, "Valid command entry: " + cmd_string
 
 if __name__ == '__main__':
@@ -36,7 +37,7 @@ if __name__ == '__main__':
         print(action)
         print(data)
 
-    if 1:
+    if 0:
         with open("characters.json") as file:
             full_text = file.read()
             character_list = data_storage.create_array(full_text, "Characters")
@@ -44,3 +45,12 @@ if __name__ == '__main__':
             for c in character_list:
                 new_char = Character(c)
                 log.out("\n" + new_char.string() + "\n")
+
+    if 1:
+        series_info = Series("books.json", "arcs.json", "characters.json", "wot.o")
+        for c in series_info.characters:
+            log.out(c.string())
+
+        series_info = Series.import_object("wot.o")
+        for c in series_info.characters:
+            log.out(c.string())
