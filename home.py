@@ -25,11 +25,17 @@ def process_cmd(cmd_string):
     cmd_parts = cmd_string.split('=')
     if not ValidCommands.is_valid(cmd_parts[0]):
         return ret.HOME, "Command not supported: " + cmd_parts[0]
-
+    if cmd_parts[0] == 'disp_char':
+        series_info = data_storage.load_pickle("wot")
+        character = series_info.find_char(cmd_parts[1])
+        if character == ret.ERROR:
+            return ret.HOME, "Unable to match character name: " + cmd_parts[1]
+        char_text = character.string()
+        return ret.HOME, char_text
     return ret.HOME, "Valid command entry: " + cmd_string
 
 if __name__ == '__main__':
-    if 0:
+    if 1:
         app.run()
 
     if 0:
@@ -46,11 +52,13 @@ if __name__ == '__main__':
                 new_char = Character(c)
                 log.out("\n" + new_char.string() + "\n")
 
-    if 1:
-        series_info = Series("books.json", "arcs.json", "characters.json", "wot.o")
-        for c in series_info.characters:
-            log.out(c.string())
+    if 0:
+        #series_info = Series("books.json", "arcs.json", "characters.json", "wot")
+        #log.out("constructed")
+        #for c in series_info.characters: 
+        #    log.out(c.string())
 
-        series_info = Series.import_object("wot.o")
-        for c in series_info.characters:
+        loaded_series_info = data_storage.load_pickle("wot")
+        log.out("loaded")
+        for c in loaded_series_info.characters:
             log.out(c.string())

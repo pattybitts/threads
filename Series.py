@@ -1,19 +1,14 @@
-import ret, data_storage
+import ret, data_storage, log
 from Character import Character
 
 class Series:
 
-    characters = []
-    
-    @staticmethod
-    def import_object(object_file):
-        return data_storage.load_pickle(object_file)
-
-    def __init__(self, book_file, arc_file, char_file, object_file):
+    def __init__(self, book_file, arc_file, char_file, dump_file):
         self.populate_books(book_file)
         self.populate_arcs(arc_file)
+        self.characters = []
         self.populate_characters(char_file)
-        data_storage.dump_pickle(self, object_file)
+        data_storage.dump_pickle(self, dump_file)
 
     def populate_characters(self, char_file):
         with open(char_file) as file:
@@ -28,3 +23,9 @@ class Series:
 
     def populate_arcs(self, arc_file):
         return ret.SUCCESS
+
+    def find_char(self, input_text):
+        for c in self.characters:
+            if c.name == input_text:
+                return c
+        return ret.ERROR

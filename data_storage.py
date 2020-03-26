@@ -1,4 +1,4 @@
-import ret, pickle
+import ret, pickle, log
 
 def create_array(array_text, target):
     out_array = []
@@ -62,8 +62,8 @@ def find_next_bracket(text):
     return ret.ERROR
 
 def dump_pickle(object, filename):
-    pfile = open(filename, 'ab')
-    pickle.dump(object, pfile)
+    pfile = open(filename, 'wb')
+    pickle.dump(object, pfile, pickle.HIGHEST_PROTOCOL)
     pfile.close()
 
 def load_pickle(filename):
