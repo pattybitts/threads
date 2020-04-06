@@ -1,17 +1,45 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Threads of the Pattern</title>
 	</head>
-	
-	<body>
-		<h2>Character Info: {{ char_name }}</h2>
-		<h2>{{ char_info }}</h2>
-		<form action="/disp_char_info" method="post">
-			<input type="text" name="char_name_box"></input>
-			<input type="submit" value="Submit"></input>
-		</form>
-	<body>
+    <body onload="init('{{char_gender}}', '{{char_allegiance}}')">
+        <h2>Modify Character Info</h2>
+        <form action="/edit_char" method="post">
+            <label for="name_box">Character Name:</label><br/>
+            <input type="text" name="name_box" value={{char_name}}><br />
+            <label for="alias_box">Aliases:</label><br />
+            <textarea name="alias_box">{{char_aliases}}</textarea>
+            <br />Gender:<br />
+            <input type="radio" id="male" name="gender" value="male">
+            <label for="male">  Male  </label>
+            <input type="radio" id="female" name="gender" value="female">
+            <label for="female">  Female  </label>
+            <input type="radio" id="other" name="gender" value="other">
+            <label for="other">  Other</label><br />
+            <br />Allegiance:<br />
+            <input type="radio" id="light" name="allegiance" value="light">
+            <label for="light">  Light  </label>
+            <input type="radio" id="shadow" name="allegiance" value="shadow">
+            <label for="shadow">  Shadow</label><br />
+            <input type="submit" value="Submit">
+        </form>
+     </body>
 </html>
+<style>
+    textarea {
+        overflow-y: scroll;
+        height: 150px;
+        width: 250px;
+    }
+</style>
+<script>
+    function init(gender, allegiance) {
+        var gender_button = document.getElementById(gender);
+        gender_button.checked = "checked";
+        var allegiance_button = document.getElementById(allegiance);
+        allegiance_button.checked = "checked";
+    }
+</script>

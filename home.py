@@ -12,10 +12,27 @@ def main():
     
 @app.route('/new_cmd', methods = ['POST'])
 def new_cmd_in():
+    series_info = data_storage.load_pickle("wot")
     cmd_string = request.form['cmd_box']
     action, data = process_cmd(cmd_string)
     if action == ret.HOME:
         return render_template('index_home.html', cmd_out=data)
+    if action == ret.CHAR_FORM:
+        character = series_info.find_char(data)
+        if character == ret.ERROR:
+            error_msg = "INTERNAL ERROR:\nValid character name not found after processing."
+            return render_template('index_home.html', cmd_out=error_msg)
+        char_name = character.name
+        char_aliases = character.print_aliases()
+        char_gender = character.gender.lower()
+        char_allegiance = character.allegiance.lower()
+        return render_template('index_char_form.html', \
+            char_name=char_name, \
+            char_aliases=char_aliases, \
+            char_gender=char_gender, \
+            char_allegiance=char_allegiance)
+    error_msg = "INTERNAL ERROR:\nInvalid return from processing."
+    return render_template('index_home.html', cmd_out=error_msg)
     
 def process_cmd(cmd_string):
     #check syntax
@@ -25,13 +42,18 @@ def process_cmd(cmd_string):
     cmd_parts = cmd_string.split('=')
     if not ValidCommands.is_valid(cmd_parts[0]):
         return ret.HOME, "Command not supported: " + cmd_parts[0]
+    series_info = data_storage.load_pickle("wot")
     if cmd_parts[0] == 'disp_char':
-        series_info = data_storage.load_pickle("wot")
         character = series_info.find_char(cmd_parts[1])
         if character == ret.ERROR:
             return ret.HOME, "Unable to match character name: " + cmd_parts[1]
-        char_text = character.string()
+        char_text = character.print_info()
         return ret.HOME, char_text
+    if cmd_parts[0] == 'edit_char':
+        character = series_info.find_char(cmd_parts[1])
+        if character == ret.ERROR:
+            return ret.HOME, "Unable to match character name: " + cmd_parts[1]
+        return ret.CHAR_FORM, character.name
     return ret.HOME, "Valid command entry: " + cmd_string
 
 if __name__ == '__main__':
@@ -50,15 +72,15 @@ if __name__ == '__main__':
 
             for c in character_list:
                 new_char = Character(c)
-                log.out("\n" + new_char.string() + "\n")
+                log.out("\n" + new_char.print_info() + "\n")
 
     if 0:
         #series_info = Series("books.json", "arcs.json", "characters.json", "wot")
         #log.out("constructed")
         #for c in series_info.characters: 
-        #    log.out(c.string())
+        #    log.out(c.print_info())
 
         loaded_series_info = data_storage.load_pickle("wot")
         log.out("loaded")
         for c in loaded_series_info.characters:
-            log.out(c.string())
+            log.out(c.print_info())
