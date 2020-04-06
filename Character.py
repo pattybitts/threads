@@ -11,7 +11,7 @@ class Character:
         self.color = data_storage.create_array(char_string, "Color")
         self.tags = data_storage.create_array(char_string, "Tags")
 
-    def string(self):
+    def print_info(self):
         alias_str = ""
         for a in self.aliases:
             alias_str = alias_str + "  " + str(a) + "\n"
@@ -25,5 +25,12 @@ class Character:
             + "Gender: " + self.gender + "\n" \
             + "Allegiance: " + self.allegiance + "\n" \
             + "Tier: " + self.tier + "\n" \
-            + "Tags:\n" + tag_str  
+            + "Tags:\n" + tag_str
+    
+    def print_aliases(self):
+        alias_str = ""
+        for a in self.aliases:
+            alias_str = alias_str + str(a) + "\n"
+        return alias_str.rstrip()
+
 

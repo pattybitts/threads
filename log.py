@@ -3,3 +3,6 @@ def db(header, variable):
 
 def out(variable):
     print("\n" + str(variable) + "\n")
+
+def banner(variable):
+    print("\n*****\n\n" + str(variable) + "\n\n*****\n")
