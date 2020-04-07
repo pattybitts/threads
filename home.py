@@ -22,15 +22,15 @@ def new_cmd_in():
         if character == ret.ERROR:
             error_msg = "INTERNAL ERROR:\nValid character name not found after processing."
             return render_template('index_home.html', cmd_out=error_msg)
-        char_name = character.name
-        char_aliases = character.print_aliases()
-        char_gender = character.gender.lower()
-        char_allegiance = character.allegiance.lower()
         return render_template('index_char_form.html', \
-            char_name=char_name, \
-            char_aliases=char_aliases, \
-            char_gender=char_gender, \
-            char_allegiance=char_allegiance)
+            char_name=character.name, \
+            char_aliases=character.print_aliases(), \
+            char_gender=character.gender.lower(), \
+            char_allegiance=character.allegiance.lower(), \
+            char_tags=character.print_tags(),
+            char_r=character.color[0], \
+            char_g=character.color[1], \
+            char_b=character.color[2])
     error_msg = "INTERNAL ERROR:\nInvalid return from processing."
     return render_template('index_home.html', cmd_out=error_msg)
     
@@ -75,10 +75,10 @@ if __name__ == '__main__':
                 log.out("\n" + new_char.print_info() + "\n")
 
     if 0:
-        #series_info = Series("books.json", "arcs.json", "characters.json", "wot")
-        #log.out("constructed")
-        #for c in series_info.characters: 
-        #    log.out(c.print_info())
+        series_info = Series("books.json", "arcs.json", "characters.json", "wot")
+        log.out("constructed")
+        for c in series_info.characters: 
+            log.out(c.print_info())
 
         loaded_series_info = data_storage.load_pickle("wot")
         log.out("loaded")

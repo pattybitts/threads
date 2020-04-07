@@ -8,22 +8,31 @@
     <body onload="init('{{char_gender}}', '{{char_allegiance}}')">
         <h2>Modify Character Info</h2>
         <form action="/edit_char" method="post">
-            <label for="name_box">Character Name:</label><br/>
+            <label for="name_box">Character Name:</label><br />
             <input type="text" name="name_box" value={{char_name}}><br />
             <label for="alias_box">Aliases:</label><br />
-            <textarea name="alias_box">{{char_aliases}}</textarea>
-            <br />Gender:<br />
+            <textarea name="alias_box">{{char_aliases}}</textarea><br />
+            Gender:<br />
             <input type="radio" id="male" name="gender" value="male">
             <label for="male">  Male  </label>
             <input type="radio" id="female" name="gender" value="female">
             <label for="female">  Female  </label>
             <input type="radio" id="other" name="gender" value="other">
             <label for="other">  Other</label><br />
-            <br />Allegiance:<br />
+            Allegiance:<br />
             <input type="radio" id="light" name="allegiance" value="light">
             <label for="light">  Light  </label>
             <input type="radio" id="shadow" name="allegiance" value="shadow">
             <label for="shadow">  Shadow</label><br />
+            Color:<br />
+            <label for="r_box">R:</label>
+            <input type="text" name="r_box" value={{char_r}}>
+            <label for="g_box">  G:</label>
+            <input type="text" name="g_box" value={{char_g}}>
+            <label for="b_box">  B:</label>
+            <input type="text" name="b_box" value={{char_b}}><br />
+            <label for="tag_box">Tags:</label><br />
+            <textarea name="tag_box">{{char_tags}}</textarea><br />
             <input type="submit" value="Submit">
         </form>
      </body>
