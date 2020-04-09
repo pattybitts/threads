@@ -25,14 +25,35 @@ def new_cmd_in():
         return render_template('index_char_form.html', \
             char_name=character.name, \
             char_aliases=character.print_aliases(), \
-            char_gender=character.gender.lower(), \
-            char_allegiance=character.allegiance.lower(), \
+            char_tier=character.tier, \
+            char_gender=character.gender, \
+            char_allegiance=character.allegiance, \
             char_tags=character.print_tags(),
-            char_r=character.color[0], \
-            char_g=character.color[1], \
-            char_b=character.color[2])
+            char_r=character.color["r"], \
+            char_g=character.color["g"], \
+            char_b=character.color["b"])
     error_msg = "INTERNAL ERROR:\nInvalid return from processing."
     return render_template('index_home.html', cmd_out=error_msg)
+
+@app.route('/edit_char', methods = ['POST'])
+def edit_char():
+    series_info = data_storage.load_pickle("wot")
+    new_char = Character(request.form['name_box'], \
+        request.form['alias_box'], \
+        request.form['gender'], \
+        request.form['allegiance'], \
+        request.form['tier_box'], \
+        request.form['r_box'], \
+        request.form['g_box'], \
+        request.form['b_box'], \
+        request.form['tag_box'], \
+        )
+    if series_info.replace_char(new_char) != ret.SUCCESS:
+        resp = "INTERNAL ERROR:\nUnable to update character " + new_char.name + " in database"
+    else:
+        resp = "Character " + new_char.name + " successfully updated in database"
+        series_info.save("wot")
+    return render_template('index_home.html', cmd_out=resp)
     
 def process_cmd(cmd_string):
     #check syntax

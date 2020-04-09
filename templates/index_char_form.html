@@ -9,20 +9,22 @@
         <h2>Modify Character Info</h2>
         <form action="/edit_char" method="post">
             <label for="name_box">Character Name:</label><br />
-            <input type="text" name="name_box" value={{char_name}}><br />
+            <input type="text" name="name_box" value='{{char_name}}'><br />
             <label for="alias_box">Aliases:</label><br />
             <textarea name="alias_box">{{char_aliases}}</textarea><br />
+            <label for="tier_box">Tier:</label><br />
+            <input type="text" name="tier_box" value={{char_tier}}><br />
             Gender:<br />
-            <input type="radio" id="male" name="gender" value="male">
+            <input type="radio" id="Male" name="gender" value="Male">
             <label for="male">  Male  </label>
-            <input type="radio" id="female" name="gender" value="female">
+            <input type="radio" id="Female" name="gender" value="Female">
             <label for="female">  Female  </label>
-            <input type="radio" id="other" name="gender" value="other">
+            <input type="radio" id="Other" name="gender" value="Other">
             <label for="other">  Other</label><br />
             Allegiance:<br />
-            <input type="radio" id="light" name="allegiance" value="light">
+            <input type="radio" id="Light" name="allegiance" value="Light">
             <label for="light">  Light  </label>
-            <input type="radio" id="shadow" name="allegiance" value="shadow">
+            <input type="radio" id="Shadow" name="allegiance" value="Shadow">
             <label for="shadow">  Shadow</label><br />
             Color:<br />
             <label for="r_box">R:</label>

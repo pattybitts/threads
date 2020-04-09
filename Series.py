@@ -24,8 +24,19 @@ class Series:
     def populate_arcs(self, arc_file):
         return ret.SUCCESS
 
-    def find_char(self, input_text):
+    def save(self, dump_file):
+        data_storage.dump_pickle(self, dump_file)
+
+    def find_char(self, input_text, strict=False):
         for c in self.characters:
             if c.name == input_text:
                 return c
+        return ret.ERROR
+
+    def replace_char(self, new_char):
+        for c in self.characters:
+            if c.name == new_char.name:
+                self.characters.remove(c)
+                self.characters.append(new_char)
+                return ret.SUCCESS
         return ret.ERROR
