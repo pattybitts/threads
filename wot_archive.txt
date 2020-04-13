@@ -1,0 +1,237 @@
+Lews Therin
+Aliases:
+  Lews Therin Telamon
+  Kinslayer
+  Dragon
+  Lord of the Morning
+Gender: Male
+Allegiance: Light
+Tier: B
+Tags:
+  Age of Legends
+  Channeler
+  Taveren
+Color:
+  R: 255
+  G: 150
+  B: 0
+
+Ishmael
+Aliases:
+  Elan Morin Tedronai
+  Ba'alzamon
+  Moridin
+  Nae'blis
+Gender: Male
+Allegiance: Shadow
+Tier: B
+Tags:
+  Age of Legends
+  Forsaken
+  Channeler
+Color:
+  R: 1
+  G: 1
+  B: 1
+
+Tam
+Aliases:
+  Tam al'Thor
+Gender: Male
+Allegiance: Light
+Tier: C
+Tags:
+  Two Rivers
+  Blademaster
+Color:
+  R: 150
+  G: 80
+  B: 50
+
+Myrddraal
+Aliases:
+  Eyeless
+  Halfman
+  Shadowman
+  Lurk
+  Fetch
+  Fade
+  Nightrunner
+  Neverborn
+Gender: Other
+Allegiance: Shadow
+Tier: D
+Tags:
+  Unspecified
+  Shadowspawn
+Color:
+  R: 
+  G: 
+  B: 
+
+Rand
+Aliases:
+  Rand al'Thor
+  Dragon Reborn
+  Coramoor
+  He Who Comes with the Dawn
+Gender: Male
+Allegiance: Light
+Tier: S
+Tags:
+  Channeler
+  Aiel
+  Taveren
+  Two Rivers
+  Blademaster
+Color:
+  R: 125
+  G: 180
+  B: 220
+
+Wit Congar
+Aliases:
+
+Gender: Male
+Allegiance: Light
+Tier: F
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+Daise Congar
+Aliases:
+  Wisdom
+Gender: Female
+Allegiance: Light
+Tier: F
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+Cenn Buie
+Aliases:
+  Thatcher
+Gender: Male
+Allegiance: Light
+Tier: D
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+Mat
+Aliases:
+  Matrim Cauthon
+  Hornsounder
+  Gambler
+  Son of Battles
+  Duckling
+  Toy
+  Prince of the Ravens
+Gender: Male
+Allegiance: Light
+Tier: A
+Tags:
+  Two Rivers
+  Taveren
+Color:
+  R: 255
+  G: 10
+  B: 100
+
+Master Luhhan
+Aliases:
+  Haral Luhhan
+Gender: Male
+Allegiance: Light
+Tier: D
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+Marin al'Vere
+Aliases:
+  Mistress al'Vere
+Gender: Female
+Allegiance: Light
+Tier: F
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+Bran al'Vere
+Aliases:
+  Mayor
+Gender: Male
+Allegiance: Light
+Tier: D
+Tags:
+  Two Rivers
+  Innkeeper
+Color:
+  R: 
+  G: 
+  B: 
+
+Ewin Finngar
+Aliases:
+
+Gender: Male
+Allegiance: Light
+Tier: F
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+Moiraine
+Aliases:
+  Moiraine Damodred
+  Alys
+Gender: Female
+Allegiance: Light
+Tier: B
+Tags:
+  Channeler
+  Aes Sedai
+  Blue Ajah
+  Cairhien
+Color:
+  R: 0
+  G: 15
+  B: 255
+
+Lan
+Aliases:
+  al'Lan Mandragoran
+  Lord of the Seven Towers
+  Uncrowned King
+Gender: Male
+Allegiance: Light
+Tier: B
+Tags:
+  Malkier
+  Warder
+  Borderlands
+Color:
+  R: 160
+  G: 215
+  B: 240
+

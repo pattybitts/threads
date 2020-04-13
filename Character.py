@@ -45,3 +45,14 @@ class Character:
         for t in self.tags:
             tag_str = tag_str + str(t) + "\n"
         return tag_str.rstrip()
+
+    def tier_value(self):
+        key = {
+            "S": 5,
+            "A": 4,
+            "B": 3,
+            "C": 2,
+            "D": 1,
+            "F": 0
+            }
+        return key.get(self.tier, 0)
