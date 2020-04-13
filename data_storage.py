@@ -1,5 +1,9 @@
 import ret, pickle, log
 
+ACTIVE_FILE = "wot"
+
+#to be archived or repurposed, not using json for this project
+#given a section of json text and a target term, returns an array of the values it is keyed to
 def create_array(array_text, target):
     out_array = []
     cut = cut_unit(array_text, array_text.find("\"" + target + "\""))
@@ -25,6 +29,8 @@ def create_array(array_text, target):
         return ret.ERROR
     return out_array
 
+#to be archived or repurposed, not using json for this project
+#given a string and a start point of quotes or parentheses, returns the unit of text contained within
 def cut_unit(full_string, start):
     if start < 0:
         return ret.ERROR

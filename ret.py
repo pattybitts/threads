@@ -5,4 +5,5 @@ INVALID_INPUT = -2
 
 #Website Directions
 HOME = 0
-CHAR_FORM = 1
+ADD_CHAR = 1
+EDIT_CHAR = 2

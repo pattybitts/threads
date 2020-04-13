@@ -7,22 +7,23 @@ app = Flask(__name__)
 
 @app.route('/')
 def main():
-    no_cmd = "Command output will appear here."
-    return render_template('index_home.html', cmd_out=no_cmd)
+    cmd_out = "Command output will appear here."
+    return render_template('index_home.html', cmd_out=cmd_out)
     
-@app.route('/new_cmd', methods = ['POST'])
+@app.route('/cmd_in', methods = ['POST'])
 def new_cmd_in():
-    series_info = data_storage.load_pickle("wot")
+    series_info = data_storage.load_pickle(data_storage.ACTIVE_FILE)
     cmd_string = request.form['cmd_box']
     action, data = process_cmd(cmd_string)
     if action == ret.HOME:
         return render_template('index_home.html', cmd_out=data)
-    if action == ret.CHAR_FORM:
+    elif action == ret.EDIT_CHAR:
         character = series_info.find_char(data)
         if character == ret.ERROR:
-            error_msg = "INTERNAL ERROR:\nValid character name not found after processing."
+            error_msg = "INTERNAL ERROR:\nValid character name not found after processing"
             return render_template('index_home.html', cmd_out=error_msg)
         return render_template('index_char_form.html', \
+            action="edit", \
             char_name=character.name, \
             char_aliases=character.print_aliases(), \
             char_tier=character.tier, \
@@ -32,12 +33,17 @@ def new_cmd_in():
             char_r=character.color["r"], \
             char_g=character.color["g"], \
             char_b=character.color["b"])
-    error_msg = "INTERNAL ERROR:\nInvalid return from processing."
+    elif action == ret.ADD_CHAR:
+        if series_info.find_char(data) != ret.ERROR:
+            error_msg = "INTERNAL ERROR:\nCharacter matched after processing"
+            return render_template('index_home.html', cmd_out=error_msg)
+        return render_template('index_char_form.html', action="add", char_name=data)
+    error_msg = "INTERNAL ERROR:\nInvalid return from processing"
     return render_template('index_home.html', cmd_out=error_msg)
 
-@app.route('/edit_char', methods = ['POST'])
+@app.route('/char_form_in', methods = ['POST'])
 def edit_char():
-    series_info = data_storage.load_pickle("wot")
+    series_info = data_storage.load_pickle(data_storage.ACTIVE_FILE)
     new_char = Character(request.form['name_box'], \
         request.form['alias_box'], \
         request.form['gender'], \
@@ -48,60 +54,53 @@ def edit_char():
         request.form['b_box'], \
         request.form['tag_box'], \
         )
-    if series_info.replace_char(new_char) != ret.SUCCESS:
-        resp = "INTERNAL ERROR:\nUnable to update character " + new_char.name + " in database"
-    else:
-        resp = "Character " + new_char.name + " successfully updated in database"
-        series_info.save("wot")
+    if request.form['action'] == 'edit':
+        if series_info.replace_char(new_char) != ret.SUCCESS:
+            resp = "INTERNAL ERROR:\nUnable to update character " + new_char.name + " in database"
+        else:
+            resp = "Character " + new_char.name + " successfully updated in database"
+            series_info.save(data_storage.ACTIVE_FILE)
+    elif request.form['action'] == 'add':
+        if series_info.add_char(new_char) != ret.SUCCESS:
+            resp = "INTERNAL ERROR:\nUnable to add character " + new_char.name + " in database"
+        else:
+            resp = "Character " + new_char.name + " successfully added to database"
+            series_info.save(data_storage.ACTIVE_FILE)
     return render_template('index_home.html', cmd_out=resp)
     
 def process_cmd(cmd_string):
-    #check syntax
-    if cmd_string.find('=') < 0:
-        return ret.HOME, "Invalid command entry: " + cmd_string
     #check command supported
     cmd_parts = cmd_string.split('=')
     if not ValidCommands.is_valid(cmd_parts[0]):
         return ret.HOME, "Command not supported: " + cmd_parts[0]
-    series_info = data_storage.load_pickle("wot")
+    series_info = data_storage.load_pickle(data_storage.ACTIVE_FILE)
     if cmd_parts[0] == 'disp_char':
         character = series_info.find_char(cmd_parts[1])
         if character == ret.ERROR:
             return ret.HOME, "Unable to match character name: " + cmd_parts[1]
         char_text = character.print_info()
         return ret.HOME, char_text
+    if cmd_parts[0] == 'gen_archive':
+        archive = open("wot_archive.txt", 'wb')
+        for c in series_info.characters:
+            archive.write(bytearray(c.print_info(), 'utf-8'))
+            archive.write(bytearray("\n\n", 'utf-8'))
+        archive.close()
+        msg = "Generated archive file at wot_archive.txt"
+        return ret.HOME, msg
     if cmd_parts[0] == 'edit_char':
         character = series_info.find_char(cmd_parts[1])
         if character == ret.ERROR:
             return ret.HOME, "Unable to match character name: " + cmd_parts[1]
-        return ret.CHAR_FORM, character.name
+        return ret.EDIT_CHAR, character.name
+    if cmd_parts[0] == 'add_char':
+        character = series_info.find_char(cmd_parts[1])
+        if character == ret.ERROR:
+            return ret.ADD_CHAR, cmd_parts[1]
+        return ret.HOME, "Duplicate character with name: " + character.name \
+            + "\nuse the 'edit_char' command to overwrite"
     return ret.HOME, "Valid command entry: " + cmd_string
 
 if __name__ == '__main__':
     if 1:
         app.run()
-
-    if 0:
-        action, data = process_cmd("disp_chare=Rand")
-        print(action)
-        print(data)
-
-    if 0:
-        with open("characters.json") as file:
-            full_text = file.read()
-            character_list = data_storage.create_array(full_text, "Characters")
-
-            for c in character_list:
-                new_char = Character(c)
-                log.out("\n" + new_char.print_info() + "\n")
-
-    if 0:
-        series_info = Series("books.json", "arcs.json", "characters.json", "wot")
-        log.out("constructed")
-        for c in series_info.characters: 
-            log.out(c.print_info())
-
-        loaded_series_info = data_storage.load_pickle("wot")
-        log.out("loaded")
-        for c in loaded_series_info.characters:
-            log.out(c.print_info())

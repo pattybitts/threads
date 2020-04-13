@@ -5,9 +5,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Threads of the Pattern</title>
 	</head>
-    <body onload="init('{{char_gender}}', '{{char_allegiance}}')">
+    <body onload="init('{{char_gender}}', '{{char_allegiance}}', '{{action}}')">
         <h2>Modify Character Info</h2>
-        <form action="/edit_char" method="post">
+        <form action="/char_form_in" method="post">
             <label for="name_box">Character Name:</label><br />
             <input type="text" name="name_box" value='{{char_name}}'><br />
             <label for="alias_box">Aliases:</label><br />
@@ -35,6 +35,11 @@
             <input type="text" name="b_box" value={{char_b}}><br />
             <label for="tag_box">Tags:</label><br />
             <textarea name="tag_box">{{char_tags}}</textarea><br />
+            Action:<br />
+            <input type="radio" id="add" name="action" value="add">
+            <label for="add">  Add  </label>
+            <input type="radio" id="edit" name="action" value="edit">
+            <label for="edit">  Edit</label><br />
             <input type="submit" value="Submit">
         </form>
      </body>
@@ -47,10 +52,18 @@
     }
 </style>
 <script>
-    function init(gender, allegiance) {
-        var gender_button = document.getElementById(gender);
-        gender_button.checked = "checked";
-        var allegiance_button = document.getElementById(allegiance);
-        allegiance_button.checked = "checked";
+    function init(gender, allegiance, action) {
+        if (gender != '') {
+            var gender_button = document.getElementById(gender);
+            gender_button.checked = "checked";
+        }
+        if (allegiance != '') {
+            var allegiance_button = document.getElementById(allegiance);
+            allegiance_button.checked = "checked";
+        }
+        if (action != '') {
+            var action_button = document.getElementById(action);
+            action_button.checked = "checked";
+        }
     }
 </script>
