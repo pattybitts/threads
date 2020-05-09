@@ -21,13 +21,15 @@ class Series:
             for c in self.characters:
                 if c.name == input_text:
                     return c
-                name_tags = c.print_aliases().split()
-                name_tags.append(c.name)
+                alias_tags = c.print_aliases().split()
+                name_tags = c.name.split()
+                for n in name_tags:
+                    alias_tags.append(n)
                 input_terms = input_text.split()
                 score = 0
                 for i in input_terms:
-                    for n in name_tags:
-                        if i.lower() == n.lower():
+                    for a in alias_tags:
+                        if i.lower() == a.lower():
                             score += 1
                 if score > best_score:
                     best_match = c
@@ -37,9 +39,9 @@ class Series:
                         best_match = c
             return best_match
 
-    def replace_char(self, new_char):
+    def replace_char(self, new_char, base_name):
         for c in self.characters:
-            if c.name == new_char.name:
+            if c.name == base_name:
                 self.characters.remove(c)
                 self.characters.append(new_char)
                 return ret.SUCCESS

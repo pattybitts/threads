@@ -34,7 +34,7 @@ def new_cmd_in():
             char_g=character.color["g"], \
             char_b=character.color["b"])
     elif action == ret.ADD_CHAR:
-        if series_info.find_char(data) != ret.ERROR:
+        if series_info.find_char(data, True) != ret.ERROR:
             error_msg = "INTERNAL ERROR:\nCharacter matched after processing"
             return render_template('index_home.html', cmd_out=error_msg)
         return render_template('index_char_form.html', action="add", char_name=data)
@@ -55,7 +55,7 @@ def edit_char():
         request.form['tag_box'], \
         )
     if request.form['action'] == 'edit':
-        if series_info.replace_char(new_char) != ret.SUCCESS:
+        if series_info.replace_char(new_char, request.form['base_name']) != ret.SUCCESS:
             resp = "INTERNAL ERROR:\nUnable to update character " + new_char.name + " in database"
         else:
             resp = "Character " + new_char.name + " successfully updated in database"
@@ -88,13 +88,20 @@ def process_cmd(cmd_string):
         archive.close()
         msg = "Generated archive file at wot_archive.txt"
         return ret.HOME, msg
+    if cmd_parts[0] == 'gen_list':
+        list = open("wot_char_list.txt", 'wb')
+        for c in series_info.characters:
+            list.write(bytearray(c.name + "\n", 'utf-8'))
+        list.close()
+        msg = "Generated character list at wot_char_list.txt"
+        return ret.HOME, msg
     if cmd_parts[0] == 'edit_char':
         character = series_info.find_char(cmd_parts[1])
         if character == ret.ERROR:
             return ret.HOME, "Unable to match character name: " + cmd_parts[1]
         return ret.EDIT_CHAR, character.name
     if cmd_parts[0] == 'add_char':
-        character = series_info.find_char(cmd_parts[1])
+        character = series_info.find_char(cmd_parts[1], True)
         if character == ret.ERROR:
             return ret.ADD_CHAR, cmd_parts[1]
         return ret.HOME, "Duplicate character with name: " + character.name \
@@ -102,5 +109,4 @@ def process_cmd(cmd_string):
     return ret.HOME, "Valid command entry: " + cmd_string
 
 if __name__ == '__main__':
-    if 1:
-        app.run()
+    app.run()

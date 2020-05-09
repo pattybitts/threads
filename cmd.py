@@ -3,7 +3,8 @@ class ValidCommands:
         "add_char",
         "edit_char",
         "disp_char",
-        "gen_archive"
+        "gen_archive",
+        "gen_list"
         ]
 
     @staticmethod

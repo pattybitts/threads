@@ -8,6 +8,8 @@
     <body onload="init('{{char_gender}}', '{{char_allegiance}}', '{{action}}')">
         <h2>Modify Character Info</h2>
         <form action="/char_form_in" method="post">
+            <label for="base_name">Database Name:</label><br />
+            <input type="text" name="base_name" value='{{char_name}}' readonly /><br/>
             <label for="name_box">Character Name:</label><br />
             <input type="text" name="name_box" value='{{char_name}}'><br />
             <label for="alias_box">Aliases:</label><br />

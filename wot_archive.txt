@@ -148,19 +148,6 @@ Color:
   G: 10
   B: 100
 
-Master Luhhan
-Aliases:
-  Haral Luhhan
-Gender: Male
-Allegiance: Light
-Tier: D
-Tags:
-  Two Rivers
-Color:
-  R: 
-  G: 
-  B: 
-
 Marin al'Vere
 Aliases:
   Mistress al'Vere
@@ -169,20 +156,6 @@ Allegiance: Light
 Tier: F
 Tags:
   Two Rivers
-Color:
-  R: 
-  G: 
-  B: 
-
-Bran al'Vere
-Aliases:
-  Mayor
-Gender: Male
-Allegiance: Light
-Tier: D
-Tags:
-  Two Rivers
-  Innkeeper
 Color:
   R: 
   G: 
@@ -223,6 +196,8 @@ Aliases:
   al'Lan Mandragoran
   Lord of the Seven Towers
   Uncrowned King
+  Dai Shan
+  Aan'allein
 Gender: Male
 Allegiance: Light
 Tier: B
@@ -234,4 +209,213 @@ Color:
   R: 160
   G: 215
   B: 240
+
+Perrin
+Aliases:
+  Perrin Aybara
+  Young Bull
+  Goldeneyes
+Gender: Male
+Allegiance: Light
+Tier: A
+Tags:
+  Two Rivers
+  Wolfbrother
+Color:
+  R: 250
+  G: 230
+  B: 45
+
+Padan Fain
+Aliases:
+  Ordeith
+  Jeraal Mordeth
+  Shaisam
+Gender: Male
+Allegiance: Shadow
+Tier: B
+Tags:
+  Lugard
+Color:
+  R: 230
+  G: 230
+  B: 255
+
+Haral Luhhan
+Aliases:
+  Master Luhhan
+Gender: Male
+Allegiance: Light
+Tier: D
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+Nynaeve
+Aliases:
+  Nynaeve al'Meara
+  el'Nynaeve ti al'Meara Mandragoran
+  Wisdom
+Gender: Female
+Allegiance: Light
+Tier: B
+Tags:
+  Two Rivers
+  Channeler
+  Accepted
+  Aes Sedai
+  Yellow Ajah
+  Rebel
+Color:
+  R: 255
+  G: 255
+  B: 0
+
+Egwene
+Aliases:
+  Egwene al'Vere
+  Tuli
+  Amyrlin Seat
+  Flame of Tar Valon
+Gender: Female
+Allegiance: Light
+Tier: A
+Tags:
+  Two Rivers
+  Channeler
+  Novice
+  Damane
+  Accepted
+  Aes Sedai
+  Amyrlin
+Color:
+  R: 0
+  G: 200
+  B: 30
+
+Narg
+Aliases:
+  Trolloc
+Gender: Male
+Allegiance: Shadow
+Tier: F
+Tags:
+  Shadowspawn
+Color:
+  R: 
+  G: 
+  B: 
+
+Trolloc
+Aliases:
+  Twisted One
+Gender: Male
+Allegiance: Shadow
+Tier: D
+Tags:
+  Shadowspawn
+  Unspecified
+Color:
+  R: 
+  G: 
+  B: 
+
+Bran al'Vere
+Aliases:
+  Brandelwyn al'Vere
+  Master al'Vere
+  Mayor
+Gender: Male
+Allegiance: Light
+Tier: D
+Tags:
+  Two Rivers
+  Innkeeper
+Color:
+  R: 
+  G: 
+  B: 
+
+Hari Coplin
+Aliases:
+
+Gender: Male
+Allegiance: Light
+Tier: F
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+Darl Coplin
+Aliases:
+
+Gender: Male
+Allegiance: Light
+Tier: F
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+Paet al'Caar
+Aliases:
+
+Gender: Male
+Allegiance: Light
+Tier: F
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+Draghkar
+Aliases:
+
+Gender: Other
+Allegiance: Shadow
+Tier: D
+Tags:
+  Shadowspawn
+  Unspecified
+Color:
+  R: 
+  G: 
+  B: 
+
+Hightower
+Aliases:
+  Master Hightower
+Gender: Male
+Allegiance: Light
+Tier: F
+Tags:
+  Taren Ferry
+Color:
+  R: 
+  G: 
+  B: 
+
+Thom
+Aliases:
+  Thomdril Merrilin
+  Gleeman
+Gender: Male
+Allegiance: Light
+Tier: C
+Tags:
+  Andor
+Color:
+  R: 170
+  G: 100
+  B: 70
 
