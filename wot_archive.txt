@@ -5,7 +5,6 @@ Aliases:
   Dragon
   Lord of the Morning
 Gender: Male
-Allegiance: Light
 Tier: B
 Tags:
   Age of Legends
@@ -16,29 +15,10 @@ Color:
   G: 150
   B: 0
 
-Ishmael
-Aliases:
-  Elan Morin Tedronai
-  Ba'alzamon
-  Moridin
-  Nae'blis
-Gender: Male
-Allegiance: Shadow
-Tier: B
-Tags:
-  Age of Legends
-  Forsaken
-  Channeler
-Color:
-  R: 1
-  G: 1
-  B: 1
-
 Tam
 Aliases:
   Tam al'Thor
 Gender: Male
-Allegiance: Light
 Tier: C
 Tags:
   Two Rivers
@@ -59,41 +39,20 @@ Aliases:
   Nightrunner
   Neverborn
 Gender: Other
-Allegiance: Shadow
 Tier: D
 Tags:
   Unspecified
   Shadowspawn
+  Darkfriend
 Color:
   R: 
   G: 
   B: 
 
-Rand
-Aliases:
-  Rand al'Thor
-  Dragon Reborn
-  Coramoor
-  He Who Comes with the Dawn
-Gender: Male
-Allegiance: Light
-Tier: S
-Tags:
-  Channeler
-  Aiel
-  Taveren
-  Two Rivers
-  Blademaster
-Color:
-  R: 125
-  G: 180
-  B: 220
-
 Wit Congar
 Aliases:
 
 Gender: Male
-Allegiance: Light
 Tier: F
 Tags:
   Two Rivers
@@ -106,7 +65,6 @@ Daise Congar
 Aliases:
   Wisdom
 Gender: Female
-Allegiance: Light
 Tier: F
 Tags:
   Two Rivers
@@ -119,7 +77,6 @@ Cenn Buie
 Aliases:
   Thatcher
 Gender: Male
-Allegiance: Light
 Tier: D
 Tags:
   Two Rivers
@@ -138,7 +95,6 @@ Aliases:
   Toy
   Prince of the Ravens
 Gender: Male
-Allegiance: Light
 Tier: A
 Tags:
   Two Rivers
@@ -148,24 +104,10 @@ Color:
   G: 10
   B: 100
 
-Marin al'Vere
-Aliases:
-  Mistress al'Vere
-Gender: Female
-Allegiance: Light
-Tier: F
-Tags:
-  Two Rivers
-Color:
-  R: 
-  G: 
-  B: 
-
 Ewin Finngar
 Aliases:
 
 Gender: Male
-Allegiance: Light
 Tier: F
 Tags:
   Two Rivers
@@ -173,42 +115,6 @@ Color:
   R: 
   G: 
   B: 
-
-Moiraine
-Aliases:
-  Moiraine Damodred
-  Alys
-Gender: Female
-Allegiance: Light
-Tier: B
-Tags:
-  Channeler
-  Aes Sedai
-  Blue Ajah
-  Cairhien
-Color:
-  R: 0
-  G: 15
-  B: 255
-
-Lan
-Aliases:
-  al'Lan Mandragoran
-  Lord of the Seven Towers
-  Uncrowned King
-  Dai Shan
-  Aan'allein
-Gender: Male
-Allegiance: Light
-Tier: B
-Tags:
-  Malkier
-  Warder
-  Borderlands
-Color:
-  R: 160
-  G: 215
-  B: 240
 
 Perrin
 Aliases:
@@ -216,7 +122,6 @@ Aliases:
   Young Bull
   Goldeneyes
 Gender: Male
-Allegiance: Light
 Tier: A
 Tags:
   Two Rivers
@@ -232,27 +137,14 @@ Aliases:
   Jeraal Mordeth
   Shaisam
 Gender: Male
-Allegiance: Shadow
 Tier: B
 Tags:
   Lugard
+  Darkfriend
 Color:
   R: 230
   G: 230
   B: 255
-
-Haral Luhhan
-Aliases:
-  Master Luhhan
-Gender: Male
-Allegiance: Light
-Tier: D
-Tags:
-  Two Rivers
-Color:
-  R: 
-  G: 
-  B: 
 
 Nynaeve
 Aliases:
@@ -260,7 +152,6 @@ Aliases:
   el'Nynaeve ti al'Meara Mandragoran
   Wisdom
 Gender: Female
-Allegiance: Light
 Tier: B
 Tags:
   Two Rivers
@@ -281,7 +172,6 @@ Aliases:
   Amyrlin Seat
   Flame of Tar Valon
 Gender: Female
-Allegiance: Light
 Tier: A
 Tags:
   Two Rivers
@@ -300,10 +190,10 @@ Narg
 Aliases:
   Trolloc
 Gender: Male
-Allegiance: Shadow
 Tier: F
 Tags:
   Shadowspawn
+  Darkfriend
 Color:
   R: 
   G: 
@@ -313,27 +203,11 @@ Trolloc
 Aliases:
   Twisted One
 Gender: Male
-Allegiance: Shadow
 Tier: D
 Tags:
   Shadowspawn
   Unspecified
-Color:
-  R: 
-  G: 
-  B: 
-
-Bran al'Vere
-Aliases:
-  Brandelwyn al'Vere
-  Master al'Vere
-  Mayor
-Gender: Male
-Allegiance: Light
-Tier: D
-Tags:
-  Two Rivers
-  Innkeeper
+  Darkfriend
 Color:
   R: 
   G: 
@@ -343,7 +217,6 @@ Hari Coplin
 Aliases:
 
 Gender: Male
-Allegiance: Light
 Tier: F
 Tags:
   Two Rivers
@@ -356,7 +229,6 @@ Darl Coplin
 Aliases:
 
 Gender: Male
-Allegiance: Light
 Tier: F
 Tags:
   Two Rivers
@@ -369,7 +241,6 @@ Paet al'Caar
 Aliases:
 
 Gender: Male
-Allegiance: Light
 Tier: F
 Tags:
   Two Rivers
@@ -382,24 +253,11 @@ Draghkar
 Aliases:
 
 Gender: Other
-Allegiance: Shadow
 Tier: D
 Tags:
   Shadowspawn
   Unspecified
-Color:
-  R: 
-  G: 
-  B: 
-
-Hightower
-Aliases:
-  Master Hightower
-Gender: Male
-Allegiance: Light
-Tier: F
-Tags:
-  Taren Ferry
+  Darkfriend
 Color:
   R: 
   G: 
@@ -410,7 +268,6 @@ Aliases:
   Thomdril Merrilin
   Gleeman
 Gender: Male
-Allegiance: Light
 Tier: C
 Tags:
   Andor
@@ -418,4 +275,812 @@ Color:
   R: 170
   G: 100
   B: 70
+
+Mutch
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Baerlon
+Color:
+  R: 
+  G: 
+  B: 
+
+Lan
+Aliases:
+  al'Lan Mandragoran
+  Andra
+  Lord of the Seven Towers
+  Uncrowned King
+  Dai Shan
+  Aan'allein
+Gender: Male
+Tier: B
+Tags:
+  Malkier
+  Warder
+  Borderlands
+Color:
+  R: 160
+  G: 215
+  B: 240
+
+Haral Luhhan
+Aliases:
+  Blacksmith
+Gender: Male
+Tier: D
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+Bran al'Vere
+Aliases:
+  Brandelwyn al'Vere
+  Mayor
+Gender: Male
+Tier: D
+Tags:
+  Two Rivers
+  Innkeeper
+Color:
+  R: 
+  G: 
+  B: 
+
+Hightower
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Taren Ferry
+Color:
+  R: 
+  G: 
+  B: 
+
+Avin
+Aliases:
+  Avin
+Gender: Male
+Tier: F
+Tags:
+  Baerlon
+Color:
+  R: 
+  G: 
+  B: 
+
+Fitch
+Aliases:
+  Fitch
+Gender: Male
+Tier: F
+Tags:
+  Baerlon
+  Innkeeper
+Color:
+  R: 
+  G: 
+  B: 
+
+Marin al'Vere
+Aliases:
+
+Gender: Female
+Tier: F
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+Ara
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Baerlon
+Color:
+  R: 
+  G: 
+  B: 
+
+Sara
+Aliases:
+  Cook
+Gender: Female
+Tier: F
+Tags:
+  Baerlon
+Color:
+  R: 
+  G: 
+  B: 
+
+Min
+Aliases:
+  Elmindreda Farshaw
+  Sarenla
+  Doomseer
+  Truthspeaker
+Gender: Female
+Tier: B
+Tags:
+  Baerlon
+Color:
+  R: 220
+  G: 140
+  B: 255
+
+Whitecloak
+Aliases:
+  Child of the Light
+Gender: Male
+Tier: D
+Tags:
+  Unspecified
+  Soldier
+Color:
+  R: 
+  G: 
+  B: 
+
+Moiraine
+Aliases:
+  Moiraine Damodred
+  Alys
+Gender: Female
+Tier: B
+Tags:
+  Channeler
+  Aes Sedai
+  Blue Ajah
+  Cairhien
+  Noble
+Color:
+  R: 0
+  G: 15
+  B: 255
+
+Mordeth
+Aliases:
+
+Gender: Male
+Tier: D
+Tags:
+  Shadar Logoth
+  Unnatural
+Color:
+  R: 
+  G: 
+  B: 
+
+Mashadar
+Aliases:
+  The Mist
+Gender: Other
+Tier: D
+Tags:
+  Shadar Logoth
+  Unnatural
+Color:
+  R: 
+  G: 
+  B: 
+
+Gelb
+Aliases:
+
+Gender: Male
+Tier: D
+Tags:
+  Sailor
+Color:
+  R: 
+  G: 
+  B: 
+
+Bayle Domon
+Aliases:
+  Captain
+Gender: Male
+Tier: D
+Tags:
+  Illian
+Color:
+  R: 
+  G: 
+  B: 
+
+Elyas
+Aliases:
+  Elyas Machera
+  Longtooth
+Gender: Male
+Tier: D
+Tags:
+  Wolfbrother
+  Warder
+Color:
+  R: 
+  G: 
+  B: 
+
+Wind
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Wolf
+Color:
+  R: 
+  G: 
+  B: 
+
+Burn
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Wolf
+Color:
+  R: 
+  G: 
+  B: 
+
+Dapple
+Aliases:
+
+Gender: Female
+Tier: F
+Tags:
+  Wolf
+Color:
+  R: 
+  G: 
+  B: 
+
+Hopper
+Aliases:
+
+Gender: Male
+Tier: C
+Tags:
+  Wolf
+Color:
+  R: 
+  G: 
+  B: 
+
+Raen
+Aliases:
+  Mahdi
+  Seeker
+Gender: Male
+Tier: D
+Tags:
+  Tuatha'an
+Color:
+  R: 
+  G: 
+  B: 
+
+Ila
+Aliases:
+
+Gender: Female
+Tier: F
+Tags:
+  Tuatha'an
+Color:
+  R: 
+  G: 
+  B: 
+
+Aram
+Aliases:
+
+Gender: Male
+Tier: D
+Tags:
+  Tuatha'an
+Color:
+  R: 
+  G: 
+  B: 
+
+Bartim
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Innkeeper
+  Whitebridge
+Color:
+  R: 
+  G: 
+  B: 
+
+Byar
+Aliases:
+  Jaret Byar
+  Captain
+Gender: Male
+Tier: C
+Tags:
+  Whitecloak
+  Soldier
+Color:
+  R: 
+  G: 
+  B: 
+
+Dain Bornhald
+Aliases:
+  Captain
+Gender: Male
+Tier: D
+Tags:
+  Whitecloak
+  Soldier
+Color:
+  R: 
+  G: 
+  B: 
+
+Master Grinwell
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+Else
+Aliases:
+  Else Grinwell
+Gender: Female
+Tier: F
+Tags:
+  Novice
+  Andor
+  Channeler
+Color:
+  R: 
+  G: 
+  B: 
+
+Mistress Grinwell
+Aliases:
+
+Gender: Female
+Tier: F
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+Eazil Forney
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+Hake
+Aliases:
+  Saml Hake
+Gender: Male
+Tier: D
+Tags:
+  Innkeeper
+  Four Kings
+Color:
+  R: 
+  G: 
+  B: 
+
+Strom
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Four Kings
+Color:
+  R: 
+  G: 
+  B: 
+
+Jak
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Four Kings
+Color:
+  R: 
+  G: 
+  B: 
+
+Gode
+Aliases:
+  Howal Gode
+Gender: Male
+Tier: D
+Tags:
+  Four Kings
+  Darkfriend
+Color:
+  R: 
+  G: 
+  B: 
+
+Hyam Kinch
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+Alpert Mull
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+Rulan Allwine
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Innkeeper
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+Paitr
+Aliases:
+
+Gender: Male
+Tier: D
+Tags:
+  Andor
+  Darkfriend
+Color:
+  R: 
+  G: 
+  B: 
+
+Mili Skane
+Aliases:
+  Lady Shiaine
+Gender: Female
+Tier: D
+Tags:
+  Andor
+  Darkfriend
+Color:
+  R: 
+  G: 
+  B: 
+
+Queen's Guard
+Aliases:
+
+Gender: Other
+Tier: F
+Tags:
+  Unspecified
+  Soldier
+Color:
+  R: 
+  G: 
+  B: 
+
+Raimun Holdwin
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Andor
+  Darkfriend
+Color:
+  R: 
+  G: 
+  B: 
+
+Almen Bunt
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+Gill
+Aliases:
+  Basel Gill
+Gender: Male
+Tier: D
+Tags:
+  Andor
+  Innkeeper
+Color:
+  R: 
+  G: 
+  B: 
+
+Loial
+Aliases:
+  Loial son of Arent son of Halan
+Gender: Male
+Tier: C
+Tags:
+  Ogier
+  Stedding Shangtai
+Color:
+  R: 130
+  G: 120
+  B: 0
+
+Lamgwin
+Aliases:
+
+Gender: Male
+Tier: F
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+Logain
+Aliases:
+  Sealbreaker
+  Logain Ablar
+Gender: Male
+Tier: C
+Tags:
+  Ghealdan
+  Channeler
+  Dedicated
+  Ashaman
+  Noble
+Color:
+  R: 30
+  G: 30
+  B: 170
+
+Elayne
+Aliases:
+  Elayne Trakand
+  Daughter-Heir
+  Queen of Andor
+  High Seat of House Trakand
+Gender: Female
+Tier: B
+Tags:
+  Channeler
+  Andor
+  Noble
+  Novice
+  Accepted
+  Aes Sedai
+  Green Ajah
+  Rebel
+Color:
+  R: 255
+  G: 110
+  B: 110
+
+Gawyn
+Aliases:
+  Gawyn Trakand
+  First Prince of the Sword
+Gender: Male
+Tier: C
+Tags:
+  Andor
+  Noble
+  Blademaster
+  Loyalist
+  Youngling
+  Warder
+Color:
+  R: 255
+  G: 160
+  B: 120
+
+Tallanvor
+Aliases:
+  Martyn Tallanvor
+  Lieutenant Guardsman
+Gender: Male
+Tier: D
+Tags:
+  Queen's Guard
+  Soldier
+Color:
+  R: 
+  G: 
+  B: 
+
+Galad
+Aliases:
+  Galadedrid Damodred
+  Lord Captain Commander
+Gender: Male
+Tier: C
+Tags:
+  Whitecloak
+  Andor
+  Blademaster
+  Noble
+Color:
+  R: 245
+  G: 245
+  B: 160
+
+Geofram Bornhald
+Aliases:
+  Lord Captain
+Gender: Male
+Tier: D
+Tags:
+  Whitecloak
+  Soldier
+Color:
+  R: 
+  G: 
+  B: 
+
+Morgase
+Aliases:
+  Morgase Trakand
+  Queen of Andor
+  High Seat of House Trakand
+  Maighdin Dorlain
+Gender: Female
+Tier: C
+Tags:
+  Channeler
+  Noble
+Color:
+  R: 255
+  G: 150
+  B: 150
+
+Elaida
+Aliases:
+  Elaida do Avriny a'Roihan
+  Watcher of the Seals
+  Flame of Tar Valon
+  Amyrlin Seat
+  Suffa
+Gender: Female
+Tier: B
+Tags:
+  Channeler
+  Aes Sedai
+  Red Ajah
+  Loyalist
+  Damane
+  Andor
+Color:
+  R: 255
+  G: 0
+  B: 0
+
+Bryne
+Aliases:
+  Captain-General
+  Lord Gareth Bryne
+Gender: Male
+Tier: C
+Tags:
+  Great Captain
+  Soldier
+  Noble
+  Blademaster
+  Rebel
+  Andor
+Color:
+  R: 220
+  G: 20
+  B: 110
+
+Machin Shin
+Aliases:
+  Black Wind
+Gender: Other
+Tier: F
+Tags:
+  
+  Darkfriend
+Color:
+  R: 
+  G: 
+  B: 
+
+Ishmael
+Aliases:
+  Elan Morin Tedronai
+  Ba'alzamon
+  Moridin
+  Nae'blis
+Gender: Male
+Tier: B
+Tags:
+  Age of Legends
+  Forsaken
+  Channeler
+  Darkfriend
+Color:
+  R: 1
+  G: 1
+  B: 1
+
+Rand
+Aliases:
+  Rand al'Thor
+  Dragon Reborn
+  Coramoor
+  He Who Comes with the Dawn
+Gender: Male
+Tier: S
+Tags:
+  Channeler
+  Aiel
+  Taveren
+  Two Rivers
+  Blademaster
+Color:
+  R: 125
+  G: 180
+  B: 220
 

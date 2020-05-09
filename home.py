@@ -28,7 +28,6 @@ def new_cmd_in():
             char_aliases=character.print_aliases(), \
             char_tier=character.tier, \
             char_gender=character.gender, \
-            char_allegiance=character.allegiance, \
             char_tags=character.print_tags(),
             char_r=character.color["r"], \
             char_g=character.color["g"], \
@@ -47,7 +46,6 @@ def edit_char():
     new_char = Character(request.form['name_box'], \
         request.form['alias_box'], \
         request.form['gender'], \
-        request.form['allegiance'], \
         request.form['tier_box'], \
         request.form['r_box'], \
         request.form['g_box'], \

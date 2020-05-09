@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Threads of the Pattern</title>
 	</head>
-    <body onload="init('{{char_gender}}', '{{char_allegiance}}', '{{action}}')">
+    <body onload="init('{{char_gender}}', '{{action}}')">
         <h2>Modify Character Info</h2>
         <form action="/char_form_in" method="post">
             <label for="base_name">Database Name:</label><br />
@@ -23,11 +23,6 @@
             <label for="female">  Female  </label>
             <input type="radio" id="Other" name="gender" value="Other">
             <label for="other">  Other</label><br />
-            Allegiance:<br />
-            <input type="radio" id="Light" name="allegiance" value="Light">
-            <label for="light">  Light  </label>
-            <input type="radio" id="Shadow" name="allegiance" value="Shadow">
-            <label for="shadow">  Shadow</label><br />
             Color:<br />
             <label for="r_box">R:</label>
             <input type="text" name="r_box" value={{char_r}}>
@@ -54,14 +49,10 @@
     }
 </style>
 <script>
-    function init(gender, allegiance, action) {
+    function init(gender, action) {
         if (gender != '') {
             var gender_button = document.getElementById(gender);
             gender_button.checked = "checked";
-        }
-        if (allegiance != '') {
-            var allegiance_button = document.getElementById(allegiance);
-            allegiance_button.checked = "checked";
         }
         if (action != '') {
             var action_button = document.getElementById(action);

@@ -2,11 +2,10 @@ import data_storage, log
 
 class Character:
 
-    def __init__(self, name_str, alias_str, gender_str, all_str, tier_str, r, g, b, tag_str):
+    def __init__(self, name_str, alias_str, gender_str, tier_str, r, g, b, tag_str):
         self.name  = name_str
         self.aliases = alias_str.split("\n")
         self.gender = gender_str
-        self.allegiance = all_str
         self.tier = tier_str
         self.color = {}
         self.color["r"] = r
@@ -29,7 +28,6 @@ class Character:
         return self.name + "\n" \
             + "Aliases:\n" + alias_str + "\n" \
             + "Gender: " + self.gender + "\n" \
-            + "Allegiance: " + self.allegiance + "\n" \
             + "Tier: " + self.tier + "\n" \
             + "Tags:\n" + tag_str + "\n" \
             + "Color:\n" + color_str
