@@ -9,7 +9,6 @@ Ewin Finngar
 Perrin
 Padan Fain
 Nynaeve
-Egwene
 Narg
 Trolloc
 Hari Coplin
@@ -76,3 +75,5 @@ Bryne
 Machin Shin
 Ishmael
 Rand
+Egwene
+Quote
