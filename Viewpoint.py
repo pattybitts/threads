@@ -1,3 +1,6 @@
+import ret
+from Character import Character
+
 class Viewpoint:
 
     def __init__(self, num, primary, words):
@@ -17,3 +20,9 @@ class Viewpoint:
             out += f.name + ", "
         return out.rstrip(", ")
 
+    def is_featured(self, character_name):
+        character_list = []
+        character_list.append(self.primary_character)
+        for c in self.featured:
+            character_list.append(c)
+        return Character.match_character(character_list, character_name) != ret.ERROR

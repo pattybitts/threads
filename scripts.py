@@ -17,8 +17,17 @@ if 0:
         new_series_info.add_char(new_char)
     new_series_info.save("wot_0")
 
+if 0:
+    booklist = []
+    book = Book("Original", 1)
+    booklist.append(copy.deepcopy(book))
+    book = Book("Edit", 2)
+    booklist.append(copy.deepcopy(book))
+    log.db("book", booklist[0].title)
+    log.db("copied_book", booklist[1].title)
+
 #import book, viewpoints, words, characters to series class
-if 1:
+if 0:
     series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
     input = open("eotw.txt", 'r')
     full_text = input.read()
@@ -69,15 +78,19 @@ if 1:
     book.add_chapter(copy.copy(chapter))
     for ch in book.chapters:
         log.out(ch.print_chapter())
+    series.save("wot")
 
-if 0:
-    booklist = []
-    book = Book("Original", 1)
-    booklist.append(copy.deepcopy(book))
-    book = Book("Edit", 2)
-    booklist.append(copy.deepcopy(book))
-    log.db("book", booklist[0].title)
-    log.db("copied_book", booklist[1].title)
+if 1:
+    series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
+    query_list = []
+    for character in series.characters:
+        if character.tier_value() > 3:
+            query_list.append(character)
+    for book in series.books:
+        for chapter in book.chapters:
+            for viewpoint in chapter.viewpoints:
+                for character in query_list:
+                    
 
 
 

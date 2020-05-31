@@ -1,4 +1,4 @@
-import data_storage, log
+import data_storage, log, ret
 
 class Character:
 
@@ -54,3 +54,30 @@ class Character:
             "F": 0
             }
         return key.get(self.tier, 0)
+
+    @staticmethod
+    def match_character(list, name: str, strict=False):
+        best_match = ret.ERROR
+        best_score = 0
+        for c in list:
+            if isinstance(c, Character()):
+                if c.name == name:
+                    return c
+                if not strict:
+                    alias_tags = c.print_aliases().split()
+                    name_tags = c.name.split()
+                    for n in name_tags:
+                        alias_tags.append(n)
+                    name_terms = name.split()
+                    score = 0
+                    for i in name_terms:
+                        for a in alias_tags:
+                            if i.lower() == a.lower():
+                                score += 1
+                    if score > best_score:
+                        best_match = c
+                        best_score = score
+                    elif score == best_score and best_match != ret.ERROR:
+                        if c.tier_value() > best_match.tier_value():
+                            best_match = c
+        return best_match        
