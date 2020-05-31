@@ -60,7 +60,7 @@ class Character:
         best_match = ret.ERROR
         best_score = 0
         for c in list:
-            if isinstance(c, Character()):
+            if isinstance(c, Character):
                 if c.name == name:
                     return c
                 if not strict:

@@ -17,6 +17,7 @@ if 0:
         new_series_info.add_char(new_char)
     new_series_info.save("wot_0")
 
+#deepcopy test
 if 0:
     booklist = []
     book = Book("Original", 1)
@@ -39,7 +40,7 @@ if 0:
     for line in lines:
         cells = line.split(",")
         num_cells = len(cells)
-        character = series.find_char(cells[1])
+        character = Character.match_character(series.characters, cells[1])
         ch_name = cells[0]
         if ch_name != '':
             vp_count = 1
@@ -53,7 +54,7 @@ if 0:
             char_name = cells[i]
             if char_name == '':
                 break
-            character = series.find_char(char_name)
+            character = Character.match_character(series.characters, char_name)
             if character == ret.ERROR:
                 log.out("Unable to locate character: " + cells[i])
                 continue
@@ -79,20 +80,36 @@ if 0:
     for ch in book.chapters:
         log.out(ch.print_chapter())
     series.save("wot")
+    data_storage.dump_pickle(book, "eotw")
 
+
+#preliminary query test - display featured word counts for S, A, B characters
 if 1:
     series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
     query_list = []
+    wordcounts = {}
     for character in series.characters:
-        if character.tier_value() > 3:
+        if character.tier_value() > 2:
             query_list.append(character)
+            wordcounts[character.name] = 0
     for book in series.books:
         for chapter in book.chapters:
             for viewpoint in chapter.viewpoints:
                 for character in query_list:
-                    
+                    if viewpoint.is_featured(character.name):
+                        wordcounts[character.name] += int(viewpoint.wordcount)
+    log.banner("Character Featured Word Counts, Tier B and Higher, Eye of the World")
+    for x in wordcounts:
+        log.out(x + ": " + str(wordcounts[x]))
 
-
+#object cleanup - load saved object, then rebuild with constructors
+if 0:
+    series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
+    eotw = data_storage.load_pickle("eotw")
+    new_series = Series()
+    new_series.add_book(eotw)
+    new_series.characters = series.characters
+    new_series.save(data_storage.ACTIVE_FILE)
 
 
 

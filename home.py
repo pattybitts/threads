@@ -73,7 +73,7 @@ def process_cmd(cmd_string):
         return ret.HOME, "Command not supported: " + cmd_parts[0]
     series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
     if cmd_parts[0] == 'disp_char':
-        character = series.find_char(cmd_parts[1])
+        character = Character.match_character(series.characters, cmd_parts[1])
         if character == ret.ERROR:
             return ret.HOME, "Unable to match character name: " + cmd_parts[1]
         char_text = character.print_info()
