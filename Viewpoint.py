@@ -13,9 +13,9 @@ class Viewpoint:
         self.featured.append(new_char)
 
     def print_viewpoint(self):
-        out = "Primary: " + self.primary_character.name + "\n"
-        out += "Wordcount: " + str(self.wordcount) + "\n"
-        out += "Featured: "
+        out = "Wordcount: " + str(self.wordcount) + "\n"
+        out += "Primary Character: " + self.primary_character.name + "\n"
+        out += "Featured Characters: "
         for f in self.featured:
             out += f.name + ", "
         return out.rstrip(", ")

@@ -33,10 +33,12 @@ def new_cmd_in():
             char_g=character.color["g"], \
             char_b=character.color["b"])
     elif action == ret.ADD_CHAR:
-        if Character.match_character(series.characters, data, True):
-            error_msg = "INTERNAL ERROR:\nCharacter matched after processing"
+        if Character.match_character(series.characters, data, True) != ret.ERROR:
+            error_msg = "INTERNAL ERROR:\nCharacter '" + data + "' matched after processing"
             return render_template('index_home.html', cmd_out=error_msg)
         return render_template('index_char_form.html', action="add", char_name=data)
+    elif action == ret.GRAPH_TOOL:
+        return render_template('index_graph_tool.html', x_val='', y_val='')
     error_msg = "INTERNAL ERROR:\nInvalid return from processing"
     return render_template('index_home.html', cmd_out=error_msg)
 
@@ -65,46 +67,56 @@ def edit_char():
             resp = "Character " + new_char.name + " successfully added to database"
             series.save(data_storage.ACTIVE_FILE)
     return render_template('index_home.html', cmd_out=resp)
-    
+
+@app.route('/new_graph', methods = ['POST'])
+def new_graph():
+    pass
+
 def process_cmd(cmd_string):
     #check command supported
     cmd_parts = cmd_string.split('=')
     if not ValidCommands.is_valid(cmd_parts[0]):
         return ret.HOME, "Command not supported: " + cmd_parts[0]
     series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
-    if cmd_parts[0] == 'disp_char':
-        character = Character.match_character(series.characters, cmd_parts[1])
-        if character == ret.ERROR:
-            return ret.HOME, "Unable to match character name: " + cmd_parts[1]
-        char_text = character.print_info()
-        return ret.HOME, char_text
-    if cmd_parts[0] == 'gen_archive':
-        archive = open("wot_archive.txt", 'wb')
-        for c in series.characters:
-            archive.write(bytearray(c.print_info(), 'utf-8'))
-            archive.write(bytearray("\n\n", 'utf-8'))
-        archive.close()
-        msg = "Generated archive file at wot_archive.txt"
-        return ret.HOME, msg
-    if cmd_parts[0] == 'gen_list':
-        list = open("wot_char_list.txt", 'wb')
-        for c in series.characters:
-            list.write(bytearray(c.name + "\n", 'utf-8'))
-        list.close()
-        msg = "Generated character list at wot_char_list.txt"
-        return ret.HOME, msg
-    if cmd_parts[0] == 'edit_char':
-        character = Character.match_character(series.characters, cmd_parts[1])
-        if character == ret.ERROR:
-            return ret.HOME, "Unable to match character name: " + cmd_parts[1]
-        return ret.EDIT_CHAR, character.name
     if cmd_parts[0] == 'add_char':
         character = Character.match_character(series.characters, cmd_parts[1], True)
         if character == ret.ERROR:
             return ret.ADD_CHAR, cmd_parts[1]
         return ret.HOME, "Duplicate character with name: " + character.name \
             + "\nuse the 'edit_char' command to overwrite"
+    if cmd_parts[0] == 'edit_char':
+        character = Character.match_character(series.characters, cmd_parts[1])
+        if character == ret.ERROR:
+            return ret.HOME, "Unable to match character name: " + cmd_parts[1]
+        return ret.EDIT_CHAR, character.name
+    if cmd_parts[0] == 'disp_char':
+        character = Character.match_character(series.characters, cmd_parts[1])
+        if character == ret.ERROR:
+            return ret.HOME, "Unable to match character name: " + cmd_parts[1]
+        char_text = character.print_info()
+        return ret.HOME, char_text
+    if cmd_parts[0] == 'list_chars':
+        msg = "Character List:\n"
+        for c in series.characters:
+            msg += c.name + "\n"
+        msg.rstrip()
+        return ret.HOME, msg
+    if cmd_parts[0] == 'gen_archive':
+        archive = open("wot_archive.txt", 'wb')
+        for c in series.characters:
+            archive.write(bytearray(c.print_info(), 'utf-8'))
+            archive.write(bytearray("\n\n", 'utf-8'))
+        for b in series.books:
+            archive.write(bytearray("(Book) " + b.title + " (" + str(b.number) + ")\n\n", 'utf-8'))
+            for c in b.chapters:
+                archive.write(bytearray(c.print_chapter() + "\n", 'utf-8'))
+        archive.close()
+        msg = "Generated archive file at wot_archive.txt"
+        return ret.HOME, msg
+    if cmd_parts[0] == 'graph_tool':
+        msg = ""
+        return ret.GRAPH_TOOL, msg
     return ret.HOME, "Valid command entry: " + cmd_string
-
+    
 if __name__ == '__main__':
     app.run()
