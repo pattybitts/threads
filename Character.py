@@ -25,7 +25,7 @@ class Character:
         color_str = "  R: " + str(self.color["r"]) + "\n"
         color_str = color_str + "  G: " + str(self.color["g"]) + "\n"
         color_str = color_str + "  B: " + str(self.color["b"])
-        return "(Character) " + self.name + "\n" \
+        return self.name + "\n" \
             + "Aliases:\n" + alias_str + "\n" \
             + "Gender: " + self.gender + "\n" \
             + "Tier: " + self.tier + "\n" \

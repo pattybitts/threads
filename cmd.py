@@ -4,8 +4,7 @@ class ValidCommands:
         "edit_char",
         "disp_char",
         "gen_archive",
-        "list_chars",
-        "graph_tool"
+        "gen_list"
         ]
 
     @staticmethod
