@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threads of the Pattern</title>
+</head>
+<body onload="init('{{x_val}}', '{{y_val}}')">
+    <h2>Interactive Analysis Tool</h2>
+    <form action="/new_graph" method="post">
+        Define X Axis<br />
+        <input type="radio" id="x_characters" name="x_axis" value="characters" />
+        <label for="x_characters">  Characters  </label>
+        <br />
+        Define Y Axis<br />
+        <input type="radio" id="y_wordcount" name="y_axis" value="wordcount" />
+        <label for="y_wordcount">  Wordcount  </label>
+        <br />
+        Define Filters<br />
+        <textarea name="filter_box"></textarea><br />
+        <input type="submit" value="Submit" />
+    </form>
+    <br />
+    Query Output:<br />
+    <textarea name="output_box">{{query_output}}</textarea>
+</body>
+</html>
+<style>
+    textarea {
+        overflow-y: scroll;
+        height: 150px;
+        width: 250px;
+    }
+</style>
+<script>
+    function init(x, y) {
+        var x_button = document.getElementById("x_characters");
+        if (x != '') {
+            x_button = document.getElementById(x);
+        }
+        x_button.checked = "checked";
+        var y_button = document.getElementById("y_wordcount");
+        if (y != '') {
+            y_button = document.getElementById(y);
+        }
+        y_button.checked = "checked";
+    }
+</script>
