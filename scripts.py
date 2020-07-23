@@ -106,7 +106,7 @@ if 0:
 #object cleanup - load saved object, then rebuild with constructors
 if 0:
     series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
-    eotw = data_storage.load_pickle("eotw")
+    eotw = data_storage.load_pickle("data\\eotw")
     new_series = Series()
     new_series.add_book(eotw)
     new_series.characters = series.characters

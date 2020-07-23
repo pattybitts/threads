@@ -69,7 +69,7 @@ def find_next_bracket(text):
 
 def dump_pickle(object, filename):
     pfile = open(filename, 'wb')
-    pickle.dump(object, pfile, pickle.HIGHEST_PROTOCOL)
+    pickle.dump(object, pfile, pickle.DEFAULT_PROTOCOL)
     pfile.close()
 
 def load_pickle(filename):
