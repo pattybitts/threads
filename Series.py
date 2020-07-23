@@ -28,7 +28,7 @@ class Series:
         return ret.SUCCESS
 
     def char_place(self, c: Character):
-        return -c.tier_value(), self.first_featured(c), c.name
+        return -Character.tier_value(c.tier), self.first_featured(c), c.name
 
     def first_featured(self, c: Character):
         vp_count = 0

@@ -1,4 +1,4 @@
-import data_storage, log, ret
+import data_storage, log, ret, util
 
 class Character:
 
@@ -44,16 +44,23 @@ class Character:
             tag_str = tag_str + str(t) + "\n"
         return tag_str.rstrip()
 
-    def tier_value(self):
+    def has_tag(self, tag_check: str):
+        for t in self.print_tags:
+            if str.lower(tag_check) == str.lower(t):
+                return True
+        return False
+
+    @staticmethod
+    def tier_value(letter: str):
         key = {
-            "S": 5,
-            "A": 4,
-            "B": 3,
-            "C": 2,
-            "D": 1,
-            "F": 0
+            "s": 5,
+            "a": 4,
+            "b": 3,
+            "c": 2,
+            "d": 1,
+            "f": 0
             }
-        return key.get(self.tier, 0)
+        return key.get(str.lower(letter), -1)
 
     @staticmethod
     def match_character(list, name: str, strict=False):
@@ -78,6 +85,44 @@ class Character:
                         best_match = c
                         best_score = score
                     elif score == best_score and best_match != ret.ERROR:
-                        if c.tier_value() > best_match.tier_value():
+                        if Character.tier_value(c.tier) > Character.tier_value(best_match.tier):
                             best_match = c
-        return best_match        
+        return best_match
+
+    
+    def apply_filter(self, sub: str, comp: str, obj: str):  
+        if sub == "name":
+            if comp == "==":
+                return (obj == self.name)
+            elif comp == "!=":
+                return (obj != self.name)
+            elif comp == ">=":
+                return (Character.match_character([self], obj) == ret.ERROR)
+            elif comp == "<=":
+                return (Character.match_character([self], obj) != ret.ERROR)
+        elif sub == "tag":
+            if comp == ">=":
+                return has_tag(obj)
+            elif comp == "<=":
+                return not has_tag(obj)
+        elif sub == "gender":
+            if comp == "==":
+                return (str.lower(self.gender) == obj)
+            elif comp == "!=":
+                return not (str.lower(self.gender) == obj)
+        elif sub == "tier":
+            if util.is_number(obj):
+                obj_val = float(obj)
+            elif tier_value(obj) != 1:
+                obj_val = tier_value(obj)
+            else:
+                return ret.ERROR
+            if comp == "==":
+                return obj_val == Character.tier_value(self.tier)
+            elif comp == "!=":
+                return obj_val != Character.tier_value(self.tier)
+            elif comp == ">=":
+                return obj_val >= Character.tier_value(self.tier)
+            elif comp == "<=":
+                return obj_val <= Character.tier_value(self.tier)
+        return ret.ERROR

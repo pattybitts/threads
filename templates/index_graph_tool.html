@@ -9,15 +9,15 @@
     <h2>Interactive Analysis Tool</h2>
     <form action="/new_graph" method="post">
         Define X Axis<br />
-        <input type="radio" id="x_characters" name="x_axis" value="characters" />
+        <input type="radio" id="x_characters" name="x_axis" value="x_characters" />
         <label for="x_characters">  Characters  </label>
         <br />
         Define Y Axis<br />
-        <input type="radio" id="y_wordcount" name="y_axis" value="wordcount" />
+        <input type="radio" id="y_wordcount" name="y_axis" value="y_wordcount" />
         <label for="y_wordcount">  Wordcount  </label>
         <br />
         Define Filters<br />
-        <textarea name="filter_box"></textarea><br />
+        <textarea name="filter_box">{{filter_text}}</textarea><br />
         <input type="submit" value="Submit" />
     </form>
     <br />

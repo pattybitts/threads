@@ -1,6 +1,6 @@
 import ret, pickle, log
 
-ACTIVE_FILE = "wot"
+ACTIVE_FILE = "data\\wot"
 
 #to be archived or repurposed, not using json for this project
 #given a section of json text and a target term, returns an array of the values it is keyed to

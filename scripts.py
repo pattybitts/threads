@@ -5,6 +5,7 @@ from Book import Book
 from Chapter import Chapter
 from Viewpoint import Viewpoint
 from Character import Character
+from Query import Query
 
 #eliminate allegiance property and instead add "Darkfriend" tag to shadow allies
 if 0:
@@ -84,12 +85,12 @@ if 0:
 
 
 #preliminary query test - display featured word counts for S, A, B characters
-if 1:
+if 0:
     series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
     query_list = []
     wordcounts = {}
     for character in series.characters:
-        if character.tier_value() > 2:
+        if Character.tier_value(character.tier) > 2:
             query_list.append(character)
             wordcounts[character.name] = 0
     for book in series.books:
@@ -111,5 +112,11 @@ if 0:
     new_series.characters = series.characters
     new_series.save(data_storage.ACTIVE_FILE)
 
+if 0:
+    print(str.isnumeric("35"))
 
-
+if 1:
+    filter_list = ["name==Rand"]
+    query = Query("x_characters", "y_wordcount", filter_list)
+    query.make_query_list()
+    log.banner(query.query_log)

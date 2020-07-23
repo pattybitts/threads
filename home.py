@@ -3,6 +3,7 @@ import ret, data_storage, log
 from cmd import ValidCommands
 from Series import Series
 from Character import Character
+from Query import Query
 app = Flask(__name__)
 
 @app.route('/')
@@ -70,7 +71,13 @@ def edit_char():
 
 @app.route('/new_graph', methods = ['POST'])
 def new_graph():
-    pass
+    filter_text = request.form['filter_box']
+    filters = filter_text.split("\n")
+    x_axis = request.form['x_axis']
+    y_axis = request.form['y_axis']
+    query = Query(x_axis, y_axis, filters)
+    query.make_query_list()
+    return render_template('index_graph_tool.html', x_val=x_axis, y_val=y_axis, query_output=query.query_log, filter_text=filter_text)
 
 def process_cmd(cmd_string):
     #check command supported
@@ -102,7 +109,7 @@ def process_cmd(cmd_string):
         msg.rstrip()
         return ret.HOME, msg
     if cmd_parts[0] == 'gen_archive':
-        archive = open("wot_archive.txt", 'wb')
+        archive = open("data\\wot_archive.txt", 'wb')
         for c in series.characters:
             archive.write(bytearray(c.print_info(), 'utf-8'))
             archive.write(bytearray("\n\n", 'utf-8'))
@@ -111,7 +118,7 @@ def process_cmd(cmd_string):
             for c in b.chapters:
                 archive.write(bytearray(c.print_chapter() + "\n", 'utf-8'))
         archive.close()
-        msg = "Generated archive file at wot_archive.txt"
+        msg = "Generated archive file at data\\wot_archive.txt"
         return ret.HOME, msg
     if cmd_parts[0] == 'graph_tool':
         msg = ""
