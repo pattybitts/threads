@@ -93,9 +93,9 @@ class Character:
     def apply_filter(self, sub: str, comp: str, obj: str):  
         if sub == "name":
             if comp == "==":
-                return (obj == self.name)
+                return (obj == str.lower(self.name))
             elif comp == "!=":
-                return (obj != self.name)
+                return (obj != str.lower(self.name))
             elif comp == ">=":
                 return (Character.match_character([self], obj) == ret.ERROR)
             elif comp == "<=":

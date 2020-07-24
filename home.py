@@ -71,7 +71,7 @@ def edit_char():
 
 @app.route('/new_graph', methods = ['POST'])
 def new_graph():
-    filter_text = request.form['filter_box']
+    filter_text = str.strip(request.form['filter_box'])
     filters = filter_text.split("\n")
     x_axis = request.form['x_axis']
     y_axis = request.form['y_axis']
