@@ -116,7 +116,7 @@ if 0:
     print(str.isnumeric("35"))
 
 if 1:
-    filter_list = ["name==Rand"]
+    filter_list = ["tag<=channeler"]
     query = Query("x_characters", "y_wordcount", filter_list)
     query.make_query_list()
     log.banner(query.query_log)

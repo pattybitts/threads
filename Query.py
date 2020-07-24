@@ -15,7 +15,6 @@ class Query:
             + "Y-Axis: " + str(y_axis) + "\n"
         for f in filters:
             self.query_log += "Filter: " + str(f) + "\n"
-        self.query_log += str("\n")
 
     def make_query_list(self):
         series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
@@ -34,7 +33,7 @@ class Query:
         for f in self.filters:
             filter_re = re.match("^([a-zA-Z]+)([!<>=]=)([\S ]+)", f, re.RegexFlag.IGNORECASE)
             if not filter_re:
-                self.query_log += "Unable to match filter: " + str(f)
+                self.query_log += "Unable to match filter: " + str(f) + "\n"
                 continue
             subject = str.lower(filter_re.group(1))
             comparator = filter_re.group(2)
@@ -42,7 +41,8 @@ class Query:
             for q in query_list:
                 filter_result = q.apply_filter(subject, comparator, object)
                 if filter_result == ret.ERROR:
-                    self.query_log += "Error in filter syntax: " + str(f)
+                    self.query_log += "Error in filter syntax: " + str(f) + "\n"
+                    break
                 elif not filter_result:
                     if not q in filter_list:
                         filter_list.append(q)
@@ -56,13 +56,6 @@ class Query:
             for q in query_list:
                 if f.is_featured(q.name):
                     self.query_results[q.name] += int(f.wordcount)
+        self.query_log += "\n"
         for q in self.query_results:
             self.query_log += q + ": " + str(self.query_results[q]) + "\n"
-            
-
-
-
-
-
-
-    

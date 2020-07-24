@@ -5,6 +5,8 @@ class Character:
     def __init__(self, name_str, alias_str, gender_str, tier_str, r, g, b, tag_str):
         self.name  = name_str
         self.aliases = alias_str.split("\n")
+        for a in self.aliases:
+            a = str.strip(a)
         self.gender = gender_str
         self.tier = tier_str
         self.color = {}
@@ -12,6 +14,8 @@ class Character:
         self.color["g"] = g
         self.color["b"] = b
         self.tags = tag_str.split("\n")
+        for t in self.tags:
+            t = str.strip(t)
 
     def print_info(self):
         alias_str = ""
@@ -45,7 +49,7 @@ class Character:
         return tag_str.rstrip()
 
     def has_tag(self, tag_check: str):
-        for t in self.print_tags:
+        for t in self.tags:
             if str.lower(tag_check) == str.lower(t):
                 return True
         return False
@@ -102,9 +106,9 @@ class Character:
                 return (Character.match_character([self], obj) != ret.ERROR)
         elif sub == "tag":
             if comp == ">=":
-                return has_tag(obj)
+                return self.has_tag(obj)
             elif comp == "<=":
-                return not has_tag(obj)
+                return not self.has_tag(obj)
         elif sub == "gender":
             if comp == "==":
                 return (str.lower(self.gender) == obj)
@@ -113,16 +117,16 @@ class Character:
         elif sub == "tier":
             if util.is_number(obj):
                 obj_val = float(obj)
-            elif tier_value(obj) != 1:
-                obj_val = tier_value(obj)
+            elif Character.tier_value(obj) != -1:
+                obj_val = Character.tier_value(obj)
             else:
                 return ret.ERROR
             if comp == "==":
-                return obj_val == Character.tier_value(self.tier)
+                return Character.tier_value(self.tier) == obj_val
             elif comp == "!=":
-                return obj_val != Character.tier_value(self.tier)
+                return Character.tier_value(self.tier) != obj_val
             elif comp == ">=":
-                return obj_val >= Character.tier_value(self.tier)
+                return Character.tier_value(self.tier) >= obj_val
             elif comp == "<=":
-                return obj_val <= Character.tier_value(self.tier)
+                return Character.tier_value(self.tier) <= obj_val
         return ret.ERROR
