@@ -4,18 +4,22 @@ class Character:
 
     def __init__(self, name_str, alias_str, gender_str, tier_str, r, g, b, tag_str):
         self.name  = name_str
-        self.aliases = alias_str.split("\n")
-        for a in self.aliases:
-            a = str.strip(a)
+        self.aliases = []
+        aliases = alias_str.split("\n")
+        for a in aliases:
+            a = a.strip("\n\r ")
+            self.aliases.append(a)
         self.gender = gender_str
         self.tier = tier_str
         self.color = {}
         self.color["r"] = r
         self.color["g"] = g
         self.color["b"] = b
-        self.tags = tag_str.split("\n")
-        for t in self.tags:
-            t = str.strip(t)
+        self.tags = []
+        tags = tag_str.split("\n")
+        for t in tags:
+            t = t.strip("\n\r ")
+            self.tags.append(t)
 
     def print_info(self):
         alias_str = ""
@@ -101,9 +105,9 @@ class Character:
             elif comp == "!=":
                 return (obj != str.lower(self.name))
             elif comp == ">=":
-                return (Character.match_character([self], obj) == ret.ERROR)
-            elif comp == "<=":
                 return (Character.match_character([self], obj) != ret.ERROR)
+            elif comp == "<=":
+                return (Character.match_character([self], obj) == ret.ERROR)
         elif sub == "tag":
             if comp == ">=":
                 return self.has_tag(obj)

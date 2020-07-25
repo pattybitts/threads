@@ -116,7 +116,20 @@ if 0:
     print(str.isnumeric("35"))
 
 if 1:
-    filter_list = ["tag<=channeler"]
+    filter_list = ["name>=rand"]
     query = Query("x_characters", "y_wordcount", filter_list)
     query.make_query_list()
     log.banner(query.query_log)
+
+#character object cleanup
+if 0:
+    series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
+    new_series = Series()
+    new_series.books = series.books
+    new_characters = []
+    n_lit = "\n"
+    for c in series.characters:
+        new_character = Character(c.name, n_lit.join(c.aliases), c.gender, c.tier, c.color["r"], c.color["g"], c.color["b"], n_lit.join(c.tags))
+        new_characters.append(copy.copy(new_character))
+    new_series.characters = new_characters
+    new_series.save(data_storage.ACTIVE_FILE)
