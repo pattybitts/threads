@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threads of the Pattern</title>
+</head>
+
+<style>
+    *:focus {
+        outline: none;
+    }
+    .text_parser {
+        overflow: hidden;
+        height: 700px;
+        width: 600px;
+        resize: none;
+    }
+    div {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        display: flex;
+    }
+    .button {
+        height: 100px;
+        width: 200px;
+        border-radius: 8px;
+        font-size: 16px;
+        padding: 10px 30px;
+        text-align: center;
+        text-decoration: none;
+        transition-duration: 0.3s;
+    }
+    .button:hover {
+        border: 2px solid hsl(240, 100%, 25%);
+        background-color: white;
+        color: hsl(240, 100%, 25%)
+    }
+    .button:active {
+        background-color: hsl(240, 100%, 75%);
+        color: hsl(240, 100%, 25%)
+    }
+    .button:disabled {
+        opacity: 0.6;
+    }
+    .light {
+        background-color: white;
+        border: 2px solid hsl(240, 100%, 75%);
+        color: hsl(240, 100%, 75%);
+    }
+    .dark {
+        background-color: hsl(240, 100%, 25%);
+        border: 2px solid white;
+        color: white;
+    }
+</style>
+
+<body>
+    <h2>Interactive Text Parser</h2>
+    <div id="text_tools_div">
+        <textarea id="body_text" class="text_parser" readonly></textarea>
+        <button id="next_page_button" class="button dark" onclick="next_page()">Next Page</button>
+    </div>
+</body>
+
+<script>
+    var page = 0;
+    function next_page() {
+        page += 1;
+        var t = document.getElementById("body_text")
+        t.value = String(page)
+    }
+</script>
+
+</html>

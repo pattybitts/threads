@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect
 import ret, data_storage, log
-from cmd import ValidCommands
 from Series import Series
 from Character import Character
 from Query import Query
@@ -40,6 +39,11 @@ def new_cmd_in():
         return render_template('index_char_form.html', action="add", char_name=data)
     elif action == ret.GRAPH_TOOL:
         return render_template('index_graph_tool.html', x_val='', y_val='')
+    elif action == ret.TEXT_TOOL:
+        sample_input = ""
+        for i in range(50):
+            sample_input += str(i) + "\n"
+        return render_template('index_text_tool.html', sample_input=sample_input)
     error_msg = "INTERNAL ERROR:\nInvalid return from processing"
     return render_template('index_home.html', cmd_out=error_msg)
 
@@ -82,8 +86,6 @@ def new_graph():
 def process_cmd(cmd_string):
     #check command supported
     cmd_parts = cmd_string.split('=')
-    if not ValidCommands.is_valid(cmd_parts[0]):
-        return ret.HOME, "Command not supported: " + cmd_parts[0]
     series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
     if cmd_parts[0] == 'add_char':
         character = Character.match_character(series.characters, cmd_parts[1], True)
@@ -123,7 +125,10 @@ def process_cmd(cmd_string):
     if cmd_parts[0] == 'graph_tool':
         msg = ""
         return ret.GRAPH_TOOL, msg
-    return ret.HOME, "Valid command entry: " + cmd_string
+    if cmd_parts[0] == 'text_tool':
+        msg = ""
+        return ret.TEXT_TOOL, msg
+    return ret.HOME, "Unsupported command entry: " + cmd_string
     
 if __name__ == '__main__':
     app.run()
