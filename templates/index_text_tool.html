@@ -63,27 +63,26 @@
     <h2>Interactive Text Parser</h2>
     <div id="text_tools_div">
         <textarea id="page_text" class="text_parser" readonly>{{page_text}}</textarea>
-        <button id="next_page_button" class="button dark" onclick="/next_page">Next Page</button>
+        <p>This is a whole paragraph with a lot of text hohoho</p>
+        <button id="test_button" class='button dark'>Test</button>
+        <button id="next_page_button" class="button dark" onclick=next_page()>Next Page</button>
     </div>
 </body>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    var page = 0;
-    var full_text = "";
-    function next_page() {
-        var fs = require("fs");
-        fs.readFile("static\\01 The Eye of the World - Robert Jordan.txt", read_function())
-        page += 1;
-        var t = document.getElementById("page_text")
-        t.value = full_text.slice(page*100, page*100+100)
-    }
-    function read_function(err, data) {
-        if (err) {
-            full_text = String(err);
-        } else {
-            full_text = data;
-        }
-    }
+    show_page = true
+    $(function () {
+        $('#test_button').click(function () {
+            if (show_page) {
+                show_page = false
+                $('#next_page_button').hide();
+            } else {
+                show_page = true
+                $('#next_page_button').show();
+            }
+        });
+    });
 </script>
 
 </html>
