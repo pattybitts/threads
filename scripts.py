@@ -114,7 +114,7 @@ if 0:
 if 0:
     print(str.isnumeric("35"))
 
-if 1:
+if 0:
     filter_list = ["name>=rand"]
     query = Query("x_characters", "y_wordcount", filter_list)
     query.make_query_list()
@@ -132,3 +132,12 @@ if 0:
         new_characters.append(copy.copy(new_character))
     new_series.characters = new_characters
     new_series.save(data_storage.ACTIVE_FILE)
+
+#parsing eotw txt to remove extra whitespace
+if 1:
+    input = open("input_files\\eotw_full_text.txt", 'r')
+    full_text = input.read()
+    mod_text = re.sub("\s*\n\n+\s*", "\n", full_text, 1000000)
+    output = open("input_files\\eotw_shortened.txt", 'wb')
+    output.write(bytearray(mod_text, 'utf-8'))
+    output.close()

@@ -6,26 +6,40 @@
     <title>Threads of the Pattern</title>
 </head>
 
+<body onload="init()">
+    <h2>Interactive Text Parser</h2>
+    <div id="text_tools_div">
+        <textarea id="page_text" class="text_parser" readonly>{{page_text}}</textarea>
+        <button id="test_button" class='button dark'>Test</button>
+        <button id="next_page_button" class="button dark" onclick=next_page()>Next Page</button>
+    </div>
+</body>
+</html>
+
 <style>
     * {
         font-family: Calibri;
     }
+
     *:focus {
         outline: none;
     }
+
     .text_parser {
         overflow: hidden;
         height: 700px;
-        width: 600px;
+        width: 900px;
         resize: none;
         font-family: 'Lucida Console';
     }
+
     div {
         position: relative;
         top: 0px;
         left: 0px;
         display: flex;
     }
+
     .button {
         height: 80px;
         width: 80px;
@@ -33,56 +47,71 @@
         font-size: 16px;
         text-align: center;
         text-decoration: none;
-        transition-duration: 0.3s;
-    }
-    .button:hover {
+        transition-duration: 0.2s;
         border: 2px solid hsl(240, 100%, 25%);
-        background-color: white;
-        color: hsl(240, 100%, 25%);
+        margin: 0px 0px 6px 6px;
     }
+
+    .button:hover {
+        border: 2px solid white;
+    }
+
     .button:active {
         background-color: hsl(240, 100%, 75%);
-        color: hsl(240, 100%, 25%);
     }
+
     .button:disabled {
         opacity: 0.6;
-    }
+        }
+
     .light {
-        background-color: white;
-        border: 2px solid hsl(240, 100%, 75%);
-        color: hsl(240, 100%, 75%);
+        background-color: hsl(240, 100%, 90%);
+        color: hsl(240, 100%, 25%);
     }
+
     .dark {
         background-color: hsl(240, 100%, 25%);
-        border: 2px solid white;
         color: white;
     }
 </style>
 
-<body>
-    <h2>Interactive Text Parser</h2>
-    <div id="text_tools_div">
-        <textarea id="page_text" class="text_parser" readonly>{{page_text}}</textarea>
-        <p>This is a whole paragraph with a lot of text hohoho</p>
-        <button id="test_button" class='button dark'>Test</button>
-        <button id="next_page_button" class="button dark" onclick=next_page()>Next Page</button>
-    </div>
-</body>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    show_page = true
+    full_text = ""
+    abs_char_count = 0;
+    function init() {
+        $.get("static/eotw_shortened.txt", read_text)
+    }
+
     $(function () {
         $('#test_button').click(function () {
-            if (show_page) {
-                show_page = false
-                $('#next_page_button').hide();
-            } else {
-                show_page = true
-                $('#next_page_button').show();
+            $('#next_page_button').toggleClass("dark");
+            $('#next_page_button').toggleClass("light");
+        });
+        $('#next_page_button').click(function () {
+            $('#page_text').val(full_text.substr(0, 1000))
+            /*var i = 0;
+            while (i < 100) {
+                var j = 0;
+                var char_count = 0;
+                next_char = full_text[j];
+                while (j != '' && j != '\n') {
+                    ++char_count;
+                    next_char = full_text[++j];
+                }
+                ++i;
             }
+            var page_text = full_text.substr(abs_char_count, char_count);
+            abs_char_count += char_count;
+            $('#page_text').val(page_text);*/
         });
     });
-</script>
 
-</html>
+    function read_text(data, status) {
+        if (status == "success") {
+            full_text = data;
+        } else {
+            full_text = "Unexpected error reading text file";
+        }
+    }
+</script>

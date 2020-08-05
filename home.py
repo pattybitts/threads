@@ -40,9 +40,7 @@ def new_cmd_in():
     elif action == ret.GRAPH_TOOL:
         return render_template('index_graph_tool.html', x_val='', y_val='')
     elif action == ret.TEXT_TOOL:
-        sample_input = ""
-        for i in range(50):
-            sample_input += str(i) + "\n"
+        sample_input = "Enter the book filename and press the \"Load Book\" button to load progress."
         return render_template('index_text_tool.html', page_text=sample_input)
     error_msg = "INTERNAL ERROR:\nInvalid return from processing"
     return render_template('index_home.html', cmd_out=error_msg)
@@ -82,13 +80,6 @@ def new_graph():
     query = Query(x_axis, y_axis, filters)
     query.make_query_list()
     return render_template('index_graph_tool.html', x_val=x_axis, y_val=y_axis, query_output=query.query_log, filter_text=filter_text)
-
-@app.route('/next_page')
-def next_page():
-    input = open("input_files\\eotw.txt", 'r')
-    full_text = "goob"
-    print("goob")
-    return render_template('index_text_tool.html', page_text=full_text)
 
 def process_cmd(cmd_string):
     #check command supported
