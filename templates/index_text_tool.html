@@ -10,8 +10,12 @@
     <h2>Interactive Text Parser</h2>
     <div id="text_tools_div">
         <textarea id="page_text" class="text_parser" readonly>{{page_text}}</textarea>
-        <button id="test_button" class='button dark'>Test</button>
-        <button id="next_page_button" class="button dark" onclick=next_page()>Next Page</button>
+        <label for="load_book_box">Book Name:</label>
+        <input id="load_book_box" />
+        <button id="load_book_button" class="button dark">Load Book</button>
+        <button id="next_page_button" class="button dark">Next Page</button>
+        <button id="save_button" class="button dark">Save Progress</button>
+        <textarea id="output_box" readonly></textarea>
     </div>
 </body>
 </html>
@@ -19,6 +23,7 @@
 <style>
     * {
         font-family: Calibri;
+        margin: 0px 0px 5px 5px;
     }
 
     *:focus {
@@ -30,6 +35,7 @@
         height: 700px;
         width: 900px;
         resize: none;
+        overflow-y: scroll;
         font-family: 'Lucida Console';
     }
 
@@ -38,22 +44,22 @@
         top: 0px;
         left: 0px;
         display: flex;
+        align-items: flex-start;
     }
 
     .button {
-        height: 80px;
-        width: 80px;
+        height: 50px;
+        width: 50px;
         border-radius: 8px;
-        font-size: 16px;
+        font-size: 12px;
         text-align: center;
         text-decoration: none;
         transition-duration: 0.2s;
-        border: 2px solid hsl(240, 100%, 25%);
-        margin: 0px 0px 6px 6px;
+        border: 1px solid hsl(240, 100%, 25%);
     }
 
     .button:hover {
-        border: 2px solid white;
+        border: 1px solid white;
     }
 
     .button:active {
@@ -62,7 +68,7 @@
 
     .button:disabled {
         opacity: 0.6;
-        }
+    }
 
     .light {
         background-color: hsl(240, 100%, 90%);
@@ -77,33 +83,25 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    full_text = ""
-    abs_char_count = 0;
+    var full_text = ""
+    var abs_char_count = 0;
+    var abs_word_count = 0;
     function init() {
         $.get("static/eotw_shortened.txt", read_text)
     }
 
     $(function () {
-        $('#test_button').click(function () {
-            $('#next_page_button').toggleClass("dark");
-            $('#next_page_button').toggleClass("light");
-        });
         $('#next_page_button').click(function () {
-            $('#page_text').val(full_text.substr(0, 1000))
-            /*var i = 0;
-            while (i < 100) {
-                var j = 0;
-                var char_count = 0;
-                next_char = full_text[j];
-                while (j != '' && j != '\n') {
-                    ++char_count;
-                    next_char = full_text[++j];
-                }
-                ++i;
+            var inc = 3500;
+            var next_char = full_text.charAt(abs_char_count + inc)
+            while (next_char != "\n") {
+                next_char = full_text.charAt(abs_char_count + ++inc);
             }
-            var page_text = full_text.substr(abs_char_count, char_count);
-            abs_char_count += char_count;
-            $('#page_text').val(page_text);*/
+            var page_text = full_text.substr(abs_char_count, inc);
+            $('#page_text').val(page_text);
+            abs_word_count += page_text.split(/\s/).length;
+            abs_char_count += inc;
+            $('#output_box').val("abs_word_count: " + String(abs_word_count));
         });
     });
 
