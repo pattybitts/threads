@@ -45,6 +45,7 @@
         left: 0px;
         display: flex;
         align-items: flex-start;
+        flex-wrap: wrap;
     }
 
     .button {
@@ -99,7 +100,7 @@
             }
             var page_text = full_text.substr(abs_char_count, inc);
             $('#page_text').val(page_text);
-            abs_word_count += page_text.split(/\s/).length;
+            abs_word_count += page_text.split(/[\s-."]+/).length;
             abs_char_count += inc;
             $('#output_box').val("abs_word_count: " + String(abs_word_count));
         });
