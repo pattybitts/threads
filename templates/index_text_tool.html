@@ -8,19 +8,33 @@
 
 <body onload="init()">
     <h2>Interactive Text Parser</h2>
-    <div id="text_tools_div">
-        <div id="raw_quotes_div">
-            <div id="page_text"></div>
-            <div id="page_quotes"></div>
+    <div id="main_div">
+        <div id="page_div">
+            <pre id="page_text">Current Page Text:<br/></pre>
+            <div id="page_quotes">Current Page Quotes:<br/></div>
         </div>
-        <textarea id="page_text" class="text_parser" readonly>{{page_text}}</textarea>
-        <textarea id="log_box" readonly rows="10" cols="100"></textarea>
-        <label for="load_book_box">Book Name:</label>
-        <input id="load_book_box" />
-        <button id="load_book_button" class="button dark">Load Book</button>
-        <button id="next_page_button" class="button dark">Next Page</button>
-        <button id="save_button" class="button dark">Save</button>
-        <button id="character_button" class="button dark">Add Char</button>
+        <div id="utils_div">
+            <div id="scene_div"></div>
+            <div id="inputs_div">
+                <div id="text_inputs_div">
+                    <label for="load_book_box">Book Name:</label>
+                    <input id="load_book_box" />
+                    <button id="load_book_button" class="button dark">Load Book</button>
+                </div>
+                <div id="buttons_div">
+                    <button id="next_page_button" class="button dark">Next Page</button>
+                    <button id="save_button" class="button dark">Save</button>
+                    <button id="character_button" class="button dark">Add Char</button>
+                </div>
+            </div>
+            <div id="hotkeys_log_div">
+                <div id="hotkeys"></div>
+                <div id="log">
+                    Log Output:
+                    <textarea id="log_box" readonly></textarea>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
@@ -28,20 +42,9 @@
 <style>
     * {
         font-family: Calibri;
-        margin: 0px 0px 5px 5px;
     }
-
     *:focus {
         outline: none;
-    }
-
-    .text_parser {
-        overflow: hidden;
-        height: 700px;
-        width: 900px;
-        resize: none;
-        overflow-y: scroll;
-        font-family: 'Lucida Console';
     }
 
     div {
@@ -50,7 +53,63 @@
         left: 0px;
         display: flex;
         align-items: flex-start;
-        flex-wrap: wrap;
+        border-radius: 5px;
+        border: 1px solid hsl(240, 100%, 25%);
+        background-color: hsl(240, 100%, 90%);
+        color: hsl(240, 100%, 25%);
+        height: 100%;
+        width: 100%;
+        flex-direction: row;
+    }
+    #main_div {
+        height: 700px;
+    }
+    #page_div {
+        width: 50%;
+        flex-direction: column;
+    }
+    #utils_div {
+        width: 50%;
+        flex-direction: column;
+    }
+    #page_text {
+        height: 50%;
+    }
+    #page_quotes {
+        height: 50%;
+        flex-direction: column;
+    }
+    #scene_div {
+        height: 40%;
+    }
+    #inputs_div {
+        height: 20%;
+    }
+    #text_inputs_div {
+        width: 40%;
+        flex-direction: column;
+    }
+    #buttons_div {
+        width: 60%;
+    }
+    #hotkeys_log_div {
+        height: 40%;
+    }
+    #hotkeys {
+        width: 50%;
+    }
+    #log {
+        width: 50%;
+        flex-direction: column;
+    }
+
+    #log_box {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        resize: none;
+        overflow-y: scroll;
+        font-family: 'Lucida Console';
     }
 
     .button {
@@ -63,24 +122,17 @@
         transition-duration: 0.2s;
         border: 1px solid hsl(240, 100%, 25%);
     }
-
     .button:hover {
         border: 1px solid white;
     }
-
     .button:active {
         background-color: hsl(240, 100%, 75%);
-    }
-
-    .button:disabled {
-        opacity: 0.6;
     }
 
     .light {
         background-color: hsl(240, 100%, 90%);
         color: hsl(240, 100%, 25%);
     }
-
     .dark {
         background-color: hsl(240, 100%, 25%);
         color: white;
@@ -95,7 +147,7 @@
     var active_hotkeys = new Map();
 
     function init() {
-        $('#log_box').val("Log output will appear here:");
+        $('#log_box').text("Log output will appear here:");
 
         active_hotkeys.set(110, "next_page"); //n
 
@@ -109,9 +161,9 @@
 
     function log(string, clear = false) {
         if (clear) {
-            $('#log_box').val("");
+            $('#log_box').text("");
         }
-        $('#log_box').val($('#log_box').val() + "\n" + string);
+        $('#log_box').text($('#log_box').text() + "\n" + string);
     }
 
     function read_text(data, status) {
@@ -135,7 +187,7 @@
         var char_inc = 0;
         var in_quote = false;
         var quote_start = 0;
-        while ((quotes.length < 5 && lines < 20) || in_quote) {
+        while ((quotes.length < 5 && lines < 17) || in_quote) {
             next_char = full_text.charAt(abs_char_count + char_inc++);
             if (next_char == "\n") {
                 lines++;
@@ -155,8 +207,8 @@
         var page_text = full_text.substr(abs_char_count, char_inc);
         abs_word_count += page_text.split(/[\s-."]+/).length;
         abs_char_count += char_inc;
-        $('#page_text').val(page_text);
-        log("", true)
+        $('#page_text').text(page_text.trim());
+        log("", true);
         quotes.forEach(function (q) {
             log(String(q));
         })
