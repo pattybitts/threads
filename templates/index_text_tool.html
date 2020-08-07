@@ -87,23 +87,16 @@
     var full_text = ""
     var abs_char_count = 0;
     var abs_word_count = 0;
+    var active_hotkeys = new Map();
     function init() {
+        active_hotkeys.set(110, "next_page") //n
+
         $.get("static/eotw_shortened.txt", read_text)
     }
 
     $(function () {
-        $('#next_page_button').click(function () {
-            var inc = 3500;
-            var next_char = full_text.charAt(abs_char_count + inc)
-            while (next_char != "\n") {
-                next_char = full_text.charAt(abs_char_count + ++inc);
-            }
-            var page_text = full_text.substr(abs_char_count, inc);
-            $('#page_text').val(page_text);
-            abs_word_count += page_text.split(/[\s-."]+/).length;
-            abs_char_count += inc;
-            $('#output_box').val("abs_word_count: " + String(abs_word_count));
-        });
+        $(document).keypress(hotkey);
+        $('#next_page_button').click(next_page);
     });
 
     function read_text(data, status) {
@@ -112,5 +105,25 @@
         } else {
             full_text = "Unexpected error reading text file";
         }
+    }
+
+    function hotkey(key) {
+        if (active_hotkeys.has(key.which)) {
+            func = String(active_hotkeys.get(key.which));
+            window[func]();
+        }
+    }
+
+    function next_page() {
+        var inc = 3500;
+        var next_char = full_text.charAt(abs_char_count + inc)
+        while (next_char != "\n") {
+            next_char = full_text.charAt(abs_char_count + ++inc);
+        }
+        var page_text = full_text.substr(abs_char_count, inc);
+        $('#page_text').val(page_text);
+        abs_word_count += page_text.split(/[\s-."]+/).length;
+        abs_char_count += inc;
+        $('#output_box').val("abs_word_count: " + String(abs_word_count));
     }
 </script>
