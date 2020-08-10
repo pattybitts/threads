@@ -134,10 +134,15 @@ if 0:
     new_series.save(data_storage.ACTIVE_FILE)
 
 #parsing eotw txt to remove extra whitespace
-if 1:
+if 0:
     input = open("input_files\\eotw_full_text.txt", 'r')
     full_text = input.read()
     mod_text = re.sub("\s*\n\n+\s*", "\n", full_text, 1000000)
     output = open("input_files\\eotw_shortened.txt", 'wb')
     output.write(bytearray(mod_text, 'utf-8'))
     output.close()
+
+#trying to test how python manages pointers in circular references
+if 1:
+    series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
+    log.banner(series.books[0])
