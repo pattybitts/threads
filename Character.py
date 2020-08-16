@@ -2,7 +2,7 @@ import data_storage, log, ret, util
 
 class Character:
 
-    def __init__(self, name_str, alias_str, gender_str, tier_str, r, g, b, tag_str):
+    def __init__(self, name_str, alias_str, gender_str, r_val, g_val, b_val, tag_str):
         self.name  = name_str
         self.aliases = []
         aliases = alias_str.split("\n")
@@ -10,16 +10,13 @@ class Character:
             a = a.strip("\n\r ")
             self.aliases.append(a)
         self.gender = gender_str
-        self.tier = tier_str
-        self.color = {}
-        self.color["r"] = r
-        self.color["g"] = g
-        self.color["b"] = b
+        self.color = {"r": r_val, "g": g_val, "b": b_val}
         self.tags = []
         tags = tag_str.split("\n")
         for t in tags:
             t = t.strip("\n\r ")
             self.tags.append(t)
+        self.joined_characters = []
 
     def print_info(self):
         alias_str = ""
@@ -36,7 +33,6 @@ class Character:
         return "(Character) " + self.name + "\n" \
             + "Aliases:\n" + alias_str + "\n" \
             + "Gender: " + self.gender + "\n" \
-            + "Tier: " + self.tier + "\n" \
             + "Tags:\n" + tag_str + "\n" \
             + "Color:\n" + color_str
     
@@ -57,18 +53,6 @@ class Character:
             if str.lower(tag_check) == str.lower(t):
                 return True
         return False
-
-    @staticmethod
-    def tier_value(letter: str):
-        key = {
-            "s": 5,
-            "a": 4,
-            "b": 3,
-            "c": 2,
-            "d": 1,
-            "f": 0
-            }
-        return key.get(str.lower(letter), -1)
 
     @staticmethod
     def match_character(list, name: str, strict=False):
@@ -92,9 +76,6 @@ class Character:
                     if score > best_score:
                         best_match = c
                         best_score = score
-                    elif score == best_score and best_match != ret.ERROR:
-                        if Character.tier_value(c.tier) > Character.tier_value(best_match.tier):
-                            best_match = c
         return best_match
 
     
@@ -118,19 +99,4 @@ class Character:
                 return (str.lower(self.gender) == obj)
             elif comp == "!=":
                 return not (str.lower(self.gender) == obj)
-        elif sub == "tier":
-            if util.is_number(obj):
-                obj_val = float(obj)
-            elif Character.tier_value(obj) != -1:
-                obj_val = Character.tier_value(obj)
-            else:
-                return ret.ERROR
-            if comp == "==":
-                return Character.tier_value(self.tier) == obj_val
-            elif comp == "!=":
-                return Character.tier_value(self.tier) != obj_val
-            elif comp == ">=":
-                return Character.tier_value(self.tier) >= obj_val
-            elif comp == "<=":
-                return Character.tier_value(self.tier) <= obj_val
         return ret.ERROR

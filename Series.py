@@ -1,12 +1,15 @@
 import ret, data_storage, log
 from Character import Character
 from Book import Book
+from Arc import Arc
 
 class Series:
 
-    def __init__(self):
+    def __init__(self, name:str):
         self.characters = []
         self.books = []
+        self.arcs = []
+        self.name = name
     
     def save(self, dump_file):
         data_storage.dump_pickle(self, dump_file)
@@ -42,3 +45,6 @@ class Series:
 
     def add_book(self, new_book: Book):
         self.books.append(new_book)
+
+    def add_arc(self, new_arc: Arc):
+        self.arcs.append(new_arc)
