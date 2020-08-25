@@ -143,6 +143,12 @@ if 0:
     output.close()
 
 #trying to test how python manages pointers in circular references
-if 1:
+if 0:
     series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
     log.banner(series.books[0])
+
+if 1:
+    old_series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
+    new_series = Series("The Wheel of Time")
+    for c in old_series.characters:
+        log.out(c.print_info())

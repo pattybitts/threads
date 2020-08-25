@@ -31,7 +31,11 @@ class Series:
         return ret.SUCCESS
 
     def char_place(self, c: Character):
-        return -Character.tier_value(c.tier), self.first_featured(c), c.name
+        scene_group = []
+        for b in self.books:
+            for s in b.scenes:
+                scene_group.append(s)
+        return -c.prominence_score(scene_group, self), self.first_featured(c), c.name
 
     def first_featured(self, c: Character):
         vp_count = 0

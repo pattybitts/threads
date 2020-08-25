@@ -59,26 +59,47 @@ class Character:
         best_match = ret.ERROR
         best_score = 0
         for c in list:
-            if isinstance(c, Character):
-                if c.name == name:
-                    return c
-                if not strict:
-                    alias_tags = c.print_aliases().split()
-                    name_tags = c.name.split()
-                    for n in name_tags:
-                        alias_tags.append(n)
-                    name_terms = name.split()
-                    score = 0
-                    for i in name_terms:
-                        for a in alias_tags:
-                            if i.lower() == a.lower():
-                                score += 1
-                    if score > best_score:
-                        best_match = c
-                        best_score = score
+            if not isinstance(c, Character):
+                continue
+            if c.name == name:
+                return c
+            if not strict:
+                alias_tags = c.print_aliases().split()
+                name_tags = c.name.split()
+                for n in name_tags:
+                    alias_tags.append(n)
+                name_terms = name.split()
+                score = 0
+                for i in name_terms:
+                    for a in alias_tags:
+                        if i.lower() == a.lower():
+                            score += 1
+                if score > best_score:
+                    best_match = c
+                    best_score = score
         return best_match
-
     
+    def prominence_score(self, scene_group, series: Series):
+        char_qwords = 0
+        total_qwords = 0
+        char_pwords = 0
+        total_pwords = 0
+        for sg in scene_group:
+            if not isinstance(sg, Scene):
+                continue
+            for c in sg.characters:
+                c_match = Character.match_character(series.characters, c["name"])
+                if c_match != ret.ERROR and c_match.name == self.name:
+                    char_qwords += c["quote_words"]
+                total_qwords += c["quote_words"]
+            p_match = Character.match_character(series.characters, sg.primary_character)
+            if p_match != ret.ERROR and p_match.name == self.name:
+                char_pwords += sg.wordcount
+            total_pwords += sg.wordcount
+        quote_score = 0 if total_qwords == 0 else char_qwords / total_qwords
+        primary_score = 0 if total_pwords == 0 else char_pwords / total_pwords
+        return .5 * (quote_score) + .5 (primary_score)
+
     def apply_filter(self, sub: str, comp: str, obj: str):  
         if sub == "name":
             if comp == "==":
