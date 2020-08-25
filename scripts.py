@@ -152,3 +152,6 @@ if 1:
     new_series = Series("The Wheel of Time")
     for c in old_series.characters:
         log.out(c.print_info())
+        new_char = Character(c.name, c.print_aliases(), c.gender, c.color["r"], c.color["g"], c.color["b"], c.print_tags())
+        new_series.add_char(copy.copy(new_char))
+    new_series.save("data\\wot_0")

@@ -38,13 +38,12 @@ class Series:
         return -c.prominence_score(scene_group, self), self.first_featured(c), c.name
 
     def first_featured(self, c: Character):
-        vp_count = 0
+        s_count = 0
         for b in self.books:
-            for ch in b.chapters:
-                for v in ch.viewpoints:
-                    vp_count += 1
-                    if v.is_featured(c.name):
-                        return vp_count
+            for s in b.scenes:
+                s_count += 1
+                if s.is_featured(c, self):
+                    return s_count
         return -1
 
     def add_book(self, new_book: Book):

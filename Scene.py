@@ -12,3 +12,9 @@ class Scene:
         self.time = UTime()
         self.p_character = p_character
         self.characters = []
+
+    def is_featured(self, character, series):
+        for c in self.characters:
+            c_match = Character.match_character(series.characters, c["name"])
+            if c_match != ret.ERROR and c_match.name == character.name:
+                return c["featured"]

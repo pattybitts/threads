@@ -98,7 +98,7 @@ class Character:
             total_pwords += sg.wordcount
         quote_score = 0 if total_qwords == 0 else char_qwords / total_qwords
         primary_score = 0 if total_pwords == 0 else char_pwords / total_pwords
-        return .5 * (quote_score) + .5 (primary_score)
+        return .5 * (quote_score) + .5 * (primary_score)
 
     def apply_filter(self, sub: str, comp: str, obj: str):  
         if sub == "name":
