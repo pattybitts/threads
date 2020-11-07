@@ -1,4 +1,4 @@
-import data_storage, log, ret, util
+import util.ret as ret
 
 class Character:
 
@@ -79,7 +79,10 @@ class Character:
                     best_score = score
         return best_match
     
-    def prominence_score(self, scene_group, series: Series):
+    def prominence_score(self, scene_group, series):
+        from obj.Series import Series
+        if not isinstance(series, Series):
+            return ret.ERROR
         char_qwords = 0
         total_qwords = 0
         char_pwords = 0

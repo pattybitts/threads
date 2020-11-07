@@ -1,4 +1,3 @@
-
 class Checkpoint:
 
     def __init__(name: str, last_scene):

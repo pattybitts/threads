@@ -1,6 +1,7 @@
-from Chapter import Chapter
-from Scene import Scene
-from Milestone import Milestone
+from obj.Chapter import Chapter
+from obj.Scene import Scene
+from obj.Milestone import Milestone
+
 class Book:
 
     def __init__(self, title: str, num: int):

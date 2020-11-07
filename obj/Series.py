@@ -1,7 +1,9 @@
-import ret, data_storage, log
-from Character import Character
-from Book import Book
-from Arc import Arc
+import util.ret as ret
+import util.data_storage as ds
+
+from obj.Character import Character
+from obj.Book import Book
+from obj.Arc import Arc
 
 class Series:
 
@@ -12,7 +14,7 @@ class Series:
         self.name = name
     
     def save(self, dump_file):
-        data_storage.dump_pickle(self, dump_file)
+        ds.dump_pickle(self, dump_file)
 
     def replace_char(self, new_char, base_name):
         for c in self.characters:
@@ -24,7 +26,7 @@ class Series:
         return ret.ERROR
 
     def add_char(self, new_char):
-        if self.find_char(new_char.name, True) != ret.ERROR:
+        if Character.match_character(self.characters, new_char.name, True) != ret.ERROR:
             return ret.ERROR
         self.characters.append(new_char)
         self.characters.sort(key=self.char_place)

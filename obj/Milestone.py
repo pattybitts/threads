@@ -1,4 +1,4 @@
-from Scene import Scene
+from obj.Scene import Scene
 
 class Milestone:
 

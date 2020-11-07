@@ -1,6 +1,6 @@
-#from Character import Character
-from ULocation import ULocation
-from UTime import UTime
+#from obj.Character import Character
+from obj.ULocation import ULocation
+from obj.UTime import UTime
 
 class Scene:
 

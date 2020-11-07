@@ -1,6 +1,19 @@
-import ret, pickle, log
+import pickle
+
+from obj.Series import Series
 
 ACTIVE_FILE = "data\\wot"
+
+def dump_pickle(object, filename):
+    pfile = open(filename, 'wb')
+    pickle.dump(object, pfile, pickle.DEFAULT_PROTOCOL)
+    pfile.close()
+
+def load_pickle(filename):
+    pfile = open(filename, 'rb')
+    object = pickle.load(pfile)
+    pfile.close()
+    return object
 
 #to be archived or repurposed, not using json for this project
 #given a section of json text and a target term, returns an array of the values it is keyed to
@@ -59,6 +72,7 @@ def cut_unit(full_string, start):
         return ret.ERROR
     return [full_string[start+1:end], full_string[end+1:]]
 
+#see above
 def find_next_bracket(text):
     for char in text:
         if char == '\"' \
@@ -66,14 +80,3 @@ def find_next_bracket(text):
             or char == '[' or char == ']':
             return char
     return ret.ERROR
-
-def dump_pickle(object, filename):
-    pfile = open(filename, 'wb')
-    pickle.dump(object, pfile, pickle.DEFAULT_PROTOCOL)
-    pfile.close()
-
-def load_pickle(filename):
-    pfile = open(filename, 'rb')
-    object = pickle.load(pfile)
-    pfile.close()
-    return object

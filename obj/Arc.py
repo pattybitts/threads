@@ -1,5 +1,5 @@
-from Checkpoint import Checkpoint
-from Scene import Scene
+from obj.Checkpoint import Checkpoint
+from obj.Scene import Scene
 
 class Arc:
 
