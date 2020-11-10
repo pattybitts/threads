@@ -2,7 +2,7 @@ import pickle
 
 from obj.Series import Series
 
-ACTIVE_FILE = "data\\wot"
+ACTIVE_FILE = "data\\wot_0"
 
 def dump_pickle(object, filename):
     pfile = open(filename, 'wb')

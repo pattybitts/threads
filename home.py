@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request, redirect
-import ret, data_storage, log
-from Series import Series
-from Character import Character
+
+import util.ret as ret
+import util.data_storage as ds
+import util.log as log
+
+from obj.Series import Series
+from obj.Character import Character
 from Query import Query
 app = Flask(__name__)
 
@@ -12,7 +16,7 @@ def main():
     
 @app.route('/cmd_in', methods = ['POST'])
 def new_cmd_in():
-    series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
+    series = ds.load_pickle(ds.ACTIVE_FILE)
     cmd_string = request.form['cmd_box']
     action, data = process_cmd(cmd_string)
     if action == ret.HOME:
@@ -47,7 +51,7 @@ def new_cmd_in():
 
 @app.route('/char_form_in', methods = ['POST'])
 def edit_char():
-    series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
+    series = ds.load_pickle(ds.ACTIVE_FILE)
     new_char = Character(request.form['name_box'], \
         request.form['alias_box'], \
         request.form['gender'], \
@@ -62,13 +66,13 @@ def edit_char():
             resp = "INTERNAL ERROR:\nUnable to update character " + new_char.name + " in database"
         else:
             resp = "Character " + new_char.name + " successfully updated in database"
-            series.save(data_storage.ACTIVE_FILE)
+            series.save(ds.ACTIVE_FILE)
     elif request.form['action'] == 'add':
         if series.add_char(new_char) != ret.SUCCESS:
             resp = "INTERNAL ERROR:\nUnable to add character " + new_char.name + " in database"
         else:
             resp = "Character " + new_char.name + " successfully added to database"
-            series.save(data_storage.ACTIVE_FILE)
+            series.save(ds.ACTIVE_FILE)
     return render_template('index_home.html', cmd_out=resp)
 
 @app.route('/new_graph', methods = ['POST'])
@@ -84,7 +88,7 @@ def new_graph():
 def process_cmd(cmd_string):
     #check command supported
     cmd_parts = cmd_string.split('=')
-    series = data_storage.load_pickle(data_storage.ACTIVE_FILE)
+    series = ds.load_pickle(ds.ACTIVE_FILE)
     if cmd_parts[0] == 'add_char':
         character = Character.match_character(series.characters, cmd_parts[1], True)
         if character == ret.ERROR:

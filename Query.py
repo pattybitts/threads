@@ -1,6 +1,11 @@
-import data_storage, re, ret, log
-from Series import Series
-from Character import Character
+import re
+
+import util.data_storage as ds
+import util.ret as ret
+import util.log as log
+
+from obj.Series import Series
+from obj.Character import Character
 
 class Query:
 
