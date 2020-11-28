@@ -6,7 +6,7 @@
     <title>Threads of the Pattern</title>
 </head>
 
-<body onload="init()">
+<body onload="init('{{book_file}}')">
     <h2>Interactive Text Parser</h2>
     <div id="main_div">
         <div id="page_div">
@@ -143,23 +143,30 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    var full_text = ""
+    var full_text = "";
     var abs_char_count = 0;
     var abs_word_count = 0;
     var active_hotkeys = new Map();
     var active_characters = new Map();
+    var input_focus = false;
 
-    function init() {
+    function init(book_file) {
         $('#log_box').text("Log output will appear here:");
 
         active_hotkeys.set(110, ["next_page", []]); //n
         active_hotkeys.set(97, ["add_char", []]); //a
 
-        $.get("static/eotw_shortened.txt", read_text);
+        $.get(book_file, read_text);
     }
 
     $(function () {
         $(document).keypress(hotkey);
+        $("input").focus(function () {
+            input_focus = true;
+        });
+        $("input").blur(function () {
+            input_focus = false;
+        });
         $('#next_page_button').click(next_page);
         $('.quote_div').hover(function () {
             $(this).addClass(".hovered");
@@ -185,7 +192,8 @@
     }
 
     function hotkey(key) {
-        if (active_hotkeys.has(key.which)) {
+        //need to add if(not in a text field)
+        if (active_hotkeys.has(key.which) && input_focus == false) {
             func = String(active_hotkeys.get(key.which)[0]);
             args = active_hotkeys.get(key.which)[1];
             window[func](args);

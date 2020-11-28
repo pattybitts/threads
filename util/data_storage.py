@@ -1,5 +1,7 @@
 import pickle
 
+import util.ret as ret
+
 from obj.Series import Series
 
 ACTIVE_FILE = "data\\wot_0"
@@ -11,6 +13,7 @@ def dump_pickle(object, filename):
 
 def load_pickle(filename):
     pfile = open(filename, 'rb')
+    #TODO try/catch here for invalid file names?
     object = pickle.load(pfile)
     pfile.close()
     return object

@@ -44,8 +44,11 @@ def new_cmd_in():
     elif action == ret.GRAPH_TOOL:
         return render_template('index_graph_tool.html', x_val='', y_val='')
     elif action == ret.TEXT_TOOL:
-        sample_input = "Enter the book filename and press the \"Load Book\" button to load progress."
-        return render_template('index_text_tool.html', page_text=sample_input)
+        #TODO have it display data from save file, prompt for n to view next page?
+        return render_template('index_text_tool.html', book_file=data["book_file"])
+    elif action == ret.ERROR:
+        error_msg = str(data)
+        return render_template('index_home.html', cmd_out=error_msg)
     error_msg = "INTERNAL ERROR:\nInvalid return from processing"
     return render_template('index_home.html', cmd_out=error_msg)
 
@@ -93,17 +96,17 @@ def process_cmd(cmd_string):
         character = Character.match_character(series.characters, cmd_parts[1], True)
         if character == ret.ERROR:
             return ret.ADD_CHAR, cmd_parts[1]
-        return ret.HOME, "Duplicate character with name: " + character.name \
+        return ret.ERROR, "Duplicate character with name: " + character.name \
             + "\nuse the 'edit_char' command to overwrite"
     if cmd_parts[0] == 'edit_char':
         character = Character.match_character(series.characters, cmd_parts[1])
         if character == ret.ERROR:
-            return ret.HOME, "Unable to match character name: " + cmd_parts[1]
+            return ret.ERROR, "Unable to match character name: " + cmd_parts[1]
         return ret.EDIT_CHAR, character.name
     if cmd_parts[0] == 'disp_char':
         character = Character.match_character(series.characters, cmd_parts[1])
         if character == ret.ERROR:
-            return ret.HOME, "Unable to match character name: " + cmd_parts[1]
+            return ret.ERROR, "Unable to match character name: " + cmd_parts[1]
         char_text = character.print_info()
         return ret.HOME, char_text
     if cmd_parts[0] == 'list_chars':
@@ -128,9 +131,22 @@ def process_cmd(cmd_string):
         msg = ""
         return ret.GRAPH_TOOL, msg
     if cmd_parts[0] == 'text_tool':
-        msg = ""
-        return ret.TEXT_TOOL, msg
-    return ret.HOME, "Unsupported command entry: " + cmd_string
+        #TODO i need to be more intelligent with my exeptions for try/catch
+        try:
+            input = open("data\\" + str(cmd_parts[1]), 'r')
+            sav_text = input.read()
+        except:
+            return ret.ERROR, "Unable to read file data\\" + str(cmd_parts[1])
+        try:
+            data = {}
+            data["book_file"] = ds.create_array(sav_text, "book_file")[0]
+            data["series_obj"] = ds.create_array(sav_text, "series_obj")[0]
+            data["book_name"] = ds.create_array(sav_text, "book_name")[0]
+            data["position"] = ds.create_array(sav_text, "position")[0]
+        except:
+            return ret.ERROR, "Invalid formatting in file data\\" +str(cmd_parts[1])
+        return ret.TEXT_TOOL, data
+    return ret.ERROR, "Unsupported command entry: " + cmd_string
     
 if __name__ == '__main__':
     app.run()

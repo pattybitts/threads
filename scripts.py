@@ -6,8 +6,18 @@ import util.log as log
 from obj.Series import Series
 from obj.Character import Character
 
-#object recreation with new structure
+#playing around with opening/reading save files
 if 1:
+    try:
+        input = open("data\\eotw.sav", 'r')
+        sav_text = input.read()
+    except:
+        log.banner("Failed to read input file")
+    not_names = ds.create_array(sav_text, "not_names")
+    log.banner(str(not_names[0]))
+
+#object recreation with new structure
+if 0:
     old_series = ds.load_pickle("data\\wot_0")
     new_series = Series("The Wheel of Time")
     for c in old_series.characters:
@@ -16,7 +26,7 @@ if 1:
         new_series.add_char(copy.copy(new_char))
     new_series.save("data\\wot_0")
 
-#we'll use this as out working template for imports?
+#we'll use this as our working template for imports?
 if 0:
     import util.log as log
     from obj.TestClass import TestClass
