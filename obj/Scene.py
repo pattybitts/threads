@@ -4,7 +4,7 @@ from obj.UTime import UTime
 
 class Scene:
 
-    def __init__(self, name: str, firstword: int, wordcount: int, p_character: str):
+    def __init__(self, name: str, firstword: int, wordcount: int, p_character: str, summary: str = ""):
         self.name = name
         self.firstword = firstword
         self.wordcount = wordcount
@@ -12,6 +12,7 @@ class Scene:
         self.time = UTime()
         self.p_character = p_character
         self.characters = []
+        self.summary = summary
 
     def is_featured(self, character, series):
         for c in self.characters:

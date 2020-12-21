@@ -45,7 +45,7 @@ def new_cmd_in():
         return render_template('index_graph_tool.html', x_val='', y_val='')
     elif action == ret.TEXT_TOOL:
         #TODO have it display data from save file, prompt for n to view next page?
-        return render_template('index_text_tool.html', book_file=data["book_file"])
+        return render_template('index_text_tool.html', book_file=data["book_file"], position=data["position"])
     elif action == ret.ERROR:
         error_msg = str(data)
         return render_template('index_home.html', cmd_out=error_msg)
