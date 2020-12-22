@@ -74,7 +74,7 @@
         border-radius: 5px;
         border: 1px solid hsl(240, 100%, 25%);
         background-color: hsl(240, 100%, 100%);
-        color: hsl(240, 100%, 25%);
+        color: black;
         height: 100%;
         width: 100%;
         flex-direction: row;
@@ -154,6 +154,14 @@
         background-color: hsl(240, 100%, 25%);
         color: white;
     }
+
+    .hgreen {
+        background-color: hsl(102, 100%, 50%);
+    }
+    .hyellow {
+        background-color: yellow;
+    }
+
 </style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -162,11 +170,13 @@
     var abs_char_count = 0;
     var abs_word_count = 0;
     var active_hotkeys = new Map();
-    var active_characters = new Map();
+    var page_mentions = new Map();
+    var scene_mentions = new Map();
     var input_focus = false;
     var known_names = [];
 
     function init(book_file, position) {
+        //i should doublecheck that is the best way to manage hotkeys
         active_hotkeys.set(110, ["next_page", []]); //n
         active_hotkeys.set(97, ["add_char", []]); //a
 
@@ -254,27 +264,29 @@
         var potential_matches = known_names;
         var potential_name = "";
         var best_matches = [];
-        page_words.forEach(function (p) {
+        var page_caps = new Map();
+        //can maybe be refactored now that i can use break
+        for (let p of page_words) {
             if (potential_name != "") {
                 potential_name += " " + /^"*(['A-Za-z]*)/.exec(p)[1];
             } else if (/^"*([A-Z].*)/.test(p)) {
                 potential_name = /^"*(['A-Za-z]*)/.exec(p)[1];
             }
             if (potential_name != "") {
-                potential_matches = potential_matches.filter(pm => pm.search(potential_name) >= 0);
+                var pm_reg = new RegExp(potential_name + "(\\s*$|\\s+)");
+                potential_matches = potential_matches.filter(pm => pm.search(pm_reg) >= 0);
                 if (potential_matches.length > 0) {
                     best_matches = potential_matches.filter(pm => pm == potential_name);
                 } else {
                     if (best_matches.length > 0) {
                         log("Matched name: " + best_matches[0]);
-                        var name_reg = new RegExp("(?<!<b>)(" + best_matches[0] + ")", "g");
-                        var name_rep = "<b>" + best_matches[0] + "</b>";
-                        html_text = html_text.replace(name_reg, name_rep);
+                        add_term(best_matches[0], page_mentions);
                         best_matches = [];
                         potential_matches = known_names;
                         if (/^"*([A-Z].*)/.test(p)) {
                             potential_name = /^"*(['A-Za-z]*)/.exec(p)[1];
-                            potential_matches = potential_matches.filter(pm => pm.search(potential_name) >= 0);
+                            pm_reg = new RegExp(potential_name + "(\\s*$|\\s+)");
+                            potential_matches = potential_matches.filter(pm => pm.search(pm_reg) >= 0);
                             if (potential_matches.length > 0) {
                                 best_matches = potential_matches.filter(pm => pm == potential_name);
                             }
@@ -282,23 +294,37 @@
                             potential_name = "";
                         }
                     } else {
+                        log("failed_name: " + potential_name);
+                        add_term(potential_name, page_caps);
                         potential_name = "";
                         potential_matches = known_names;
                     }
                 }
             }
-        })
-
+        }
+        //page_presentation
+        var name_reg = null;
+        var name_rep = "";
+        for (let pm of page_mentions.keys()) {
+            name_reg = new RegExp("(?<!>)(" + pm + ")(?![<\\w])", "g");
+            name_rep = "<span class='hgreen'>" + pm + "</span>";
+            html_text = html_text.replace(name_reg, name_rep);
+        }
+        for (let pc of page_caps.keys()) {
+            name_reg = new RegExp("(?<!>)(" + pc + ")(?![\\w])", "g");
+            name_rep = "<span class='hyellow'>" + pc + "</span>";
+            html_text = html_text.replace(name_reg, name_rep);
+        }
 
         abs_word_count += page_words.length;
         abs_char_count += char_inc;
         $('#page_text').empty;
         $('#page_text').html(html_text.trim());
         $('#page_quotes').empty();
-        quotes.forEach(function (q) {
+        for (let q of quotes) {
             var quote_html = "<div class='quote_div'>" + String(q) + "</div>";
             $('#page_quotes').append(quote_html);
-        })
+        }
     }
 
     function add_char(args) {
@@ -310,11 +336,17 @@
         update_hotkeys();
     }
 
-    function assign_quote(args) {
-        var char_name = args[0];
-        if (active_characters.has(char_name)) {
-
+    function add_term(term, list) {
+        for (let [key, value] of list) {
+            if (key == term) {
+                value += 1;
+                return;
+            }
         }
+        list.set(term, 1);
+    }
+
+    function assign_quote(args) {
 
     }
 
