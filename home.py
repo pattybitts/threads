@@ -44,8 +44,7 @@ def new_cmd_in():
     elif action == ret.GRAPH_TOOL:
         return render_template('index_graph_tool.html', x_val='', y_val='')
     elif action == ret.TEXT_TOOL:
-        #TODO have it display data from save file, prompt for n to view next page?
-        return render_template('index_text_tool.html', book_file=data["book_file"], position=data["position"])
+        return render_template('index_text_tool.html', book_file=data["book_file"], position=data["position"], known_names=data["known_names"])
     elif action == ret.ERROR:
         error_msg = str(data)
         return render_template('index_home.html', cmd_out=error_msg)
@@ -143,6 +142,7 @@ def process_cmd(cmd_string):
             data["series_obj"] = ds.create_array(sav_text, "series_obj")[0]
             data["book_name"] = ds.create_array(sav_text, "book_name")[0]
             data["position"] = ds.create_array(sav_text, "position")[0]
+            data["known_names"] = ",".join(ds.create_array(sav_text, "known_names"))
         except:
             return ret.ERROR, "Invalid formatting in file data\\" +str(cmd_parts[1])
         return ret.TEXT_TOOL, data
