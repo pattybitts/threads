@@ -36,7 +36,7 @@
                     <textarea name="alias_box"></textarea><br />
                     <label for="joins_box">Joined Characters:</label>
                     <textarea name="joins_box"></textarea><br />
-                    <label for="tags_box">New Aliases:</label>
+                    <label for="tags_box">New Tags:</label>
                     <textarea name="tags_box"></textarea><br />
                 </div>
             </div>
@@ -155,6 +155,10 @@
         color: white;
     }
 
+    .hovered {
+        background-color: yellow;
+    }
+
     .hgreen {
         background-color: hsl(102, 100%, 50%);
     }
@@ -174,15 +178,18 @@
     var scene_mentions = new Map();
     var input_focus = false;
     var known_names = [];
+    var hot_names = new Map();
 
     function init(book_file, position) {
-        //i should doublecheck that is the best way to manage hotkeys
         active_hotkeys.set(110, ["next_page", []]); //n
         active_hotkeys.set(97, ["add_char", []]); //a
 
         $.get(book_file, read_text);
         abs_char_count = position;
         known_names = $('#log_box').text().split(',');
+        for (var i = 0; i < 10; i++) {
+            hot_names.set(i, ["", 0]);
+        }
 
         $('#log_box').text("Log output will appear here:");
         $('#page_text').text("Page text will appear here:");
@@ -233,6 +240,8 @@
     function next_page(args) {
         log("New Page", true);
 
+        page_mentions.clear();
+
         //parsing through page text for quotes
         var quotes = [];
         var lines = 0;
@@ -279,7 +288,7 @@
                     best_matches = potential_matches.filter(pm => pm == potential_name);
                 } else {
                     if (best_matches.length > 0) {
-                        log("Matched name: " + best_matches[0]);
+                        //log("Matched name: " + best_matches[0]);
                         add_term(best_matches[0], page_mentions);
                         best_matches = [];
                         potential_matches = known_names;
@@ -294,7 +303,7 @@
                             potential_name = "";
                         }
                     } else {
-                        log("failed_name: " + potential_name);
+                        //log("failed_name: " + potential_name);
                         add_term(potential_name, page_caps);
                         potential_name = "";
                         potential_matches = known_names;
@@ -309,6 +318,32 @@
             name_reg = new RegExp("(?<!>)(" + pm + ")(?![<\\w])", "g");
             name_rep = "<span class='hgreen'>" + pm + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
+
+            //adding to hot_names
+            var in_hot_names = false;
+            for (let value of hot_names.values()) {
+                if (value[0] === pm) {
+                    value[1] = 0;
+                    in_hot_names = true;
+                    log("found " + pm + " in hot_names");
+                }
+            }
+            if (!in_hot_names) {
+                var high_val = 0;
+                var high_key = null;
+                for (let key of hot_names.keys()) {
+                    if (hot_names.get(key)[0] == "") {
+                        high_key = key;
+                        break;
+                    } else if (hot_names.get(key)[1] > high_val) {
+                        high_key = key;
+                        high_val = hot_names.get(key)[1];
+                    }
+                }
+                if (high_key != null) {
+                    hot_names.set(high_key, [pm, 0]);
+                }
+            }
         }
         for (let pc of page_caps.keys()) {
             name_reg = new RegExp("(?<!>)(" + pc + ")(?![\\w])", "g");
@@ -324,6 +359,13 @@
         for (let q of quotes) {
             var quote_html = "<div class='quote_div'>" + String(q) + "</div>";
             $('#page_quotes').append(quote_html);
+        }
+        log("Hot Names");
+        for (let value of hot_names.values()) {
+            if (value[0] != "") {
+                value[1] += 1;
+            }
+            log("Name: " + value[0] + ", Recent: " + value[1]);
         }
     }
 
