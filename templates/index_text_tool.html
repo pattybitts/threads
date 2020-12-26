@@ -42,11 +42,16 @@
             </div>
             <div id="buttons_div">
                 <button id="next_page_button" class="button dark">Next Page</button>
-                <button id="save_button" class="button dark">Save</button>
-                <button id="character_button" class="button dark">Add Char</button>
+                <button id="save_button" class="button dark">Set Scene</button>
+                <button id="character_button" class="button dark">Set Char</button>
+                <button id="quote_button" class="button dark">Set Quote</button>
+                <button id="reset_button" class="button dark">Reset</button>
             </div>
             <div id="hotkeys_log_div">
-                <div id="hotkeys"></div>
+                <div id="hotkeys">
+                    <div id="fixed_hotkeys"></div>
+                    <div id="char_hotkeys"></div>
+                </div>
                 <div id="log">
                     Log Output:
                     <textarea id="log_box" readonly>{{known_names}}</textarea>
@@ -73,7 +78,6 @@
         align-items: flex-start;
         border-radius: 5px;
         border: 1px solid hsl(240, 100%, 25%);
-        background-color: hsl(240, 100%, 100%);
         color: black;
         height: 100%;
         width: 100%;
@@ -115,6 +119,12 @@
     #hotkeys {
         width: 50%;
     }
+    #fixed_hotkeys {
+        flex-direction: column;
+    }
+    #char_hotkeys {
+        flex-direction: column;
+    }
     #log {
         width: 50%;
         flex-direction: column;
@@ -155,10 +165,6 @@
         color: white;
     }
 
-    .hovered {
-        background-color: yellow;
-    }
-
     .hgreen {
         background-color: hsl(102, 100%, 50%);
     }
@@ -194,7 +200,10 @@
         $('#log_box').text("Log output will appear here:");
         $('#page_text').text("Page text will appear here:");
         $('#page_quotes').text("Page quotes will appear here:");
-        $('#hotkeys').text("Active Hotekys:");
+        $('#fixed_hotkeys').html("<b>Fixed Hotkeys:</b>" +
+            "Next Page: N<br />" +
+            "Add Character: A<br />");
+        $('#char_hotkeys').html("<b>Character Hotkeys:</b>");
     }
 
     $(function () {
@@ -206,12 +215,6 @@
             input_focus = false;
         });
         $('#next_page_button').click(next_page);
-        $('.quote_div').hover(function () {
-            $(this).addClass(".hovered");
-        },
-        function () {
-            $(this).removeClass(".hovered");
-        });
     });
 
     function log(string, clear = false) {
@@ -230,15 +233,16 @@
     }
 
     function hotkey(key) {
+        //log(key.which);
         if (active_hotkeys.has(key.which) && input_focus == false) {
             func = String(active_hotkeys.get(key.which)[0]);
             args = active_hotkeys.get(key.which)[1];
             window[func](args);
-        }
+        } 
     }
 
     function next_page(args) {
-        log("New Page", true);
+        //log("New Page", true);
 
         page_mentions.clear();
 
@@ -325,7 +329,7 @@
                 if (value[0] === pm) {
                     value[1] = 0;
                     in_hot_names = true;
-                    log("found " + pm + " in hot_names");
+                    //log("found " + pm + " in hot_names");
                 }
             }
             if (!in_hot_names) {
@@ -351,22 +355,32 @@
             html_text = html_text.replace(name_reg, name_rep);
         }
 
+        var char_hotkey_text = "<b>Character Hotkeys:</b>";
+        for (let key of hot_names.keys()) {
+            var name_val = hot_names.get(key)[0];
+            if (name_val != "") {
+                active_hotkeys.set(48 + key, ["set_quote", [name_val]]); //48 is key 0
+                char_hotkey_text += name_val + ": " + key + "<br />";
+            }
+        }
+        $('#char_hotkeys').html(char_hotkey_text);
+
         abs_word_count += page_words.length;
         abs_char_count += char_inc;
         $('#page_text').empty;
         $('#page_text').html(html_text.trim());
         $('#page_quotes').empty();
         for (let q of quotes) {
-            var quote_html = "<div class='quote_div'>" + String(q) + "</div>";
+            var quote_html = "<div onclick='select_quote(this)' class='quote_div'>" + String(q) + "</div>";
             $('#page_quotes').append(quote_html);
         }
-        log("Hot Names");
-        for (let value of hot_names.values()) {
-            if (value[0] != "") {
-                value[1] += 1;
-            }
-            log("Name: " + value[0] + ", Recent: " + value[1]);
-        }
+    }
+
+    function select_quote(quote) {
+        $('.quote_div').removeClass(".selected");
+        $('.quote_div').css("background-color", "white");
+        $(quote).addClass(".selected");
+        $(quote).css("background-color", "yellow");
     }
 
     function add_char(args) {
