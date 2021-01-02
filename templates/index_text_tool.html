@@ -377,10 +377,16 @@
     }
 
     function select_quote(quote) {
-        $('.quote_div').removeClass(".selected");
+        var unclick = false;
+        if (quote.classList.contains("selected")) {
+            unclick = true;
+        }
+        $('.quote_div').removeClass("selected");
         $('.quote_div').css("background-color", "white");
-        $(quote).addClass(".selected");
-        $(quote).css("background-color", "yellow");
+        if (!unclick) {
+            $(quote).addClass("selected");
+            $(quote).css("background-color", "yellow");
+        }
     }
 
     function add_char(args) {
@@ -402,15 +408,9 @@
         list.set(term, 1);
     }
 
-    function assign_quote(args) {
-
-    }
-
-    function update_hotkeys(args) {
-
-    }
-
-    function format_page_text(args) {
-
+    function set_quote(args) {
+        var quote_text = $('.selected:first').html();
+        log("Set Quote: " + quote_text);
+        log("Speaker: " + String(args[0]));
     }
 </script>
