@@ -43,7 +43,8 @@
             <div id="buttons_div">
                 <button id="next_page_button" class="button dark">Next Page</button>
                 <button id="save_button" class="button dark">Set Scene</button>
-                <button id="character_button" class="button dark">Set Char</button>
+                <button id="event_button" class="button dark">Char Event</button>
+                <button id="add_button" class="button dark">Add Name</button>
                 <button id="quote_button" class="button dark">Set Quote</button>
                 <button id="reset_button" class="button dark">Reset</button>
             </div>
@@ -166,7 +167,7 @@
     }
 
     .hgreen {
-        background-color: hsl(102, 100%, 50%);
+        background-color:  lime;
     }
     .hyellow {
         background-color: yellow;
@@ -180,15 +181,18 @@
     var abs_char_count = 0;
     var abs_word_count = 0;
     var active_hotkeys = new Map();
+    var page_text = "";
     var page_mentions = new Map();
     var scene_mentions = new Map();
+    var page_quotes = new Map();
+    var scene_quotes = new Map();
     var input_focus = false;
     var known_names = [];
     var hot_names = new Map();
 
     function init(book_file, position) {
         active_hotkeys.set(110, ["next_page", []]); //n
-        active_hotkeys.set(97, ["add_char", []]); //a
+        active_hotkeys.set(97, ["add_name", []]); //a
 
         $.get(book_file, read_text);
         abs_char_count = position;
@@ -206,6 +210,7 @@
         $('#char_hotkeys').html("<b>Character Hotkeys:</b>");
     }
 
+    //jQuery inits
     $(function () {
         $(document).keypress(hotkey);
         $("input").focus(function () {
@@ -215,6 +220,7 @@
             input_focus = false;
         });
         $('#next_page_button').click(next_page);
+        $('#add_button').click(add_name);
     });
 
     function log(string, clear = false) {
@@ -242,10 +248,17 @@
     }
 
     function next_page(args) {
-        //log("New Page", true);
+        log("Last Page Info:", true);
+        log("Page Mentions:");
+        for (let key of page_mentions.keys()) {
+            log(key + ": " + page_mentions.get(key));
+        }
+        log("Page Quotes:");
+        for (let key of page_quotes.keys()) {
+            log(key + ": " + page_quotes.get(key));
+        }
 
-        page_mentions.clear();
-
+        page_quotes.clear();
         //parsing through page text for quotes
         var quotes = [];
         var lines = 0;
@@ -269,9 +282,32 @@
                 }
             }
         }
+        $('#page_quotes').empty();
+        for (let q of quotes) {
+            var quote_html = "<div onclick='select_quote(this)' class='quote_div'>" + String(q) + "</div>";
+            $('#page_quotes').append(quote_html);
+        }
 
-        //parsing through page text for names
-        var page_text = full_text.substr(abs_char_count, char_inc);
+        page_text = full_text.substr(abs_char_count, char_inc);
+        process_page_text();
+
+        var char_hotkey_text = "<b>Character Hotkeys:</b>";
+        for (let key of hot_names.keys()) {
+            var name_val = hot_names.get(key)[0];
+            if (name_val != "") {
+                active_hotkeys.set(48 + key, ["set_quote", [name_val]]); //48 is key 0
+                char_hotkey_text += name_val + ": " + key + "<br />";
+            }
+        }
+        $('#char_hotkeys').html(char_hotkey_text);
+
+        abs_word_count += page_text.split(/[\s-."]+/).length;
+        abs_char_count += char_inc;
+
+    }
+
+    function process_page_text() {
+        page_mentions.clear();
         var html_text = page_text;
         var page_words = page_text.split(/[\s-."]+/);
         var potential_matches = known_names;
@@ -293,7 +329,7 @@
                 } else {
                     if (best_matches.length > 0) {
                         //log("Matched name: " + best_matches[0]);
-                        add_term(best_matches[0], page_mentions);
+                        add_to_map(best_matches[0], page_mentions);
                         best_matches = [];
                         potential_matches = known_names;
                         if (/^"*([A-Z].*)/.test(p)) {
@@ -308,14 +344,13 @@
                         }
                     } else {
                         //log("failed_name: " + potential_name);
-                        add_term(potential_name, page_caps);
+                        add_to_map(potential_name, page_caps);
                         potential_name = "";
                         potential_matches = known_names;
                     }
                 }
             }
         }
-        //page_presentation
         var name_reg = null;
         var name_rep = "";
         for (let pm of page_mentions.keys()) {
@@ -355,62 +390,59 @@
             html_text = html_text.replace(name_reg, name_rep);
         }
 
-        var char_hotkey_text = "<b>Character Hotkeys:</b>";
-        for (let key of hot_names.keys()) {
-            var name_val = hot_names.get(key)[0];
-            if (name_val != "") {
-                active_hotkeys.set(48 + key, ["set_quote", [name_val]]); //48 is key 0
-                char_hotkey_text += name_val + ": " + key + "<br />";
-            }
-        }
-        $('#char_hotkeys').html(char_hotkey_text);
-
-        abs_word_count += page_words.length;
-        abs_char_count += char_inc;
         $('#page_text').empty;
         $('#page_text').html(html_text.trim());
-        $('#page_quotes').empty();
-        for (let q of quotes) {
-            var quote_html = "<div onclick='select_quote(this)' class='quote_div'>" + String(q) + "</div>";
-            $('#page_quotes').append(quote_html);
-        }
     }
 
     function select_quote(quote) {
         var unclick = false;
-        if (quote.classList.contains("selected")) {
+        var classes = quote.classList;
+        if (classes.contains("selected") || classes.contains("assigned")) {
             unclick = true;
         }
+        $('.selected').css("background-color", "white");
         $('.quote_div').removeClass("selected");
-        $('.quote_div').css("background-color", "white");
         if (!unclick) {
             $(quote).addClass("selected");
             $(quote).css("background-color", "yellow");
         }
     }
 
-    function add_char(args) {
-        var char_tag = prompt("Enter new character name:", "Unknown");
-        if (char_tag != null) {
-            alias_list.push(char_tag);
+    function add_name(args) {
+        var alias = prompt("Enter new name:", "Unknown");
+        if (alias != null) {
+            add_to_array(alias, known_names);
         }
-        format_page_text();
-        update_hotkeys();
+        process_page_text();
+        //update_hotkeys();
     }
 
-    function add_term(term, list) {
-        for (let [key, value] of list) {
+    function add_to_map(term, list, count=1) {
+        for (let key of list.keys()) {
             if (key == term) {
-                value += 1;
+                list.set(key, list.get(key) + count);
                 return;
             }
         }
         list.set(term, 1);
     }
 
+    function add_to_array(term, list) {
+        if (!list.includes(term)) {
+            list.push(term);
+        }
+    }
+
     function set_quote(args) {
-        var quote_text = $('.selected:first').html();
-        log("Set Quote: " + quote_text);
-        log("Speaker: " + String(args[0]));
+        var quote_div = $('.selected:first');
+        var quote_text = quote_div.html();
+        var speaker = args[0];
+
+        add_to_map(speaker, page_quotes, quote_text.split(" ").length);
+
+        quote_div.removeClass("selected");
+        quote_div.addClass("assigned");
+        quote_div.css("background-color", "lime");
+        quote_div.html(quote_text + "<br />Assigned: " + speaker);
     }
 </script>
