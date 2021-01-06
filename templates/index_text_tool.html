@@ -173,6 +173,13 @@
         background-color: yellow;
     }
 
+    .selected {
+        background-color: yellow;
+    }
+    .assigned {
+        background-color: lime;
+    }
+
 </style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -287,6 +294,7 @@
             var quote_html = "<div onclick='select_quote(this)' class='quote_div'>" + String(q) + "</div>";
             $('#page_quotes').append(quote_html);
         }
+        $(".quote_div:first").addClass('selected');
 
         page_text = full_text.substr(abs_char_count, char_inc);
         process_page_text();
@@ -400,11 +408,9 @@
         if (classes.contains("selected") || classes.contains("assigned")) {
             unclick = true;
         }
-        $('.selected').css("background-color", "white");
         $('.quote_div').removeClass("selected");
         if (!unclick) {
             $(quote).addClass("selected");
-            $(quote).css("background-color", "yellow");
         }
     }
 
@@ -414,7 +420,6 @@
             add_to_array(alias, known_names);
         }
         process_page_text();
-        //update_hotkeys();
     }
 
     function add_to_map(term, list, count=1) {
@@ -434,15 +439,20 @@
     }
 
     function set_quote(args) {
-        var quote_div = $('.selected:first');
-        var quote_text = quote_div.html();
+        var all_quotes = document.getElementsByClassName('quote_div');
+        var quote_div = null;
         var speaker = args[0];
-
-        add_to_map(speaker, page_quotes, quote_text.split(" ").length);
-
-        quote_div.removeClass("selected");
-        quote_div.addClass("assigned");
-        quote_div.css("background-color", "lime");
-        quote_div.html(quote_text + "<br />Assigned: " + speaker);
+        for (var i = 0, len = all_quotes.length | 0; i < len; i = i + 1) {
+            quote_div = all_quotes[i];
+            if (quote_div.classList.contains("selected")) {
+                var quote_text = quote_div.textContent;
+                add_to_map(speaker, page_quotes, quote_text.split(" ").length);
+                quote_div.setAttribute("class", "quote_div assigned");
+                if (i + 1 < len) {
+                    all_quotes[i+1].setAttribute("class", "quote_div selected");
+                }
+                break;
+            }
+        }
     }
 </script>
