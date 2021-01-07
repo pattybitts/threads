@@ -291,7 +291,7 @@
         }
         $('#page_quotes').empty();
         for (let q of quotes) {
-            var quote_html = "<div onclick='select_quote(this)' class='quote_div'>" + String(q) + "</div>";
+            var quote_html = "<div onclick='select_quote(this)' class='quote_div'>\"" + String(q) + "\"</div>";
             $('#page_quotes').append(quote_html);
         }
         $(".quote_div:first").addClass('selected');
@@ -403,14 +403,19 @@
     }
 
     function select_quote(quote) {
-        var unclick = false;
+
         var classes = quote.classList;
-        if (classes.contains("selected") || classes.contains("assigned")) {
-            unclick = true;
-        }
         $('.quote_div').removeClass("selected");
-        if (!unclick) {
-            $(quote).addClass("selected");
+        $(quote).addClass("selected");
+        if (classes.contains("assigned")) {
+            $(quote).removeClass("assigned");
+            //this nonsense works for now, but I should extract quote text somewhere/somehow else i think
+            var quote_text = quote.textContent;
+            var quote_reg = new RegExp("\".*\"", "s");
+            var quote_matches = quote_text.match(quote_reg);
+            if (quote_matches != null) {
+                quote.textContent = quote_matches[0];
+            }
         }
     }
 
@@ -448,6 +453,7 @@
                 var quote_text = quote_div.textContent;
                 add_to_map(speaker, page_quotes, quote_text.split(" ").length);
                 quote_div.setAttribute("class", "quote_div assigned");
+                quote_div.innerHTML = quote_div.innerHTML + "<br /><br />Assigned: " + speaker;
                 if (i + 1 < len) {
                     all_quotes[i+1].setAttribute("class", "quote_div selected");
                 }
