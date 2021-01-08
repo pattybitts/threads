@@ -255,7 +255,9 @@
     }
 
     function next_page(args) {
-        log("Last Page Info:", true);
+        log("New Page", true);
+        log("Abs Pos: " + abs_char_count);
+        /*log("Previous Page Info:");
         log("Page Mentions:");
         for (let key of page_mentions.keys()) {
             log(key + ": " + page_mentions.get(key));
@@ -263,7 +265,7 @@
         log("Page Quotes:");
         for (let key of page_quotes.keys()) {
             log(key + ": " + page_quotes.get(key));
-        }
+        }*/
 
         page_quotes.clear();
         //parsing through page text for quotes
@@ -299,19 +301,23 @@
         page_text = full_text.substr(abs_char_count, char_inc);
         process_page_text();
 
+        update_hotkeys(true);
+
+        abs_word_count += page_text.split(/[\s-."]+/).length;
+        abs_char_count += char_inc;
+    }
+
+    function update_hotkeys(inc_hot_names=false) {
         var char_hotkey_text = "<b>Character Hotkeys:</b>";
         for (let key of hot_names.keys()) {
             var name_val = hot_names.get(key)[0];
             if (name_val != "") {
                 active_hotkeys.set(48 + key, ["set_quote", [name_val]]); //48 is key 0
                 char_hotkey_text += name_val + ": " + key + "<br />";
+                if (inc_hot_names) {hot_names.set(key, [name_val, hot_names.get(key)[1] + 1]);}
             }
         }
         $('#char_hotkeys').html(char_hotkey_text);
-
-        abs_word_count += page_text.split(/[\s-."]+/).length;
-        abs_char_count += char_inc;
-
     }
 
     function process_page_text() {
@@ -330,6 +336,7 @@
                 potential_name = /^"*(['A-Za-z]*)/.exec(p)[1];
             }
             if (potential_name != "") {
+                potential_name = potential_name.replace("'s", "");
                 var pm_reg = new RegExp(potential_name + "(\\s*$|\\s+)");
                 potential_matches = potential_matches.filter(pm => pm.search(pm_reg) >= 0);
                 if (potential_matches.length > 0) {
@@ -366,31 +373,7 @@
             name_rep = "<span class='hgreen'>" + pm + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
 
-            //adding to hot_names
-            var in_hot_names = false;
-            for (let value of hot_names.values()) {
-                if (value[0] === pm) {
-                    value[1] = 0;
-                    in_hot_names = true;
-                    //log("found " + pm + " in hot_names");
-                }
-            }
-            if (!in_hot_names) {
-                var high_val = 0;
-                var high_key = null;
-                for (let key of hot_names.keys()) {
-                    if (hot_names.get(key)[0] == "") {
-                        high_key = key;
-                        break;
-                    } else if (hot_names.get(key)[1] > high_val) {
-                        high_key = key;
-                        high_val = hot_names.get(key)[1];
-                    }
-                }
-                if (high_key != null) {
-                    hot_names.set(high_key, [pm, 0]);
-                }
-            }
+            add_to_hot_names(pm);
         }
         for (let pc of page_caps.keys()) {
             name_reg = new RegExp("(?<!>)(" + pc + ")(?![\\w])", "g");
@@ -400,6 +383,35 @@
 
         $('#page_text').empty;
         $('#page_text').html(html_text.trim());
+    }
+
+    function add_to_hot_names(name) {
+        var in_hot_names = false;
+        for (let value of hot_names.values()) {
+            if (value[0] === name) {
+                value[1] = 0;
+                in_hot_names = true;
+                break;
+            }
+        }
+        if (!in_hot_names) {
+            var high_val = 0;
+            var high_key = null;
+            for (let key of hot_names.keys()) {
+                if (hot_names.get(key)[0] == "") {
+                    high_key = key;
+                    break;
+                } else if (hot_names.get(key)[1] > high_val) {
+                    high_key = key;
+                    high_val = hot_names.get(key)[1];
+                }
+            }
+            if (high_key != null) {
+                hot_names.set(high_key, [name, 0]);
+            } else {
+                log("ERROR: Too many fresh names, no countermeasure yet");
+            }
+        }
     }
 
     function select_quote(quote) {
@@ -423,8 +435,12 @@
         var alias = prompt("Enter new name:", "Unknown");
         if (alias != null) {
             add_to_array(alias, known_names);
+            add_to_hot_names(alias);
+            update_hotkeys();
+            process_page_text();
+        } else {
+            log("ERROR: added name is null");
         }
-        process_page_text();
     }
 
     function add_to_map(term, list, count=1) {
