@@ -336,6 +336,7 @@
                 potential_name = /^"*(['A-Za-z]*)/.exec(p)[1];
             }
             if (potential_name != "") {
+                //log("pm: " + potential_name);
                 potential_name = potential_name.replace("'s", "");
                 var pm_reg = new RegExp(potential_name + "(\\s*$|\\s+)");
                 potential_matches = potential_matches.filter(pm => pm.search(pm_reg) >= 0);
@@ -343,25 +344,23 @@
                     best_matches = potential_matches.filter(pm => pm == potential_name);
                 } else {
                     if (best_matches.length > 0) {
-                        //log("Matched name: " + best_matches[0]);
                         add_to_map(best_matches[0], page_mentions);
                         best_matches = [];
                         potential_matches = known_names;
-                        if (/^"*([A-Z].*)/.test(p)) {
-                            potential_name = /^"*(['A-Za-z]*)/.exec(p)[1];
-                            pm_reg = new RegExp(potential_name + "(\\s*$|\\s+)");
-                            potential_matches = potential_matches.filter(pm => pm.search(pm_reg) >= 0);
-                            if (potential_matches.length > 0) {
-                                best_matches = potential_matches.filter(pm => pm == potential_name);
-                            }
-                        } else {
-                            potential_name = "";
-                        }
                     } else {
-                        //log("failed_name: " + potential_name);
                         add_to_map(potential_name, page_caps);
                         potential_name = "";
                         potential_matches = known_names;
+                    }
+                    if (/^"*([A-Z].*)/.test(p)) {
+                        potential_name = /^"*(['A-Za-z]*)/.exec(p)[1];
+                        pm_reg = new RegExp(potential_name + "(\\s*$|\\s+)");
+                        potential_matches = potential_matches.filter(pm => pm.search(pm_reg) >= 0);
+                        if (potential_matches.length > 0) {
+                            best_matches = potential_matches.filter(pm => pm == potential_name);
+                        }
+                    } else {
+                        potential_name = "";
                     }
                 }
             }
@@ -432,6 +431,7 @@
     }
 
     function add_name(args) {
+        //log("New name added", true);
         var alias = prompt("Enter new name:", "Unknown");
         if (alias != null) {
             add_to_array(alias, known_names);
