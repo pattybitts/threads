@@ -18,6 +18,7 @@
         we begin building the database so we can create initial data models.
     -->
     <form hidden id="gen_form" action="/generate_summary" method="post">
+        <textarea id="known_names">{{known_names}}</textarea>
         <input type="text" name="position"/>
     </form>
     <div id="main_div">
@@ -68,7 +69,7 @@
                 </div>
                 <div id="log">
                     Log Output:
-                    <textarea id="log_box" readonly>{{known_names}}</textarea>
+                    <textarea id="log_box" readonly></textarea>
                 </div>
             </div>
         </div>
@@ -197,41 +198,23 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+    //page utilities
+    var active_hotkeys = new Map();
+    var input_focus = false;
+
     var full_text = "";
     var abs_char_count = 0;
     var abs_word_count = 0;
-    var active_hotkeys = new Map();
+    
     var page_text = "";
     var page_mentions = new Map();
-    var scene_mentions = new Map();
     var page_quotes = new Map();
+    var scene_mentions = new Map();
     var scene_quotes = new Map();
-    var input_focus = false;
+    
     var known_names = [];
     var hot_names = new Map();
 
-    function init(book_file, position) {
-        active_hotkeys.set(110, ["next_page", []]); //n
-        active_hotkeys.set(97, ["add_name", []]); //a
-        active_hotkeys.set(115, ["generate_summary", []]); //s
-
-        $.get(book_file, read_text);
-        abs_char_count = position;
-        known_names = $('#log_box').text().split(',');
-        for (var i = 0; i < 10; i++) {
-            hot_names.set(i, ["", 0]);
-        }
-
-        $('#log_box').text("Log output will appear here:");
-        $('#page_text').text("Page text will appear here:");
-        $('#page_quotes').text("Page quotes will appear here:");
-        $('#fixed_hotkeys').html("<b>Fixed Hotkeys:</b>" +
-            "Next Page: N<br />" +
-            "Add Character: A<br />");
-        $('#char_hotkeys').html("<b>Character Hotkeys:</b>");
-    }
-
-    //jQuery inits
     $(document).ready(function () {
         $(document).keypress(hotkey);
         $("input").focus(function () {
@@ -244,6 +227,30 @@
         $('#add_button').click(add_name);
         $('#summary_button').click(generate_summary);
     });
+
+    function init(book_file, position) {
+        active_hotkeys.set(110, ["next_page", []]); //n
+        active_hotkeys.set(97, ["add_name", []]); //a
+        active_hotkeys.set(115, ["generate_summary", []]); //s
+
+        $.get(book_file, read_text);
+        abs_char_count = position;
+        known_names = $('#known_names').text().split(',');
+        for (var i = 0; i < 10; i++) {
+            hot_names.set(i, ["", 0]);
+        }
+
+        $('#log_box').text("Log output will appear here:");
+        $('#page_text').text("Page text will appear here:");
+        $('#page_quotes').text("Page quotes will appear here:");
+        $('#fixed_hotkeys').html("<b>Fixed Hotkeys:</b>" +
+            "Next Page: N<br />" +
+            "Add Character: A<br />");
+        $('#char_hotkeys').html("<b>Character Hotkeys:</b>");
+        //this would be a small qol, but it's crashing the page (running before fully initialized?)
+        //TODO
+        //next_page();
+    }
 
     function log(string, clear = false) {
         if (clear) {
@@ -269,21 +276,34 @@
         }
     }
 
-    function next_page(args) {
-        log("New Page", true);
-        log("Abs Pos: " + abs_char_count);
-        /*log("Previous Page Info:");
-        log("Page Mentions:");
-        for (let key of page_mentions.keys()) {
-            log(key + ": " + page_mentions.get(key));
+    function next_page() {
+        //checking that all previous quotes are assigned
+        var checked_quotes = true;
+        var all_quotes = document.getElementsByClassName('quote_div');
+        for (var i = 0, len = all_quotes.length | 0; i < len; i = i + 1) {
+            var quote_div = all_quotes[i];
+            if (!quote_div.classList.contains("assigned")) {
+                checked_quotes = false;
+                break;
+            }
         }
-        log("Page Quotes:");
+        if (!checked_quotes) {
+            log("ERROR: Cannot start new page until all quotes on previous page are assigned");
+            return;
+        }
+
+        //storing previous page mentions, quotes in scene arrays
+        for (let key of page_mentions.keys()) {
+            add_to_map(scene_mentions, key, page_mentions.get(key));
+        }
         for (let key of page_quotes.keys()) {
-            log(key + ": " + page_quotes.get(key));
-        }*/
+            add_to_map(scene_quotes, key, page_quotes.get(key));
+        }
+
+        log("New Page");
+        log("Abs Pos: " + abs_char_count);
 
         page_quotes.clear();
-        //parsing through page text for quotes
         var quotes = [];
         var lines = 0;
         var char_inc = 0;
@@ -359,11 +379,11 @@
                     best_matches = potential_matches.filter(pm => pm == potential_name);
                 } else {
                     if (best_matches.length > 0) {
-                        add_to_map(best_matches[0], page_mentions);
+                        add_to_map(page_mentions, best_matches[0]);
                         best_matches = [];
                         potential_matches = known_names;
                     } else {
-                        add_to_map(potential_name, page_caps);
+                        add_to_map(page_caps, potential_name);
                         potential_name = "";
                         potential_matches = known_names;
                     }
@@ -456,24 +476,24 @@
         if (alias == "") {
             log("Blank name");
         } else {
-            add_to_array(alias, known_names);
+            add_to_array(known_names, alias);
             add_to_hot_names(alias);
             update_hotkeys();
             process_page_text();
         }
     }
 
-    function add_to_map(term, list, count=1) {
+    function add_to_map(list, term, count=1) {
         for (let key of list.keys()) {
             if (key == term) {
                 list.set(key, list.get(key) + count);
                 return;
             }
         }
-        list.set(term, 1);
+        list.set(term, count);
     }
 
-    function add_to_array(term, list) {
+    function add_to_array(list, term) {
         if (!list.includes(term)) {
             list.push(term);
         }
@@ -487,7 +507,7 @@
             quote_div = all_quotes[i];
             if (quote_div.classList.contains("selected")) {
                 var quote_text = quote_div.textContent;
-                add_to_map(speaker, page_quotes, quote_text.split(" ").length);
+                add_to_map(page_quotes, speaker, quote_text.split(" ").length);
                 quote_div.setAttribute("class", "quote_div assigned");
                 quote_div.innerHTML = quote_div.innerHTML + "<br /><br />Assigned: " + speaker;
                 if (i + 1 < len) {
@@ -499,6 +519,15 @@
     }
 
     function generate_summary() {
-        $("#gen_form").submit();
+        log("Current Summary", true);
+        log("Scene Mentions:");
+        for (let key of scene_mentions.keys()) {
+            log("  " + key + ": " + scene_mentions.get(key));
+        }
+        log("Scene Quote-Words:");
+        for (let key of scene_quotes.keys()) {
+            log("  " + key + ": " + scene_quotes.get(key));
+        }
+        //$("#gen_form").submit();
     }
 </script>
