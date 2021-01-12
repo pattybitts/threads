@@ -8,6 +8,18 @@
 
 <body onload="init('{{book_file}}', {{position}})">
     <h2>Interactive Text Parser</h2>
+    <!--  
+        This is admittedly an ugly fix to our problem of interfacing between the page and python.
+        We use a hidden form with fields corresponding to the data to be saved.
+        The corresponding function populates the fields and submits the form.
+        On the python side, we use request.form to pull the data into the database, perform server-side
+        operations, then re-upload the data to preserve the context.
+        Options for elegant asynchronous data-transfer with AJAX may come, but it's essential for now that
+        we begin building the database so we can create initial data models.
+    -->
+    <form hidden id="gen_form" action="/generate_summary" method="post">
+        <input type="text" name="position"/>
+    </form>
     <div id="main_div">
         <div id="page_div">
             <pre id="page_text"></pre>
@@ -47,6 +59,7 @@
                 <button id="add_button" class="button dark">Add Name</button>
                 <button id="quote_button" class="button dark">Set Quote</button>
                 <button id="reset_button" class="button dark">Reset</button>
+                <button id="summary_button" class="button dark">Summary</button>
             </div>
             <div id="hotkeys_log_div">
                 <div id="hotkeys">
@@ -200,6 +213,7 @@
     function init(book_file, position) {
         active_hotkeys.set(110, ["next_page", []]); //n
         active_hotkeys.set(97, ["add_name", []]); //a
+        active_hotkeys.set(115, ["generate_summary", []]); //s
 
         $.get(book_file, read_text);
         abs_char_count = position;
@@ -218,7 +232,7 @@
     }
 
     //jQuery inits
-    $(function () {
+    $(document).ready(function () {
         $(document).keypress(hotkey);
         $("input").focus(function () {
             input_focus = true;
@@ -228,6 +242,7 @@
         });
         $('#next_page_button').click(next_page);
         $('#add_button').click(add_name);
+        $('#summary_button').click(generate_summary);
     });
 
     function log(string, clear = false) {
@@ -251,7 +266,7 @@
             func = String(active_hotkeys.get(key.which)[0]);
             args = active_hotkeys.get(key.which)[1];
             window[func](args);
-        } 
+        }
     }
 
     function next_page(args) {
@@ -354,6 +369,7 @@
                     }
                     if (/^"*([A-Z].*)/.test(p)) {
                         potential_name = /^"*(['A-Za-z]*)/.exec(p)[1];
+                        potential_name = potential_name.replace("'s", "");
                         pm_reg = new RegExp(potential_name + "(\\s*$|\\s+)");
                         potential_matches = potential_matches.filter(pm => pm.search(pm_reg) >= 0);
                         if (potential_matches.length > 0) {
@@ -414,7 +430,6 @@
     }
 
     function select_quote(quote) {
-
         var classes = quote.classList;
         $('.quote_div').removeClass("selected");
         $(quote).addClass("selected");
@@ -430,16 +445,21 @@
         }
     }
 
-    function add_name(args) {
-        //log("New name added", true);
-        var alias = prompt("Enter new name:", "Unknown");
-        if (alias != null) {
+    function add_name() {
+        //There's a bug here where if the user cancels the prompt, it prevents other hotkeys from functioning
+        //ignoring for now
+        var alias = prompt("Enter new name:", "");
+        if (alias === null) {
+            log("ERROR: added name is null - need to refresh");
+            return;
+        }
+        if (alias == "") {
+            log("Blank name");
+        } else {
             add_to_array(alias, known_names);
             add_to_hot_names(alias);
             update_hotkeys();
             process_page_text();
-        } else {
-            log("ERROR: added name is null");
         }
     }
 
@@ -476,5 +496,9 @@
                 break;
             }
         }
+    }
+
+    function generate_summary() {
+        $("#gen_form").submit();
     }
 </script>

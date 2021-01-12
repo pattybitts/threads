@@ -77,6 +77,10 @@ def edit_char():
             series.save(ds.ACTIVE_FILE)
     return render_template('index_home.html', cmd_out=resp)
 
+@app.route('/generate_summary', methods = ['POST'])
+def generate_summary():
+    return redirect('/')
+
 @app.route('/new_graph', methods = ['POST'])
 def new_graph():
     filter_text = str.strip(request.form['filter_box'])
