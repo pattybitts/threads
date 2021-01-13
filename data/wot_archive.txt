@@ -1,40 +1,259 @@
-(Character) Rand
+(Character) Agelmar
 Aliases:
-  Rand al'Thor
-  Dragon Reborn
-  Coramoor
-  He Who Comes with the Dawn
+  Agelmar Jagad
+  Lord of Fal Dara
 Gender: Male
-Tier: S
 Tags:
-  Channeler
-  Aiel
-  Taveren
-  Two Rivers
+  Noble
+  Soldier
   Blademaster
+  Great Captain
 Color:
-  R: 125
-  G: 180
-  B: 220
+  R: 
+  G: 
+  B: 
 
-(Character) Mat
+(Character) Almen Bunt
 Aliases:
-  Matrim Cauthon
-  Hornsounder
-  Gambler
-  Son of Battles
-  Duckling
-  Toy
-  Prince of the Ravens
+
 Gender: Male
-Tier: A
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Alpert Mull
+Aliases:
+
+Gender: Male
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Ara
+Aliases:
+
+Gender: Male
+Tags:
+  Baerlon
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Aram
+Aliases:
+
+Gender: Male
+Tags:
+  Tuatha'an
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Aran'gar
+Aliases:
+  Eval Ramman
+  Balthamel
+  Halima Saranov
+Gender: Other
+Tags:
+  Darkfriend
+  Forsaken
+  Age of Legends
+  Rebel
+  Channeler
+Color:
+  R: 180
+  G: 0
+  B: 110
+
+(Character) Avin
+Aliases:
+  Avin
+Gender: Male
+Tags:
+  Baerlon
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Bartim
+Aliases:
+
+Gender: Male
+Tags:
+  Innkeeper
+  Whitebridge
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Bayle Domon
+Aliases:
+  Captain
+Gender: Male
+Tags:
+  Illian
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Bran al'Vere
+Aliases:
+  Brandelwyn al'Vere
+  Mayor
+Gender: Male
 Tags:
   Two Rivers
-  Taveren
+  Innkeeper
 Color:
-  R: 255
-  G: 10
-  B: 100
+  R: 
+  G: 
+  B: 
+
+(Character) Bryne
+Aliases:
+  Captain-General
+  Lord Gareth Bryne
+Gender: Male
+Tags:
+  Great Captain
+  Soldier
+  Noble
+  Blademaster
+  Rebel
+  Andor
+Color:
+  R: 220
+  G: 20
+  B: 110
+
+(Character) Burn
+Aliases:
+
+Gender: Male
+Tags:
+  Wolf
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Byar
+Aliases:
+  Jaret Byar
+  Captain
+Gender: Male
+Tags:
+  Whitecloak
+  Soldier
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Cenn Buie
+Aliases:
+  Thatcher
+Gender: Male
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) City Watch
+Aliases:
+  Guardsman
+Gender: Other
+Tags:
+  Andor
+  Unspecified
+  Soldier
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Dain Bornhald
+Aliases:
+  Captain
+Gender: Male
+Tags:
+  Whitecloak
+  Soldier
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Daise Congar
+Aliases:
+  Wisdom
+Gender: Female
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Dapple
+Aliases:
+
+Gender: Female
+Tags:
+  Wolf
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Darl Coplin
+Aliases:
+
+Gender: Male
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Draghkar
+Aliases:
+
+Gender: Other
+Tags:
+  Shadowspawn
+  Unspecified
+  Darkfriend
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Eazil Forney
+Aliases:
+
+Gender: Male
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
 
 (Character) Egwene
 Aliases:
@@ -43,7 +262,6 @@ Aliases:
   Amyrlin Seat
   Flame of Tar Valon
 Gender: Female
-Tier: A
 Tags:
   Two Rivers
   Channeler
@@ -58,140 +276,25 @@ Color:
   G: 200
   B: 30
 
-(Character) Perrin
+(Character) Elaida
 Aliases:
-  Perrin Aybara
-  Young Bull
-  Goldeneyes
-Gender: Male
-Tier: A
-Tags:
-  Two Rivers
-  Wolfbrother
-Color:
-  R: 250
-  G: 230
-  B: 45
-
-(Character) Ishmael
-Aliases:
-  Elan Morin Tedronai
-  Ba'alzamon
-  Moridin
-  Nae'blis
-Gender: Male
-Tier: B
-Tags:
-  Age of Legends
-  Forsaken
-  Channeler
-  Darkfriend
-Color:
-  R: 1
-  G: 1
-  B: 1
-
-(Character) Lews Therin
-Aliases:
-  Lews Therin Telamon
-  Kinslayer
-  Dragon
-  Lord of the Morning
-Gender: Male
-Tier: B
-Tags:
-  Age of Legends
-  Channeler
-  Taveren
-Color:
-  R: 255
-  G: 150
-  B: 0
-
-(Character) Lan
-Aliases:
-  al'Lan Mandragoran
-  Andra
-  Lord of the Seven Towers
-  Uncrowned King
-  Dai Shan
-  Aan'allein
-Gender: Male
-Tier: B
-Tags:
-  Malkier
-  Warder
-  Borderlands
-Color:
-  R: 160
-  G: 215
-  B: 240
-
-(Character) Moiraine
-Aliases:
-  Moiraine Damodred
-  Alys
+  Elaida do Avriny a'Roihan
+  Watcher of the Seals
+  Flame of Tar Valon
+  Amyrlin Seat
+  Suffa
 Gender: Female
-Tier: B
 Tags:
   Channeler
   Aes Sedai
-  Blue Ajah
-  Cairhien
-  Noble
-Color:
-  R: 0
-  G: 15
-  B: 255
-
-(Character) Nynaeve
-Aliases:
-  Nynaeve al'Meara
-  el'Nynaeve ti al'Meara Mandragoran
-  Wisdom
-Gender: Female
-Tier: B
-Tags:
-  Two Rivers
-  Channeler
-  Accepted
-  Aes Sedai
-  Yellow Ajah
-  Rebel
+  Red Ajah
+  Loyalist
+  Damane
+  Andor
 Color:
   R: 255
-  G: 255
+  G: 0
   B: 0
-
-(Character) Padan Fain
-Aliases:
-  Ordeith
-  Jeraal Mordeth
-  Shaisam
-Gender: Male
-Tier: B
-Tags:
-  Lugard
-  Darkfriend
-Color:
-  R: 230
-  G: 230
-  B: 255
-
-(Character) Min
-Aliases:
-  Elmindreda Farshaw
-  Sarenla
-  Doomseer
-  Truthspeaker
-Gender: Female
-Tier: B
-Tags:
-  Baerlon
-Color:
-  R: 220
-  G: 140
-  B: 255
 
 (Character) Elayne
 Aliases:
@@ -200,7 +303,6 @@ Aliases:
   Queen of Andor
   High Seat of House Trakand
 Gender: Female
-Tier: B
 Tags:
   Channeler
   Andor
@@ -215,133 +317,60 @@ Color:
   G: 110
   B: 110
 
-(Character) Elaida
+(Character) Else
 Aliases:
-  Elaida do Avriny a'Roihan
-  Watcher of the Seals
-  Flame of Tar Valon
-  Amyrlin Seat
-  Suffa
+  Else Grinwell
 Gender: Female
-Tier: B
 Tags:
-  Channeler
-  Aes Sedai
-  Red Ajah
-  Loyalist
-  Damane
+  Novice
   Andor
+  Channeler
 Color:
-  R: 255
-  G: 0
-  B: 0
+  R: 
+  G: 
+  B: 
 
-(Character) Tam
+(Character) Elyas
 Aliases:
-  Tam al'Thor
+  Elyas Machera
+  Longtooth
 Gender: Male
-Tier: C
+Tags:
+  Wolfbrother
+  Warder
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Ewin Finngar
+Aliases:
+
+Gender: Male
 Tags:
   Two Rivers
-  Blademaster
-Color:
-  R: 150
-  G: 80
-  B: 50
-
-(Character) Thom
-Aliases:
-  Thomdril Merrilin
-  Gleeman
-Gender: Male
-Tier: C
-Tags:
-  Andor
-Color:
-  R: 170
-  G: 100
-  B: 70
-
-(Character) Hopper
-Aliases:
-
-Gender: Male
-Tier: C
-Tags:
-  Wolf
 Color:
   R: 
   G: 
   B: 
 
-(Character) Byar
+(Character) Fitch
 Aliases:
-  Jaret Byar
-  Captain
+  Fitch
 Gender: Male
-Tier: C
 Tags:
-  Whitecloak
-  Soldier
+  Baerlon
+  Innkeeper
 Color:
   R: 
   G: 
   B: 
-
-(Character) Loial
-Aliases:
-  Loial son of Arent son of Halan
-Gender: Male
-Tier: C
-Tags:
-  Ogier
-  Stedding Shangtai
-Color:
-  R: 130
-  G: 120
-  B: 0
-
-(Character) Logain
-Aliases:
-  Sealbreaker
-  Logain Ablar
-Gender: Male
-Tier: C
-Tags:
-  Ghealdan
-  Channeler
-  Dedicated
-  Ashaman
-  Noble
-Color:
-  R: 30
-  G: 30
-  B: 170
-
-(Character) Bryne
-Aliases:
-  Captain-General
-  Lord Gareth Bryne
-Gender: Male
-Tier: C
-Tags:
-  Great Captain
-  Soldier
-  Noble
-  Blademaster
-  Rebel
-  Andor
-Color:
-  R: 220
-  G: 20
-  B: 110
 
 (Character) Galad
 Aliases:
   Galadedrid Damodred
   Lord Captain Commander
 Gender: Male
-Tier: C
 Tags:
   Whitecloak
   Andor
@@ -357,7 +386,6 @@ Aliases:
   Gawyn Trakand
   First Prince of the Sword
 Gender: Male
-Tier: C
 Tags:
   Andor
   Noble
@@ -370,6 +398,375 @@ Color:
   G: 160
   B: 120
 
+(Character) Gelb
+Aliases:
+
+Gender: Male
+Tags:
+  Sailor
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Geofram Bornhald
+Aliases:
+  Lord Captain
+Gender: Male
+Tags:
+  Whitecloak
+  Soldier
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Gill
+Aliases:
+  Basel Gill
+Gender: Male
+Tags:
+  Andor
+  Innkeeper
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Gode
+Aliases:
+  Howal Gode
+Gender: Male
+Tags:
+  Four Kings
+  Darkfriend
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Hake
+Aliases:
+  Saml Hake
+Gender: Male
+Tags:
+  Innkeeper
+  Four Kings
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Haral Luhhan
+Aliases:
+  Blacksmith
+Gender: Male
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Hari Coplin
+Aliases:
+
+Gender: Male
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Hightower
+Aliases:
+
+Gender: Male
+Tags:
+  Taren Ferry
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Hopper
+Aliases:
+
+Gender: Male
+Tags:
+  Wolf
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Hyam Kinch
+Aliases:
+
+Gender: Male
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Ila
+Aliases:
+
+Gender: Female
+Tags:
+  Tuatha'an
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Ingtar
+Aliases:
+  Lord Ingtar of House Shinowa
+Gender: Male
+Tags:
+  Shienar
+  Soldier
+  Noble
+  Darkfriend
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Ishmael
+Aliases:
+  Elan Morin Tedronai
+  Ba'alzamon
+  Moridin
+  Nae'blis
+Gender: Male
+Tags:
+  Age of Legends
+  Forsaken
+  Channeler
+  Darkfriend
+Color:
+  R: 1
+  G: 1
+  B: 1
+
+(Character) Jak
+Aliases:
+
+Gender: Male
+Tags:
+  Four Kings
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Lamgwin
+Aliases:
+
+Gender: Male
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Lan
+Aliases:
+  al'Lan Mandragoran
+  Andra
+  Lord of the Seven Towers
+  Uncrowned King
+  Dai Shan
+  Aan'allein
+Gender: Male
+Tags:
+  Malkier
+  Warder
+  Borderlands
+Color:
+  R: 160
+  G: 215
+  B: 240
+
+(Character) Lews Therin
+Aliases:
+  Lews Therin Telamon
+  Kinslayer
+  Dragon
+  Lord of the Morning
+Gender: Male
+Tags:
+  Age of Legends
+  Channeler
+  Taveren
+Color:
+  R: 255
+  G: 150
+  B: 0
+
+(Character) Logain
+Aliases:
+  Sealbreaker
+  Logain Ablar
+Gender: Male
+Tags:
+  Ghealdan
+  Channeler
+  Dedicated
+  Ashaman
+  Noble
+Color:
+  R: 30
+  G: 30
+  B: 170
+
+(Character) Loial
+Aliases:
+  Loial son of Arent son of Halan
+Gender: Male
+Tags:
+  Ogier
+  Stedding Shangtai
+Color:
+  R: 130
+  G: 120
+  B: 0
+
+(Character) Machin Shin
+Aliases:
+  Black Wind
+Gender: Other
+Tags:
+  
+  Darkfriend
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Marin al'Vere
+Aliases:
+
+Gender: Female
+Tags:
+  Two Rivers
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Mashadar
+Aliases:
+  The Mist
+Gender: Other
+Tags:
+  Shadar Logoth
+  Unnatural
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Master Grinwell
+Aliases:
+
+Gender: Male
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Mat
+Aliases:
+  Matrim Cauthon
+  Hornsounder
+  Gambler
+  Son of Battles
+  Duckling
+  Toy
+  Prince of the Ravens
+Gender: Male
+Tags:
+  Two Rivers
+  Taveren
+Color:
+  R: 255
+  G: 10
+  B: 100
+
+(Character) Mili Skane
+Aliases:
+  Lady Shiaine
+Gender: Female
+Tags:
+  Andor
+  Darkfriend
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Min
+Aliases:
+  Elmindreda Farshaw
+  Sarenla
+  Doomseer
+  Truthspeaker
+Gender: Female
+Tags:
+  Baerlon
+Color:
+  R: 220
+  G: 140
+  B: 255
+
+(Character) Mistress Grinwell
+Aliases:
+
+Gender: Female
+Tags:
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Moiraine
+Aliases:
+  Moiraine Damodred
+  Alys
+Gender: Female
+Tags:
+  Channeler
+  Aes Sedai
+  Blue Ajah
+  Cairhien
+  Noble
+Color:
+  R: 0
+  G: 15
+  B: 255
+
+(Character) Mordeth
+Aliases:
+
+Gender: Male
+Tags:
+  Shadar Logoth
+  Unnatural
+Color:
+  R: 
+  G: 
+  B: 
+
 (Character) Morgase
 Aliases:
   Morgase Trakand
@@ -377,7 +774,6 @@ Aliases:
   High Seat of House Trakand
   Maighdin Dorlain
 Gender: Female
-Tier: C
 Tags:
   Channeler
   Noble
@@ -386,62 +782,12 @@ Color:
   G: 150
   B: 150
 
-(Character) Aran'gar
+(Character) Mutch
 Aliases:
-  Eval Ramman
-  Balthamel
-  Halima Saranov
-Gender: Other
-Tier: C
-Tags:
-  Darkfriend
-  Forsaken
-  Age of Legends
-  Rebel
-  Channeler
-Color:
-  R: 180
-  G: 0
-  B: 110
 
-(Character) Osan'gar
-Aliases:
-  Aginor
-  Corlan Dashiva
 Gender: Male
-Tier: C
 Tags:
-  Forsaken
-  Darkfriend
-  Channeler
-  Age of Legends
-  Ashaman
-Color:
-  R: 100
-  G: 100
-  B: 100
-
-(Character) Bran al'Vere
-Aliases:
-  Brandelwyn al'Vere
-  Mayor
-Gender: Male
-Tier: D
-Tags:
-  Two Rivers
-  Innkeeper
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Cenn Buie
-Aliases:
-  Thatcher
-Gender: Male
-Tier: D
-Tags:
-  Two Rivers
+  Baerlon
 Color:
   R: 
   G: 
@@ -458,7 +804,6 @@ Aliases:
   Nightrunner
   Neverborn
 Gender: Other
-Tier: D
 Tags:
   Unspecified
   Shadowspawn
@@ -468,11 +813,70 @@ Color:
   G: 
   B: 
 
-(Character) Haral Luhhan
+(Character) Narg
 Aliases:
-  Blacksmith
+  Trolloc
 Gender: Male
-Tier: D
+Tags:
+  Shadowspawn
+  Darkfriend
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Nynaeve
+Aliases:
+  Nynaeve al'Meara
+  el'Nynaeve ti al'Meara Mandragoran
+  Wisdom
+Gender: Female
+Tags:
+  Two Rivers
+  Channeler
+  Accepted
+  Aes Sedai
+  Yellow Ajah
+  Rebel
+Color:
+  R: 255
+  G: 255
+  B: 0
+
+(Character) Osan'gar
+Aliases:
+  Aginor
+  Corlan Dashiva
+Gender: Male
+Tags:
+  Forsaken
+  Darkfriend
+  Channeler
+  Age of Legends
+  Ashaman
+Color:
+  R: 100
+  G: 100
+  B: 100
+
+(Character) Padan Fain
+Aliases:
+  Ordeith
+  Jeraal Mordeth
+  Shaisam
+Gender: Male
+Tags:
+  Lugard
+  Darkfriend
+Color:
+  R: 230
+  G: 230
+  B: 255
+
+(Character) Paet al'Caar
+Aliases:
+
+Gender: Male
 Tags:
   Two Rivers
 Color:
@@ -480,144 +884,50 @@ Color:
   G: 
   B: 
 
-(Character) Mordeth
+(Character) Paitr
 Aliases:
 
 Gender: Male
-Tier: D
 Tags:
-  Shadar Logoth
-  Unnatural
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Trolloc
-Aliases:
-  Twisted One
-Gender: Male
-Tier: D
-Tags:
-  Shadowspawn
-  Unspecified
+  Andor
   Darkfriend
 Color:
   R: 
   G: 
   B: 
 
-(Character) Draghkar
+(Character) Perrin
 Aliases:
-
-Gender: Other
-Tier: D
-Tags:
-  Shadowspawn
-  Unspecified
-  Darkfriend
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Dain Bornhald
-Aliases:
-  Captain
+  Perrin Aybara
+  Young Bull
+  Goldeneyes
 Gender: Male
-Tier: D
 Tags:
-  Whitecloak
-  Soldier
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Geofram Bornhald
-Aliases:
-  Lord Captain
-Gender: Male
-Tier: D
-Tags:
-  Whitecloak
-  Soldier
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Whitecloak
-Aliases:
-  Child of the Light
-Gender: Male
-Tier: D
-Tags:
-  Unspecified
-  Soldier
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Mashadar
-Aliases:
-  The Mist
-Gender: Other
-Tier: D
-Tags:
-  Shadar Logoth
-  Unnatural
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Bayle Domon
-Aliases:
-  Captain
-Gender: Male
-Tier: D
-Tags:
-  Illian
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Gelb
-Aliases:
-
-Gender: Male
-Tier: D
-Tags:
-  Sailor
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Elyas
-Aliases:
-  Elyas Machera
-  Longtooth
-Gender: Male
-Tier: D
-Tags:
+  Two Rivers
   Wolfbrother
-  Warder
+Color:
+  R: 250
+  G: 230
+  B: 45
+
+(Character) Queen's Guard
+Aliases:
+
+Gender: Other
+Tags:
+  Unspecified
+  Soldier
 Color:
   R: 
   G: 
   B: 
 
-(Character) Aram
+(Character) Quote
 Aliases:
-
-Gender: Male
-Tier: D
+  Narrator
+Gender: Other
 Tags:
-  Tuatha'an
+
 Color:
   R: 
   G: 
@@ -628,7 +938,6 @@ Aliases:
   Mahdi
   Seeker
 Gender: Male
-Tier: D
 Tags:
   Tuatha'an
 Color:
@@ -636,111 +945,79 @@ Color:
   G: 
   B: 
 
-(Character) Gode
-Aliases:
-  Howal Gode
-Gender: Male
-Tier: D
-Tags:
-  Four Kings
-  Darkfriend
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Hake
-Aliases:
-  Saml Hake
-Gender: Male
-Tier: D
-Tags:
-  Innkeeper
-  Four Kings
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Mili Skane
-Aliases:
-  Lady Shiaine
-Gender: Female
-Tier: D
-Tags:
-  Andor
-  Darkfriend
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Paitr
+(Character) Ragan
 Aliases:
 
 Gender: Male
-Tier: D
-Tags:
-  Andor
-  Darkfriend
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Gill
-Aliases:
-  Basel Gill
-Gender: Male
-Tier: D
-Tags:
-  Andor
-  Innkeeper
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Tallanvor
-Aliases:
-  Martyn Tallanvor
-  Lieutenant Guardsman
-Gender: Male
-Tier: D
-Tags:
-  Queen's Guard
-  Soldier
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Agelmar
-Aliases:
-  Agelmar Jagad
-  Lord of Fal Dara
-Gender: Male
-Tier: D
-Tags:
-  Noble
-  Soldier
-  Blademaster
-  Great Captain
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Ingtar
-Aliases:
-  Lord Ingtar of House Shinowa
-Gender: Male
-Tier: D
 Tags:
   Shienar
   Soldier
-  Noble
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Raimun Holdwin
+Aliases:
+
+Gender: Male
+Tags:
+  Andor
   Darkfriend
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Rand
+Aliases:
+  Rand al'Thor
+  Dragon Reborn
+  Coramoor
+  He Who Comes with the Dawn
+Gender: Male
+Tags:
+  Channeler
+  Aiel
+  Taveren
+  Two Rivers
+  Blademaster
+Color:
+  R: 125
+  G: 180
+  B: 220
+
+(Character) Rulan Allwine
+Aliases:
+
+Gender: Male
+Tags:
+  Innkeeper
+  Andor
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Sara
+Aliases:
+  Cook
+Gender: Female
+Tags:
+  Baerlon
+Color:
+  R: 
+  G: 
+  B: 
+
+(Character) Shienaran
+Aliases:
+
+Gender: Other
+Tags:
+  Soldier
+  Unspecified
+  Shienar
 Color:
   R: 
   G: 
@@ -752,328 +1029,8 @@ Aliases:
   Last of the Nym
   Treebrother
 Gender: Male
-Tier: D
 Tags:
   Age of Legends
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Quote
-Aliases:
-  Narrator
-Gender: Other
-Tier: F
-Tags:
-
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Daise Congar
-Aliases:
-  Wisdom
-Gender: Female
-Tier: F
-Tags:
-  Two Rivers
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Marin al'Vere
-Aliases:
-
-Gender: Female
-Tier: F
-Tags:
-  Two Rivers
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Wit Congar
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Two Rivers
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Ewin Finngar
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Two Rivers
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Narg
-Aliases:
-  Trolloc
-Gender: Male
-Tier: F
-Tags:
-  Shadowspawn
-  Darkfriend
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Darl Coplin
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Two Rivers
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Hari Coplin
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Two Rivers
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Paet al'Caar
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Two Rivers
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Hightower
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Taren Ferry
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Avin
-Aliases:
-  Avin
-Gender: Male
-Tier: F
-Tags:
-  Baerlon
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Fitch
-Aliases:
-  Fitch
-Gender: Male
-Tier: F
-Tags:
-  Baerlon
-  Innkeeper
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Mutch
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Baerlon
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Ara
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Baerlon
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) City Watch
-Aliases:
-  Guardsman
-Gender: Other
-Tier: F
-Tags:
-  Andor
-  Unspecified
-  Soldier
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Sara
-Aliases:
-  Cook
-Gender: Female
-Tier: F
-Tags:
-  Baerlon
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Burn
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Wolf
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Dapple
-Aliases:
-
-Gender: Female
-Tier: F
-Tags:
-  Wolf
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Wind
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Wolf
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Ila
-Aliases:
-
-Gender: Female
-Tier: F
-Tags:
-  Tuatha'an
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Bartim
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Innkeeper
-  Whitebridge
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Eazil Forney
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Andor
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Else
-Aliases:
-  Else Grinwell
-Gender: Female
-Tier: F
-Tags:
-  Novice
-  Andor
-  Channeler
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Master Grinwell
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Andor
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Mistress Grinwell
-Aliases:
-
-Gender: Female
-Tier: F
-Tags:
-  Andor
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Jak
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Four Kings
 Color:
   R: 
   G: 
@@ -1083,7 +1040,6 @@ Color:
 Aliases:
 
 Gender: Male
-Tier: F
 Tags:
   Four Kings
 Color:
@@ -1091,60 +1047,60 @@ Color:
   G: 
   B: 
 
-(Character) Alpert Mull
+(Character) Tallanvor
 Aliases:
-
+  Martyn Tallanvor
+  Lieutenant Guardsman
 Gender: Male
-Tier: F
 Tags:
-  Andor
+  Queen's Guard
+  Soldier
 Color:
   R: 
   G: 
   B: 
 
-(Character) Hyam Kinch
+(Character) Tam
 Aliases:
-
+  Tam al'Thor
 Gender: Male
-Tier: F
+Tags:
+  Two Rivers
+  Blademaster
+Color:
+  R: 150
+  G: 80
+  B: 50
+
+(Character) Thom
+Aliases:
+  Thomdril Merrilin
+  Gleeman
+Gender: Male
 Tags:
   Andor
+Color:
+  R: 170
+  G: 100
+  B: 70
+
+(Character) Trolloc
+Aliases:
+  Twisted One
+Gender: Male
+Tags:
+  Shadowspawn
+  Unspecified
+  Darkfriend
 Color:
   R: 
   G: 
   B: 
 
-(Character) Rulan Allwine
+(Character) Whitecloak
 Aliases:
-
+  Child of the Light
 Gender: Male
-Tier: F
-Tags:
-  Innkeeper
-  Andor
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Almen Bunt
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Andor
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Queen's Guard
-Aliases:
-
-Gender: Other
-Tier: F
 Tags:
   Unspecified
   Soldier
@@ -1153,410 +1109,25 @@ Color:
   G: 
   B: 
 
-(Character) Raimun Holdwin
+(Character) Wind
 Aliases:
 
 Gender: Male
-Tier: F
 Tags:
-  Andor
-  Darkfriend
+  Wolf
 Color:
   R: 
   G: 
   B: 
 
-(Character) Lamgwin
+(Character) Wit Congar
 Aliases:
 
 Gender: Male
-Tier: F
 Tags:
-  Andor
+  Two Rivers
 Color:
   R: 
   G: 
   B: 
-
-(Character) Machin Shin
-Aliases:
-  Black Wind
-Gender: Other
-Tier: F
-Tags:
-  
-  Darkfriend
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Ragan
-Aliases:
-
-Gender: Male
-Tier: F
-Tags:
-  Shienar
-  Soldier
-Color:
-  R: 
-  G: 
-  B: 
-
-(Character) Shienaran
-Aliases:
-
-Gender: Other
-Tier: F
-Tags:
-  Soldier
-  Unspecified
-  Shienar
-Color:
-  R: 
-  G: 
-  B: 
-
-(Book) Eye of the World (1)
-
-(Chapter) Prologue: Dragonmount (0):
-  VP 1:
-Wordcount: 2362
-Primary Character: Lews Therin
-Featured Characters: Ishmael
-  VP 2:
-Wordcount: 254
-Primary Character: Quote
-Featured Characters:
-
-(Chapter) An Empty Road (1):
-  VP 1:
-Wordcount: 7164
-Primary Character: Rand
-Featured Characters: Tam, Myrddraal, Wit Congar, Daise Congar, Bran al'Vere, Cenn Buie, Mat
-
-(Chapter) Strangers (2):
-  VP 1:
-Wordcount: 4956
-Primary Character: Rand
-Featured Characters: Mat, Haral Luhhan, Marin al'Vere, Ewin Finngar, Moiraine, Lan
-
-(Chapter) The Peddler (3):
-  VP 1:
-Wordcount: 5260
-Primary Character: Rand
-Featured Characters: Perrin, Mat, Padan Fain, Cenn Buie, Bran al'Vere, Ewin Finngar, Tam, Nynaeve, Egwene
-
-(Chapter) The Gleeman (4):
-  VP 1:
-Wordcount: 5965
-Primary Character: Rand
-Featured Characters: Egwene, Thom, Mat, Perrin, Moiraine, Ewin Finngar, Cenn Buie, Bran al'Vere, Nynaeve, Tam
-
-(Chapter) Winternight (5):
-  VP 1:
-Wordcount: 7123
-Primary Character: Rand
-Featured Characters: Tam, Trolloc, Narg
-
-(Chapter) The Westwood (6):
-  VP 1:
-Wordcount: 3411
-Primary Character: Rand
-Featured Characters: Tam, Trolloc, Myrddraal
-
-(Chapter) Out of the Woods (7):
-  VP 1:
-Wordcount: 5682
-Primary Character: Rand
-Featured Characters: Haral Luhhan, Egwene, Nynaeve, Thom, Bran al'Vere, Lan, Moiraine
-
-(Chapter) A Place of Safety (8):
-  VP 1:
-Wordcount: 5934
-Primary Character: Rand
-Featured Characters: Thom, Lan, Bran al'Vere, Moiraine
-
-(Chapter) Tellings of the Wheel (9):
-  VP 1:
-Wordcount: 6933
-Primary Character: Rand
-Featured Characters: Tam, Lan, Mat, Moiraine, Hari Coplin, Darl Coplin, Cenn Buie, Bran al'Vere, Haral Luhhan, Paet al'Caar
-
-(Chapter) Leavetaking (10):
-  VP 1:
-Wordcount: 4048
-Primary Character: Rand
-Featured Characters: Lan, Perrin, Mat, Moiraine, Egwene, Thom, Draghkar
-
-(Chapter) The Road to Taren Ferry (11):
-  VP 1:
-Wordcount: 3567
-Primary Character: Rand
-Featured Characters: Thom, Mat, Perrin, Moiraine, Lan, Draghkar, Egwene, Hightower
-
-(Chapter) Across the Taren (12):
-  VP 1:
-Wordcount: 5255
-Primary Character: Rand
-Featured Characters: Lan, Moiraine, Thom, Egwene, Perrin, Mat, Hightower
-
-(Chapter) Choices (13):
-  VP 1:
-Wordcount: 7308
-Primary Character: Rand
-Featured Characters: Moiraine, Lan, Egwene, Mat, Perrin, Thom, Avin, Mutch, Fitch
-
-(Chapter) The Stag and Lion (14):
-  VP 1:
-Wordcount: 5890
-Primary Character: Rand
-Featured Characters: Fitch, Mat, Perrin, Moiraine, Ara, Thom, Lan, Egwene, Ishmael
-
-(Chapter) Strangers and Friends (15):
-  VP 1:
-Wordcount: 9061
-Primary Character: Rand
-Featured Characters: Sara, Fitch, Perrin, Mutch, Min, Padan Fain, Mat, Whitecloak, Dain Bornhald, City Watch, Thom
-
-(Chapter) The Wisdom (16):
-  VP 1:
-Wordcount: 4246
-Primary Character: Rand
-Featured Characters: Perrin, Min, Thom, Mat, Moiraine, Nynaeve, Egwene, Lan
-
-(Chapter) Watchers and Hunters (17):
-  VP 1:
-Wordcount: 6565
-Primary Character: Rand
-Featured Characters: Thom, Perrin, Mat, Whitecloak, Nynaeve, Moiraine, Egwene, Lan, Myrddraal, Fitch, Mutch, City Watch, Dain Bornhald
-
-(Chapter) The Caemlyn Road (18):
-  VP 1:
-Wordcount: 5529
-Primary Character: Rand
-Featured Characters: Lan, Egwene, Nynaeve, Moiraine, Perrin, Thom, Mat, Myrddraal, Trolloc
-
-(Chapter) Shadow's Waiting (19):
-  VP 1:
-Wordcount: 7094
-Primary Character: Rand
-Featured Characters: Moiraine, Lan, Nynaeve, Egwene, Thom, Perrin, Mat, Mordeth
-
-(Chapter) Dust on the Wind (20):
-  VP 1:
-Wordcount: 2177
-Primary Character: Rand
-Featured Characters: Lan, Egwene, Moiraine, Nynaeve, Mashadar, Trolloc, Myrddraal, Mat, Thom
-  VP 2:
-Wordcount: 1469
-Primary Character: Perrin
-Featured Characters: Egwene, Trolloc
-  VP 3:
-Wordcount: 3977
-Primary Character: Rand
-Featured Characters: Mat, Thom, Trolloc, Gelb, Bayle Domon
-
-(Chapter) Listen to the Wind (21):
-  VP 1:
-Wordcount: 5127
-Primary Character: Nynaeve
-Featured Characters: Moiraine, Lan
-
-(Chapter) A Path Chosen (22):
-  VP 1:
-Wordcount: 2184
-Primary Character: Perrin
-Featured Characters: Egwene
-
-(Chapter) Wolfbrother (23):
-  VP 1:
-Wordcount: 5822
-Primary Character: Perrin
-Featured Characters: Egwene, Elyas, Dapple, Burn, Hopper, Wind
-
-(Chapter) Flight Down the Arinelle (24):
-  VP 1:
-Wordcount: 5334
-Primary Character: Rand
-Featured Characters: Ishmael, Bayle Domon, Gelb, Mat, Thom
-
-(Chapter) The Traveling People (25):
-  VP 1:
-Wordcount: 6144
-Primary Character: Perrin
-Featured Characters: Egwene, Dapple, Wind, Hopper, Raen, Ila, Aram
-
-(Chapter) Whitebridge (26):
-  VP 1:
-Wordcount: 8979
-Primary Character: Rand
-Featured Characters: Mat, Thom, Bayle Domon, Gelb, Bartim, Myrddraal
-
-(Chapter) Shelter From the Storm (27):
-  VP 1:
-Wordcount: 4918
-Primary Character: Perrin
-Featured Characters: Elyas, Egwene, Ila, Aram, Raen, Dapple, Wind, Hopper, Ishmael
-
-(Chapter) Footprints in the Air (28):
-  VP 1:
-Wordcount: 3163
-Primary Character: Nynaeve
-Featured Characters: Moiraine, Lan
-
-(Chapter) Eyes Without Pity (29):
-  VP 1:
-Wordcount: 6184
-Primary Character: Perrin
-Featured Characters: Elyas, Egwene
-
-(Chapter) Children of Shadow (30):
-  VP 1:
-Wordcount: 6407
-Primary Character: Perrin
-Featured Characters: Egwene, Elyas, Dapple, Wind, Hopper, Whitecloak, Geofram Bornhald, Byar
-
-(Chapter) Play for Your Supper (31):
-  VP 1:
-Wordcount: 4545
-Primary Character: Rand
-Featured Characters: Mat, Master Grinwell, Mistress Grinwell, Else, Eazil Forney
-
-(Chapter) Four Kings in Shadow (32):
-  VP 1:
-Wordcount: 7977
-Primary Character: Rand
-Featured Characters: Mat, Hake, Jak, Strom, Gode
-
-(Chapter) The Dark Waits (33):
-  VP 1:
-Wordcount: 10410
-Primary Character: Rand
-Featured Characters: Hyam Kinch, Mat, Gode, Ishmael, Alpert Mull, Rulan Allwine, Paitr, Mili Skane
-
-(Chapter) The Last Village (34):
-  VP 1:
-Wordcount: 5931
-Primary Character: Rand
-Featured Characters: Mat, Queen's Guard, Myrddraal, Raimun Holdwin, Almen Bunt
-
-(Chapter) Caemlyn (35):
-  VP 1:
-Wordcount: 5354
-Primary Character: Rand
-Featured Characters: Mat, Almen Bunt, Queen's Guard, Gill
-
-(Chapter) Web of the Pattern (36):
-  VP 1:
-Wordcount: 5726
-Primary Character: Rand
-Featured Characters: Gill, Mat, Loial
-
-(Chapter) The Long Chase (37):
-  VP 1:
-Wordcount: 3239
-Primary Character: Nynaeve
-Featured Characters: Moiraine, Lan, Whitecloak
-
-(Chapter) Rescue (38):
-  VP 1:
-Wordcount: 5934
-Primary Character: Perrin
-Featured Characters: Egwene, Byar, Lan, Moiraine, Nynaeve, Dapple
-
-(Chapter) Weaving of the Web (39):
-  VP 1:
-Wordcount: 4472
-Primary Character: Rand
-Featured Characters: Mat, Gill, Lamgwin, Padan Fain, Logain, Elayne
-
-(Chapter) The Web Tightens (40):
-  VP 1:
-Wordcount: 9523
-Primary Character: Rand
-Featured Characters: Elayne, Gawyn, Galad, Tallanvor, Morgase, Elaida, Bryne
-
-(Chapter) Old Friends and New Threats (41):
-  VP 1:
-Wordcount: 5812
-Primary Character: Rand
-Featured Characters: Lamgwin, Gill, Loial, Whitecloak, Moiraine, Nynaeve, Egwene, Perrin, Lan, Mat
-
-(Chapter) Remembrance of Dreams (42):
-  VP 1:
-Wordcount: 4720
-Primary Character: Rand
-Featured Characters: Perrin, Loial, Mat, Moiraine, Lan, Nynaeve, Egwene
-
-(Chapter) Decisions and Apparitions (43):
-  VP 1:
-Wordcount: 4900
-Primary Character: Rand
-Featured Characters: Loial, Moiraine, Egwene, Nynaeve, Mat, Perrin, Lan, Gill, Lamgwin, Ishmael
-
-(Chapter) The Dark Along the Ways (44):
-  VP 1:
-Wordcount: 5305
-Primary Character: Rand
-Featured Characters: Moiraine, Gill, Nynaeve, Egwene, Loial, Lan, Mat, Perrin
-
-(Chapter) What Follows in Shadow (45):
-  VP 1:
-Wordcount: 5563
-Primary Character: Rand
-Featured Characters: Nynaeve, Moiraine, Loial, Perrin, Mat, Lan, Machin Shin
-
-(Chapter) Fal Dara (46):
-  VP 1:
-Wordcount: 6748
-Primary Character: Rand
-Featured Characters: Loial, Nynaeve, Perrin, Moiraine, Lan, Mat, Egwene, Shienaran, Ragan, Ingtar, Agelmar, Padan Fain
-
-(Chapter) More Tales of the Wheel (47):
-  VP 1:
-Wordcount: 5169
-Primary Character: Rand
-Featured Characters: Perrin, Mat, Loial, Agelmar, Egwene, Nynaeve, Moiraine, Lan
-
-(Chapter) The Blight (48):
-  VP 1:
-Wordcount: 4586
-Primary Character: Rand
-Featured Characters: Ingtar, Moiraine, Mat, Lan, Nynaeve, Egwene, Loial, Perrin
-
-(Chapter) The Dark One Stirs (49):
-  VP 1:
-Wordcount: 3478
-Primary Character: Rand
-Featured Characters: Nynaeve, Lan, Egwene, Moiraine, Mat, Perrin, Loial, Someshta
-
-(Chapter) Meetings at the Eye (50):
-  VP 1:
-Wordcount: 4544
-Primary Character: Rand
-Featured Characters: Someshta, Perrin, Egwene, Nynaeve, Moiraine, Mat, Lan, Osan'gar, Aran'gar
-
-(Chapter) Against the Shadow (51):
-  VP 1:
-Wordcount: 3513
-Primary Character: Rand
-Featured Characters: Osan'gar, Ishmael, Rand
-
-(Chapter) Neither Beginning Nor End (52):
-  VP 1:
-Wordcount: 3878
-Primary Character: Rand
-Featured Characters: Egwene, Nynaeve, Moiraine, Mat, Perrin, Lan, Loial
-
-(Chapter) The Wheel Turns (53):
-  VP 1:
-Wordcount: 3204
-Primary Character: Rand
-Featured Characters: Egwene, Lan, Nynaeve, Moiraine, Loial, Mat, Perrin, Mat, Shienaran, Ingtar, Agelmar
-  VP 2:
-Wordcount: 124
-Primary Character: Moiraine
-Featured Characters:
 
