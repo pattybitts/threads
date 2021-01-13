@@ -212,7 +212,7 @@
     //scene data storage (will be saved via form)
     var scene_mentions = new Map();
     var scene_quotes = new Map();
-    var char_events = new Map();
+    var char_events = [];
     
     var known_names = [];
     var hot_names = new Map();
@@ -353,10 +353,28 @@
     }
 
     function character_event() {
-        log("cnb: " + get_text('char_name_box'));
-        log("ab: " + get_text('aliases_box'));
-        log("jb: " + get_text('joins_box'));
-        log("tb: " + get_text('tags_box'));
+        var char_name = get_text('char_name_box');
+        if (char_name == "") {
+            log("ERROR: Character Events must have a primary name.");
+            return;
+        } else {
+            add_to_array(known_names, char_name);
+            add_to_hot_names(char_name);
+        }
+        var char_aliases = get_text('aliases_box').split(/[\v\r\n]+/);
+        for (ca of char_aliases) {
+            add_to_array(known_names, ca);
+            add_to_hot_names(ca);
+        }
+        update_hotkeys();
+        process_page_text();
+        add_to_array(char_events, [
+            get_text('char_name_box', true),
+            get_text('aliases_box', true),
+            get_text('joins_box', true),
+            get_text('tags_box', true),
+        ]);
+        log("Submitted Character Event for: " + char_name);
     }
 
     function update_hotkeys(inc_hot_names=false) {
@@ -516,13 +534,17 @@
         }
     }
 
-    function get_text(element) {
+    function get_text(element, clear=false) {
         var el = $('#' + element);
         if (el.length === 0) {
             log("ERROR: failed to find element id: " + element);
             return null;
         }
-        return el.val();
+        var ret = el.val();
+        if (clear) {
+            el.val("");
+        }
+        return ret;
     }
 
     function set_quote(args) {
@@ -553,6 +575,13 @@
         log("Scene Quote-Words:");
         for (let key of scene_quotes.keys()) {
             log("  " + key + ": " + scene_quotes.get(key));
+        }
+        log("Character Events:");
+        for (let ce of char_events) {
+            var ce_string = "Name: " + ce[0] + " Aliases: " + ce[1] + " Joins: " + ce[2] + " Tags: " + ce[3];
+            ce_string = ce_string.trim();
+            ce_string = ce_string.replace(/[\v\r\n]+/g, ",");
+            log(ce_string);
         }
         //$("#gen_form").submit();
     }
