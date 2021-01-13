@@ -38,29 +38,28 @@
                     <textarea name="locations_box"></textarea><br />
                     <label for="summary_box">Brief Description:</label>
                     <textarea name="summary_box"></textarea><br />
-                    <label for="next_box">First Words of Next Scene:</label>
-                    <input type="text" name="next_box"><br />
                 </div>
                 <div id="char_div">
                     Character Update:<br /><br />
                     <label for="char_name_box">Character Name:</label>
-                    <input type="text" name="char_name_box" /><br />
-                    <label for="alias_box">New Aliases:</label>
-                    <textarea name="alias_box"></textarea><br />
+                    <input type="text" id="char_name_box" name="char_name_box" /><br />
+                    <label for="aliases_box">New Aliases:</label>
+                    <textarea id="aliases_box" name="aliases_box"></textarea><br />
                     <label for="joins_box">Joined Characters:</label>
-                    <textarea name="joins_box"></textarea><br />
+                    <textarea id="joins_box" name="joins_box"></textarea><br />
                     <label for="tags_box">New Tags:</label>
-                    <textarea name="tags_box"></textarea><br />
+                    <textarea id="tags_box" name="tags_box"></textarea><br />
                 </div>
             </div>
             <div id="buttons_div">
                 <button id="next_page_button" class="button dark">Next Page</button>
-                <button id="save_button" class="button dark">Set Scene</button>
                 <button id="event_button" class="button dark">Char Event</button>
                 <button id="add_button" class="button dark">Add Name</button>
                 <button id="quote_button" class="button dark">Set Quote</button>
                 <button id="reset_button" class="button dark">Reset</button>
-                <button id="summary_button" class="button dark">Summary</button>
+                <button id="summary_button" class="button dark">Sum</button>
+                <button id="mark_button" class="button dark">Mark Scene</button>
+                <button id="save_button" class="button dark">Save Scene</button>
             </div>
             <div id="hotkeys_log_div">
                 <div id="hotkeys">
@@ -209,8 +208,11 @@
     var page_text = "";
     var page_mentions = new Map();
     var page_quotes = new Map();
+
+    //scene data storage (will be saved via form)
     var scene_mentions = new Map();
     var scene_quotes = new Map();
+    var char_events = new Map();
     
     var known_names = [];
     var hot_names = new Map();
@@ -223,15 +225,23 @@
         $("input").blur(function () {
             input_focus = false;
         });
+        $("textarea").focus(function () {
+            input_focus = true;
+        });
+        $("textarea").blur(function () {
+            input_focus = false;
+        });
         $('#next_page_button').click(next_page);
         $('#add_button').click(add_name);
         $('#summary_button').click(generate_summary);
+        $('#event_button').click(character_event);
     });
 
     function init(book_file, position) {
         active_hotkeys.set(110, ["next_page", []]); //n
         active_hotkeys.set(97, ["add_name", []]); //a
         active_hotkeys.set(115, ["generate_summary", []]); //s
+        active_hotkeys.set(99, ["character_event", []]); //c
 
         $.get(book_file, read_text);
         abs_char_count = position;
@@ -340,6 +350,13 @@
 
         abs_word_count += page_text.split(/[\s-."]+/).length;
         abs_char_count += char_inc;
+    }
+
+    function character_event() {
+        log("cnb: " + get_text('char_name_box'));
+        log("ab: " + get_text('aliases_box'));
+        log("jb: " + get_text('joins_box'));
+        log("tb: " + get_text('tags_box'));
     }
 
     function update_hotkeys(inc_hot_names=false) {
@@ -497,6 +514,15 @@
         if (!list.includes(term)) {
             list.push(term);
         }
+    }
+
+    function get_text(element) {
+        var el = $('#' + element);
+        if (el.length === 0) {
+            log("ERROR: failed to find element id: " + element);
+            return null;
+        }
+        return el.val();
     }
 
     function set_quote(args) {
