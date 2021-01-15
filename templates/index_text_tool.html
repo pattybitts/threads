@@ -52,14 +52,14 @@
                 </div>
             </div>
             <div id="buttons_div">
-                <button id="next_page_button" class="button dark">Next Page</button>
-                <button id="event_button" class="button dark">Char Event</button>
-                <button id="add_button" class="button dark">Add Name</button>
-                <button id="quote_button" class="button dark">Set Quote</button>
-                <button id="reset_button" class="button dark">Reset</button>
-                <button id="summary_button" class="button dark">Sum</button>
-                <button id="mark_button" class="button dark">Mark Scene</button>
-                <button id="save_button" class="button dark">Save Scene</button>
+                <button id="next_page_button" class="button light">Next Page</button>
+                <button id="event_button" class="button light">Char Event</button>
+                <button id="add_button" class="button light">Add Name</button>
+                <button id="quote_button" class="button light">Set Quote</button>
+                <button id="reset_button" class="button light">Reset</button>
+                <button id="summary_button" class="button light">Sum</button>
+                <button id="mark_button" class="button light">Mark Scene</button>
+                <button id="save_button" class="button light">Save Scene</button>
             </div>
             <div id="hotkeys_log_div">
                 <div id="hotkeys">
@@ -91,7 +91,7 @@
         display: flex;
         align-items: flex-start;
         border-radius: 5px;
-        border: 1px solid hsl(240, 100%, 25%);
+        border: 1px solid black;
         color: black;
         height: 100%;
         width: 100%;
@@ -161,21 +161,21 @@
         text-align: center;
         text-decoration: none;
         transition-duration: 0.2s;
-        border: 1px solid hsl(240, 100%, 25%);
+        border: 1px solid black;
     }
     .button:hover {
-        border: 1px solid white;
+        background-color: lightgray;
     }
     .button:active {
-        background-color: hsl(240, 100%, 75%);
+        background-color: grey;
     }
 
     .light {
-        background-color: hsl(240, 100%, 90%);
-        color: hsl(240, 100%, 25%);
+        background-color: white;
+        color: black;
     }
     .dark {
-        background-color: hsl(240, 100%, 25%);
+        background-color: black;
         color: white;
     }
 
@@ -184,6 +184,9 @@
     }
     .hyellow {
         background-color: yellow;
+    }
+    .hred {
+        background-color: palevioletred;
     }
 
     .selected {
@@ -203,13 +206,14 @@
 
     var full_text = "";
     var abs_char_count = 0;
-    var abs_word_count = 0;
     
     var page_text = "";
+    var page_words = 0;
     var page_mentions = new Map();
     var page_quotes = new Map();
 
     //scene data storage (will be saved via form)
+    var scene_words = 0;
     var scene_mentions = new Map();
     var scene_quotes = new Map();
     var char_events = [];
@@ -235,6 +239,7 @@
         $('#add_button').click(add_name);
         $('#summary_button').click(generate_summary);
         $('#event_button').click(character_event);
+        $('#mark_button').click(mark_scene);
     });
 
     function init(book_file, position) {
@@ -242,6 +247,7 @@
         active_hotkeys.set(97, ["add_name", []]); //a
         active_hotkeys.set(115, ["generate_summary", []]); //s
         active_hotkeys.set(99, ["character_event", []]); //c
+        active_hotkeys.set(109, ["mark_scene", []]); //m
 
         $.get(book_file, read_text);
         abs_char_count = position;
@@ -255,7 +261,10 @@
         $('#page_quotes').text("Page quotes will appear here:");
         $('#fixed_hotkeys').html("<b>Fixed Hotkeys:</b>" +
             "Next Page: N<br />" +
-            "Add Character: A<br />");
+            "Add Character: A<br />" +
+            "Character Event: C<br />" +
+            "Mark Scene End: M<br />" +
+            "Generate Summary: S");
         $('#char_hotkeys').html("<b>Character Hotkeys:</b>");
         //this would be a small qol, but it's crashing the page (running before fully initialized?)
         //TODO
@@ -302,13 +311,14 @@
             return;
         }
 
-        //storing previous page mentions, quotes in scene arrays
+        //adding previous page info to scene_arrays
         for (let key of page_mentions.keys()) {
             add_to_map(scene_mentions, key, page_mentions.get(key));
         }
         for (let key of page_quotes.keys()) {
             add_to_map(scene_quotes, key, page_quotes.get(key));
         }
+        scene_words += page_words;
 
         log("New Page");
         log("Abs Pos: " + abs_char_count);
@@ -345,10 +355,8 @@
 
         page_text = full_text.substr(abs_char_count, char_inc);
         process_page_text();
-
         update_hotkeys(true);
 
-        abs_word_count += page_text.split(/[\s-."]+/).length;
         abs_char_count += char_inc;
     }
 
@@ -366,7 +374,6 @@
             add_to_array(known_names, ca);
             add_to_hot_names(ca);
         }
-        update_hotkeys();
         process_page_text();
         add_to_array(char_events, [
             get_text('char_name_box', true),
@@ -377,27 +384,29 @@
         log("Submitted Character Event for: " + char_name);
     }
 
-    function update_hotkeys(inc_hot_names=false) {
+    function update_hotkeys(inc_counters=false) {
         var char_hotkey_text = "<b>Character Hotkeys:</b>";
         for (let key of hot_names.keys()) {
             var name_val = hot_names.get(key)[0];
             if (name_val != "") {
                 active_hotkeys.set(48 + key, ["set_quote", [name_val]]); //48 is key 0
                 char_hotkey_text += name_val + ": " + key + "<br />";
-                if (inc_hot_names) {hot_names.set(key, [name_val, hot_names.get(key)[1] + 1]);}
+                if (inc_counters) {hot_names.set(key, [name_val, hot_names.get(key)[1] + 1]);}
             }
         }
         $('#char_hotkeys').html(char_hotkey_text);
     }
 
     function process_page_text() {
-        page_mentions.clear();
         var html_text = page_text;
-        var page_words = page_text.split(/[\s-."]+/);
         var potential_matches = known_names;
         var potential_name = "";
         var best_matches = [];
         var page_caps = new Map();
+
+        page_mentions.clear();
+        page_words = page_text.split(/[\s-."]+/);
+
         //can maybe be refactored now that i can use break
         for (let p of page_words) {
             if (potential_name != "") {
@@ -414,6 +423,7 @@
                     best_matches = potential_matches.filter(pm => pm == potential_name);
                 } else {
                     if (best_matches.length > 0) {
+                        //log("bm: " + best_matches);
                         add_to_map(page_mentions, best_matches[0]);
                         best_matches = [];
                         potential_matches = known_names;
@@ -438,7 +448,8 @@
         }
         var name_reg = null;
         var name_rep = "";
-        for (let pm of page_mentions.keys()) {
+        var sorted_pm = new Map([...page_mentions.entries()].sort());
+        for (let pm of sorted_pm.keys()) {
             name_reg = new RegExp("(?<!>)(" + pm + ")(?![<\\w])", "g");
             name_rep = "<span class='hgreen'>" + pm + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
@@ -450,6 +461,8 @@
             name_rep = "<span class='hyellow'>" + pc + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
         }
+
+        update_hotkeys();
 
         $('#page_text').empty;
         $('#page_text').html(html_text.trim());
@@ -505,15 +518,14 @@
         //ignoring for now
         var alias = prompt("Enter new name:", "");
         if (alias === null) {
-            log("ERROR: added name is null - need to refresh");
+            log("ERROR: null prompt - need to refresh for hotkey functionality");
             return;
         }
         if (alias == "") {
-            log("Blank name");
+            log("No Prompt Entry");
         } else {
             add_to_array(known_names, alias);
             add_to_hot_names(alias);
-            update_hotkeys();
             process_page_text();
         }
     }
@@ -566,8 +578,26 @@
         }
     }
 
+    function mark_scene() {
+        var next_words = prompt("Enter first words of next scene:", "");
+        if (next_words === null) {
+            log("ERROR: null prompt - need to refresh for hotkey functionality");
+            return;
+        }
+        if (next_words === "") {
+            log("No Prompt Entry");
+        } else {
+            var endpoint = page_text.indexOf(next_words);
+            if (endpoint >= 0) {
+
+            }
+        }
+    }
+
     function generate_summary() {
         log("Current Summary", true);
+        log("Absolute Char Count: " + abs_char_count);
+        //log("Chapter Name: " + get_text())
         log("Scene Mentions:");
         for (let key of scene_mentions.keys()) {
             log("  " + key + ": " + scene_mentions.get(key));
