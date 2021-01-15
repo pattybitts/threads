@@ -31,13 +31,13 @@
                 <div id="scene_div">
                     Scene Info:<br /><br />
                     <label for="chapter_box">Chapter Name:</label>
-                    <input type="text" name="chapter_box"><br />
+                    <input type="text" id="chapter_box" name="chapter_box"><br />
                     <label for="primary_box">Primary Character Name:</label>
-                    <input type="text" name="primary_box"><br />
+                    <input type="text" id="primary_box" name="primary_box"><br />
                     <label for="locations_box">Location Names:</label>
-                    <textarea name="locations_box"></textarea><br />
+                    <textarea id="locations_box" name="locations_box"></textarea><br />
                     <label for="summary_box">Brief Description:</label>
-                    <textarea name="summary_box"></textarea><br />
+                    <textarea id="summary_box" name="summary_box"></textarea><br />
                 </div>
                 <div id="char_div">
                     Character Update:<br /><br />
@@ -203,20 +203,23 @@
     //page utilities
     var active_hotkeys = new Map();
     var input_focus = false;
+    var last_page = false;
 
     var full_text = "";
     var abs_char_count = 0;
-    
+
+    var page_start = 0;
     var page_text = "";
-    var page_words = 0;
+    var page_wordcount = 0;
     var page_mentions = new Map();
     var page_quotes = new Map();
 
     //scene data storage (will be saved via form)
-    var scene_words = 0;
+    var scene_wordcount = 0;
     var scene_mentions = new Map();
     var scene_quotes = new Map();
     var char_events = [];
+    var scene_end = null;
     
     var known_names = [];
     var hot_names = new Map();
@@ -295,7 +298,7 @@
         }
     }
 
-    function next_page() {
+    function save_page_to_scene() {
         //checking that all previous quotes are assigned
         var checked_quotes = true;
         var all_quotes = document.getElementsByClassName('quote_div');
@@ -307,10 +310,8 @@
             }
         }
         if (!checked_quotes) {
-            log("ERROR: Cannot start new page until all quotes on previous page are assigned");
-            return;
+            return false;
         }
-
         //adding previous page info to scene_arrays
         for (let key of page_mentions.keys()) {
             add_to_map(scene_mentions, key, page_mentions.get(key));
@@ -318,10 +319,26 @@
         for (let key of page_quotes.keys()) {
             add_to_map(scene_quotes, key, page_quotes.get(key));
         }
-        scene_words += page_words;
+        log("Previous Page Words: " + page_wordcount);
+        scene_wordcount += page_wordcount;
+        page_start = abs_char_count;
+        return true;
+    }
+
+    function next_page() {
+        //checking that previous data has been saved
+        if (scene_end !== null && !last_page) {
+            log("ERROR: cannot continue until previous scene is saved");
+            return;
+        }
+        if (!last_page) {
+            if (!save_page_to_scene()) {
+                log("ERROR: Cannot start until all quotes on previous page are assigned");
+                return;
+            }
+        }
 
         log("New Page");
-        log("Abs Pos: " + abs_char_count);
 
         page_quotes.clear();
         var quotes = [];
@@ -345,6 +362,9 @@
                     quotes.push(quote);
                 }
             }
+            if (scene_end !== null && char_inc >= scene_end) {
+                break;
+            }
         }
         $('#page_quotes').empty();
         for (let q of quotes) {
@@ -355,7 +375,7 @@
 
         page_text = full_text.substr(abs_char_count, char_inc);
         process_page_text();
-        update_hotkeys(true);
+        update_hotkeys(!last_page);
 
         abs_char_count += char_inc;
     }
@@ -369,7 +389,7 @@
             add_to_array(known_names, char_name);
             add_to_hot_names(char_name);
         }
-        var char_aliases = get_text('aliases_box').split(/[\v\r\n]+/);
+        var char_aliases = get_text('aliases_box').split(/[\v\r\n]+(?!$)/);
         for (ca of char_aliases) {
             add_to_array(known_names, ca);
             add_to_hot_names(ca);
@@ -403,9 +423,10 @@
         var potential_name = "";
         var best_matches = [];
         var page_caps = new Map();
+        var page_words = page_text.split(/[\s-."]+(?!$)/);
 
         page_mentions.clear();
-        page_words = page_text.split(/[\s-."]+/);
+        page_wordcount = page_words.length;
 
         //can maybe be refactored now that i can use break
         for (let p of page_words) {
@@ -567,7 +588,7 @@
             quote_div = all_quotes[i];
             if (quote_div.classList.contains("selected")) {
                 var quote_text = quote_div.textContent;
-                add_to_map(page_quotes, speaker, quote_text.split(" ").length);
+                add_to_map(page_quotes, speaker, quote_text.split(/\s+(?!$)/).length);
                 quote_div.setAttribute("class", "quote_div assigned");
                 quote_div.innerHTML = quote_div.innerHTML + "<br /><br />Assigned: " + speaker;
                 if (i + 1 < len) {
@@ -579,6 +600,7 @@
     }
 
     function mark_scene() {
+        //log("Called mark_scene");
         var next_words = prompt("Enter first words of next scene:", "");
         if (next_words === null) {
             log("ERROR: null prompt - need to refresh for hotkey functionality");
@@ -589,15 +611,29 @@
         } else {
             var endpoint = page_text.indexOf(next_words);
             if (endpoint >= 0) {
-
+                //log("Setting scene end at: " + next_words + " : " + endpoint);
+                scene_end = endpoint;
+                abs_char_count = page_start;
+                last_page = true;
+                next_page();
+                last_page = false;
             }
         }
     }
 
     function generate_summary() {
+        if (!save_page_to_scene()) {
+            log("ERROR: scene still contains some unassigned quotes");
+            return;
+        }
         log("Current Summary", true);
         log("Absolute Char Count: " + abs_char_count);
-        //log("Chapter Name: " + get_text())
+        log("Chapter Name: " + get_text('chapter_box'));
+        log("Primary Character: " + get_text('primary_box'));
+        log("Locations: " + get_text('locations_box').replace(/[\v\r\n]+/g, ","));
+        log("Brief Description: " + get_text('summary_box'));
+        log("");
+        log("Scene Words: " + scene_wordcount);
         log("Scene Mentions:");
         for (let key of scene_mentions.keys()) {
             log("  " + key + ": " + scene_mentions.get(key));
