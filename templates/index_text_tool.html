@@ -251,6 +251,7 @@
         active_hotkeys.set(115, ["generate_summary", []]); //s
         active_hotkeys.set(99, ["character_event", []]); //c
         active_hotkeys.set(109, ["mark_scene", []]); //m
+        active_hotkeys.set(100, ["diagnostic", []]); //d
 
         $.get(book_file, read_text);
         abs_char_count = position;
@@ -449,6 +450,7 @@
                         best_matches = [];
                         potential_matches = known_names;
                     } else {
+                        if (/[\s-."]+(?!$)/.test(potential_name)) { potential_name = potential_name.split(/[\s-."]+(?!$)/)[0];}
                         add_to_map(page_caps, potential_name);
                         potential_name = "";
                         potential_matches = known_names;
@@ -477,7 +479,10 @@
 
             add_to_hot_names(pm);
         }
-        for (let pc of page_caps.keys()) {
+        var sorted_pc = new Map([...page_caps.entries()].sort());
+        log("Page Caps");
+        for (let pc of sorted_pc.keys()) {
+            log("pc1: " + pc);
             name_reg = new RegExp("(?<!>)(" + pc + ")(?![\\w])", "g");
             name_rep = "<span class='hyellow'>" + pc + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
@@ -627,7 +632,7 @@
             return;
         }
         log("Current Summary", true);
-        log("Absolute Char Count: " + abs_char_count);
+        log("Page Start: " + page_start);
         log("Chapter Name: " + get_text('chapter_box'));
         log("Primary Character: " + get_text('primary_box'));
         log("Locations: " + get_text('locations_box').replace(/[\v\r\n]+/g, ","));
@@ -650,5 +655,10 @@
             log(ce_string);
         }
         //$("#gen_form").submit();
+    }
+
+    function diagnostic() {
+        log("Diagnostic:", true);
+        log("Page Start: " + page_start);
     }
 </script>
