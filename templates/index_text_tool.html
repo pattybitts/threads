@@ -19,7 +19,15 @@
     -->
     <form hidden id="gen_form" action="/generate_summary" method="post">
         <textarea id="known_names">{{known_names}}</textarea>
-        <input type="text" name="position"/>
+        <input type="text" id="position" />
+        <input type="text" id="chapter" />
+        <input type="text" id="primary" />
+        <textarea id="locations"></textarea>
+        <textarea id="description"></textarea>
+        <input type="text" id="wordcount" />
+        <textarea id="mentions"></textarea>
+        <textarea id="quotes"></textarea>
+        <textarea id="char_events"></textarea>
     </form>
     <div id="main_div">
         <div id="page_div">
@@ -36,8 +44,8 @@
                     <input type="text" id="primary_box" name="primary_box"><br />
                     <label for="locations_box">Location Names:</label>
                     <textarea id="locations_box" name="locations_box"></textarea><br />
-                    <label for="summary_box">Brief Description:</label>
-                    <textarea id="summary_box" name="summary_box"></textarea><br />
+                    <label for="description_box">Brief Description:</label>
+                    <textarea id="description_box" name="description_box"></textarea><br />
                 </div>
                 <div id="char_div">
                     Character Update:<br /><br />
@@ -320,7 +328,6 @@
         for (let key of page_quotes.keys()) {
             add_to_map(scene_quotes, key, page_quotes.get(key));
         }
-        log("Previous Page Words: " + page_wordcount);
         scene_wordcount += page_wordcount;
         page_start = abs_char_count;
         return true;
@@ -398,9 +405,9 @@
         process_page_text();
         add_to_array(char_events, [
             get_text('char_name_box', true),
-            get_text('aliases_box', true),
-            get_text('joins_box', true),
-            get_text('tags_box', true),
+            get_text('aliases_box', true).split(/[\v\r\n]+(?!$)/),
+            get_text('joins_box', true).split(/[\v\r\n]+(?!$)/),
+            get_text('tags_box', true).split(/[\v\r\n]+(?!$)/),
         ]);
         log("Submitted Character Event for: " + char_name);
     }
@@ -480,9 +487,7 @@
             add_to_hot_names(pm);
         }
         var sorted_pc = new Map([...page_caps.entries()].sort());
-        log("Page Caps");
         for (let pc of sorted_pc.keys()) {
-            log("pc1: " + pc);
             name_reg = new RegExp("(?<!>)(" + pc + ")(?![\\w])", "g");
             name_rep = "<span class='hyellow'>" + pc + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
@@ -627,35 +632,87 @@
     }
 
     function generate_summary() {
+        //checking and updating last page
         if (!save_page_to_scene()) {
-            log("ERROR: scene still contains some unassigned quotes");
+            log("ERROR: Quotes unassigned");
             return;
         }
+        //checking form fields
+        var checked_fields = true;
+        checked_fields = get_text('chapter_box') != "" & checked_fields;
+        checked_fields = get_text('primary_box') != "" & checked_fields;
+        checked_fields = get_text('locations_box') != "" & checked_fields;
+        checked_fields = get_text('description_box') != "" & checked_fields;
+        if (!checked_fields) {
+            log("ERROR: Scene fields empty");
+            return;
+        }
+
+        //transferring data to gen_form
+        $('#known_names').text(known_names.join());
+        $('#position').text(page_start);
+        $('#chapter').text(get_text('chapter_box'));
+        $('#primary').text(get_text('primary_box'));
+        $('#locations').text(get_text('locations_box'));
+        $('#description').text(get_text('description_box'));
+        $('#wordcount').text(scene_wordcount);
+
+        var sm_string = "";
+        for (let [key, value] of scene_mentions.entries()) {
+            sm_string = sm_string + key + "," + value + "\n";
+        }
+        sm_string = sm_string.trim();
+        $('#mentions').text(sm_string);
+        var sq_string = "";
+        for (let [key, value] of scene_quotes.entries()) {
+            sq_string = sq_string + key + "," + value + "\n";
+        }
+        sq_string = sq_string.trim();
+        $('#quotes').text(sq_string);
+        var ce_string = "";
+        for (let ce of char_events) {
+            //lets just note that I will be quite surprised if this line works
+            //ce_string = ce_string + [key, ...value.join()].join(";") + "\n";
+            //update: it did NOT WORK 0;0;;,;1;;1;,;2; HELP
+            //ce_string = ce_string + [key, value[0].join(), value[1].join(), value[2].join()].join(";") + "\n";
+            //archived process for the histories
+            ce_string = ce_string + [ce[0], ce[1].join(), ce[2].join(), ce[3].join()].join(";") + "\n";
+        }
+        ce_string = ce_string.trim();
+
+        //log report (temporary, diagnostic)
         log("Current Summary", true);
         log("Page Start: " + page_start);
         log("Chapter Name: " + get_text('chapter_box'));
         log("Primary Character: " + get_text('primary_box'));
         log("Locations: " + get_text('locations_box').replace(/[\v\r\n]+/g, ","));
-        log("Brief Description: " + get_text('summary_box'));
+        log("Brief Description: " + get_text('description_box'));
         log("");
         log("Scene Words: " + scene_wordcount);
         log("Scene Mentions:");
-        for (let key of scene_mentions.keys()) {
+        log(sm_string);
+        /*for (let key of scene_mentions.keys()) {
             log("  " + key + ": " + scene_mentions.get(key));
-        }
+        }*/
         log("Scene Quote-Words:");
-        for (let key of scene_quotes.keys()) {
+        log(sq_string);
+        /*for (let key of scene_quotes.keys()) {
             log("  " + key + ": " + scene_quotes.get(key));
-        }
+        }*/
         log("Character Events:");
-        for (let ce of char_events) {
+        log(ce_string);
+        /*for (let ce of char_events) {
             var ce_string = "Name: " + ce[0] + " Aliases: " + ce[1] + " Joins: " + ce[2] + " Tags: " + ce[3];
             ce_string = ce_string.trim();
             ce_string = ce_string.replace(/[\v\r\n]+/g, ",");
             log(ce_string);
-        }
+        }*/
+
+
         //$("#gen_form").submit();
     }
+
+
 
     function diagnostic() {
         log("Diagnostic:", true);
