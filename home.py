@@ -79,7 +79,41 @@ def edit_char():
 
 @app.route('/generate_summary', methods = ['POST'])
 def generate_summary():
-    return redirect('/')
+    
+    known_names = request.form['kn_form']
+    position = request.form['po_form']
+    chapter = request.form['ch_form']
+    primary = request.form['pr_form']
+    locations = request.form['lo_form']
+    description = request.form['de_form']
+    wordcount = request.form['wo_form']
+    mentions = request.form['me_form']
+    quotes = request.form['qu_form']
+    char_events = request.form['ce_form']
+
+    log.banner("Scene Data")
+    log.out("Known Names: \n" + known_names)
+    log.out("Postion: " + position)
+    log.out("Chapter: " + chapter)
+    log.out("Primary: " + primary)
+    log.out("Locations: " + locations)
+    log.out("Description: " + description)
+    log.out("Wordcount: " + wordcount)
+    log.out("Mentions: \n" + mentions)
+    log.out("Quotes: \n" + quotes)
+    log.out("Character Events: \n" + char_events)
+
+    return render_template('index_text_tool.html', \
+        known_names=known_names, \
+        position=position, \
+        chapter=chapter, \
+        primary=primary, \
+        locations=locations, \
+        description=description, \
+        wordcount=wordcount, \
+        mentions=mentions, \
+        quotes=quotes, \
+        char_events=char_events)
 
 @app.route('/new_graph', methods = ['POST'])
 def new_graph():
