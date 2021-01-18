@@ -69,6 +69,7 @@
                 <button id="summary_button" class="button light">Sum</button>
                 <button id="mark_button" class="button light">Mark Scene</button>
                 <button id="save_button" class="button light">Save Scene</button>
+                <button id="diagnostic_button" class="button light">Diagnostic</button>
             </div>
             <div id="hotkeys_log_div">
                 <div id="hotkeys">
@@ -253,6 +254,7 @@
         $('#summary_button').click(generate_summary);
         $('#event_button').click(character_event);
         $('#mark_button').click(mark_scene);
+        $('#diagnostic_button').click(diagnostic);
     });
 
     function init(book_file, position) {
@@ -715,12 +717,6 @@
     function diagnostic() {
         log("***");
         log("Diagnostic:");
-        log("Page Start: " + page_start);
-        log("Postion: " + abs_char_count);
-        log("Form WC: " + $('#wordcount').value());
-        log("Form P: " + $('#position').value());
-        log("Form Ch: " + $('#chapter').value());
-        log("Form CE: " + $('#char_events').text());
         log("***");
     }
 </script>
