@@ -44,7 +44,11 @@ def new_cmd_in():
     elif action == ret.GRAPH_TOOL:
         return render_template('index_graph_tool.html', x_val='', y_val='')
     elif action == ret.TEXT_TOOL:
-        return render_template('index_text_tool.html', book_file=data["book_file"], position=data["position"], known_names=data["known_names"])
+        return render_template('index_text_tool.html', \
+            save_file=data["save_file"], \
+            book_file=data["book_file"], \
+            position=data["position"], \
+            known_names=data["known_names"])
     elif action == ret.ERROR:
         error_msg = str(data)
         return render_template('index_home.html', cmd_out=error_msg)
@@ -80,6 +84,7 @@ def edit_char():
 @app.route('/generate_summary', methods = ['POST'])
 def generate_summary():
     
+    save_file = request.form['sf_form']
     known_names = request.form['kn_form']
     position = request.form['po_form']
     chapter = request.form['ch_form']
@@ -90,6 +95,15 @@ def generate_summary():
     mentions = request.form['me_form']
     quotes = request.form['qu_form']
     char_events = request.form['ce_form']
+
+    log.banner("Made it here")
+
+    data = extract_save_data(save_file)
+    if data == ret.ERROR:
+        resp = "ERROR: unable to extract book data from save file: " + save_file
+        return render_template('index_home.html', cmd_out=resp)
+    else:
+        book_file = data["book_file"]
 
     log.banner("Scene Data")
     log.out("Known Names: \n" + known_names)
@@ -104,6 +118,8 @@ def generate_summary():
     log.out("Character Events: \n" + char_events)
 
     return render_template('index_text_tool.html', \
+        save_file=save_file, \
+        book_file=book_file, \
         known_names=known_names, \
         position=position, \
         chapter=chapter, \
@@ -168,23 +184,31 @@ def process_cmd(cmd_string):
         msg = ""
         return ret.GRAPH_TOOL, msg
     if cmd_parts[0] == 'text_tool':
-        #TODO i need to be more intelligent with my exeptions for try/catch
-        try:
-            input = open("data\\" + str(cmd_parts[1]), 'r')
-            sav_text = input.read()
-        except:
+        data = extract_save_data(str(cmd_parts[1]))
+        if data == ret.ERROR:
             return ret.ERROR, "Unable to read file data\\" + str(cmd_parts[1])
-        try:
-            data = {}
-            data["book_file"] = ds.create_array(sav_text, "book_file")[0]
-            data["series_obj"] = ds.create_array(sav_text, "series_obj")[0]
-            data["book_name"] = ds.create_array(sav_text, "book_name")[0]
-            data["position"] = ds.create_array(sav_text, "position")[0]
-            data["known_names"] = ",".join(ds.create_array(sav_text, "known_names"))
-        except:
-            return ret.ERROR, "Invalid formatting in file data\\" +str(cmd_parts[1])
-        return ret.TEXT_TOOL, data
+        else:
+            return ret.TEXT_TOOL, data
     return ret.ERROR, "Unsupported command entry: " + cmd_string
+
+def extract_save_data(save_file_name):
+    #TODO i need to be more intelligent with my exeptions for try/catch
+    try:
+        input = open("data\\" + str(save_file_name), 'r')
+        sav_text = input.read()
+    except:
+        return ret.ERROR
+    try:
+        data = {}
+        data["save_file"] = ds.create_array(sav_text, "save_file")[0]
+        data["book_file"] = ds.create_array(sav_text, "book_file")[0]
+        data["series_obj"] = ds.create_array(sav_text, "series_obj")[0]
+        data["book_name"] = ds.create_array(sav_text, "book_name")[0]
+        data["position"] = ds.create_array(sav_text, "position")[0]
+        data["known_names"] = ",".join(ds.create_array(sav_text, "known_names"))
+    except:
+        return ret.ERROR
+    return data
     
 if __name__ == '__main__':
     app.run()
