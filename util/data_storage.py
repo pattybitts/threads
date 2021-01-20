@@ -10,11 +10,13 @@ def dump_pickle(object, filename):
     pfile.close()
 
 def load_pickle(filename):
-    pfile = open(filename, 'rb')
-    #TODO try/catch here for invalid file names?
-    object = pickle.load(pfile)
-    pfile.close()
-    return object
+    try:
+        pfile = open(filename, 'rb')
+        object = pickle.load(pfile)
+        pfile.close()
+        return object
+    except:
+        return ret.ERROR
 
 #to be archived or repurposed, not using json for this project
 #given a section of json text and a target term, returns an array of the values it is keyed to

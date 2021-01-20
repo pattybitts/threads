@@ -3,15 +3,9 @@
   "book_file": "static/eotw_shortened.txt",
   "library_file": "library_1_19",
   "series_name": "The Wheel of Time",
-	"book_name": "Eye of the World",
+	"book_name": "The Eye of the World",
 	"position": "0",
-	"known_names": [
-    "Rand",
-    "Lews Therin",
-    "Lews Therin Telamon",
-    "Betrayer",
-    "Betrayer of Hope",
-    "Elan Morin Tedronai",
-    "Shai'tan"
-	]
+  "known_names": [
+    "goob"
+  ]
 }

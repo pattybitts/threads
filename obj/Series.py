@@ -13,6 +13,18 @@ class Series:
         self.arcs = []
         self.name = name
 
+    def add_book(self, new_book: Book):
+        self.books.append(new_book)
+
+    def add_arc(self, new_arc: Arc):
+        self.arcs.append(new_arc)
+
+    def get_book(self, book_name: str):
+        for b in self.books:
+            if b.name == book_name:
+                return b
+        return ret.ERROR
+
     #all methods below here are from before the 1-19 obj rework and are therefore suspect
 
     def replace_char(self, new_char, base_name):
@@ -46,9 +58,3 @@ class Series:
                 if s.is_featured(c, self):
                     return s_count
         return -1
-
-    def add_book(self, new_book: Book):
-        self.books.append(new_book)
-
-    def add_arc(self, new_arc: Arc):
-        self.arcs.append(new_arc)

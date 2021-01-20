@@ -4,7 +4,10 @@ import util.ret as ret
 import util.data_storage as ds
 import util.log as log
 
+from SceneImporter import SceneImporter
+from obj.Library import Library
 from obj.Series import Series
+from obj.Book import Book
 from obj.Character import Character
 from Query import Query
 app = Flask(__name__)
@@ -84,7 +87,12 @@ def edit_char():
 @app.route('/generate_summary', methods = ['POST'])
 def generate_summary():
     
-    save_file = request.form['sf_form']
+    importer = SceneImporter()
+    status = importer.process_save_file(request.form['sf_form'])
+    if status == ret.ERROR:
+        resp = "ERROR: unable to extract book data from save file"
+        return render_template('index_home.html', cmd_out=resp)
+
     known_names = request.form['kn_form']
     position = request.form['po_form']
     chapter = request.form['ch_form']
@@ -96,14 +104,8 @@ def generate_summary():
     quotes = request.form['qu_form']
     char_events = request.form['ce_form']
 
-    data = extract_save_data(save_file)
-    if data == ret.ERROR:
-        resp = "ERROR: unable to extract book data from save file: " + save_file
-        return render_template('index_home.html', cmd_out=resp)
+    save_file = request.form['sf_form']
     
-    book_file = data["book_file"]
-    series_obj = data["series_obj"]
-
     log.banner("Scene Data")
     log.out("Known Names: \n" + known_names)
     log.out("Postion: " + position)
@@ -118,7 +120,7 @@ def generate_summary():
 
     return render_template('index_text_tool.html', \
         save_file=save_file, \
-        book_file=book_file, \
+        book_file=importer.book_file, \
         known_names=known_names, \
         position=position, \
         chapter=chapter, \
@@ -183,31 +185,14 @@ def process_cmd(cmd_string):
         msg = ""
         return ret.GRAPH_TOOL, msg
     if cmd_parts[0] == 'text_tool':
-        data = extract_save_data(str(cmd_parts[1]))
+        save_file = str(cmd_parts[1])
+        importer = SceneImporter()
+        data = importer.extract_save_data(save_file)
         if data == ret.ERROR:
-            return ret.ERROR, "Unable to read file data\\" + str(cmd_parts[1])
+            return ret.ERROR, "Unable to read file data\\" + save_file
         else:
             return ret.TEXT_TOOL, data
     return ret.ERROR, "Unsupported command entry: " + cmd_string
-
-def extract_save_data(save_file_name):
-    #TODO i need to be more intelligent with my exeptions for try/catch
-    try:
-        input = open("data\\" + str(save_file_name), 'r')
-        sav_text = input.read()
-    except:
-        return ret.ERROR
-    try:
-        data = {}
-        data["save_file"] = ds.create_array(sav_text, "save_file")[0]
-        data["book_file"] = ds.create_array(sav_text, "book_file")[0]
-        data["series_obj"] = ds.create_array(sav_text, "series_obj")[0]
-        data["book_name"] = ds.create_array(sav_text, "book_name")[0]
-        data["position"] = ds.create_array(sav_text, "position")[0]
-        data["known_names"] = ",".join(ds.create_array(sav_text, "known_names"))
-    except:
-        return ret.ERROR
-    return data
     
 if __name__ == '__main__':
     app.run()

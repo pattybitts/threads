@@ -17,6 +17,12 @@ class Library:
     def add_series(self, new_series: Series):
         self.series.append(new_series)
 
+    def get_series(self, series_name: str):
+        for s in self.series:
+            if s.name == series_name:
+                return s
+        return ret.ERROR
+
     def get_info(self):
         resp = "Created: " + self.last_updated.strftime("%m_%d_%y_%H%M")
         resp += "\nSeries:\n"
