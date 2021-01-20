@@ -1,5 +1,9 @@
+from obj.Scene import Scene
+
 class Checkpoint:
 
-    def __init__(name: str, last_scene):
+    def __init__(name: str, description: str, scene: Scene):
         self.name = name
-        self.last_scene = last_scene
+        self.placement = num
+        self.description = description
+        self.scene = scene

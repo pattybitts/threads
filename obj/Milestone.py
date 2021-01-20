@@ -2,8 +2,7 @@ from obj.Scene import Scene
 
 class Milestone:
 
-    def __init__(self, name: str, degree: int):
+    def __init__(self, name: str):
         self.name = name
-        self.degree = degree
+        self.type = ""
         self.scenes = []
-        #self.type = some_struct_term

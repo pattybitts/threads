@@ -2,22 +2,18 @@ import util.ret as ret
 
 class Character:
 
-    def __init__(self, name_str, alias_str, gender_str, r_val, g_val, b_val, tag_str):
+    def __init__(self, name_str: str, gender_str, r_val: int=0, g_val: int=0, b_val: int=0):
         self.name  = name_str
-        self.aliases = []
-        aliases = alias_str.split("\n")
-        for a in aliases:
-            a = a.strip("\n\r ")
-            self.aliases.append(a)
         self.gender = gender_str
+        self.tier = ""
         self.color = {"r": r_val, "g": g_val, "b": b_val}
+        self.aliases = []
+        self.joins = []
         self.tags = []
-        tags = tag_str.split("\n")
-        for t in tags:
-            t = t.strip("\n\r ")
-            self.tags.append(t)
-        self.joined_characters = []
+        self.featured = []
 
+    #all methods below here are before the 1-19 object rebuild and are suspect
+        
     def print_info(self):
         alias_str = ""
         for a in self.aliases:

@@ -4,10 +4,10 @@ class Chapter:
 
     def __init__(self, title, num):
         self.name = title
-        self.position = num
+        self.placement = num
         self.scenes = []
-        #wordcount = 0
-        #firstword = 0
+
+    #all methods below are before 1-19
 
     def print_chapter(self):
         out = "(Chapter) " + self.title + " (" + str(self.number) + "):\n"

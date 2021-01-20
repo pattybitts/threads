@@ -12,9 +12,8 @@ class Series:
         self.books = []
         self.arcs = []
         self.name = name
-    
-    def save(self, dump_file):
-        ds.dump_pickle(self, dump_file)
+
+    #all methods below here are from before the 1-19 obj rework and are therefore suspect
 
     def replace_char(self, new_char, base_name):
         for c in self.characters:

@@ -3,11 +3,23 @@ import copy, re
 import util.data_storage as ds
 import util.log as log
 
+from obj.Library import Library
 from obj.Series import Series
 from obj.Character import Character
 
-#playing around with opening/reading save files
+#getting library object and info
 if 1:
+    library = ds.load_pickle("data\\library_1_19")
+    log.out(library.get_info())
+
+#creating new library object
+if 0:
+    new_library = Library()
+    log.out(new_library.get_info())
+    new_library.save("data\\library_1_19")
+
+#playing around with opening/reading save files
+if 0:
     try:
         input = open("data\\eotw.sav", 'r')
         sav_text = input.read()

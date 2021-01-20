@@ -6,12 +6,9 @@ class Book:
 
     def __init__(self, title: str, num: int):
         self.name = title
-        self.position = num
+        self.placement = num
         self.chapters = []
-        self.scenes = []
         self.milestones = []
-        #self.wordcount = 0
-        #self.firstword = 0
 
     def add_chapter(self, new_chapter: Chapter):
         self.chapters.append(new_chapter)

@@ -96,14 +96,13 @@ def generate_summary():
     quotes = request.form['qu_form']
     char_events = request.form['ce_form']
 
-    log.banner("Made it here")
-
     data = extract_save_data(save_file)
     if data == ret.ERROR:
         resp = "ERROR: unable to extract book data from save file: " + save_file
         return render_template('index_home.html', cmd_out=resp)
-    else:
-        book_file = data["book_file"]
+    
+    book_file = data["book_file"]
+    series_obj = data["series_obj"]
 
     log.banner("Scene Data")
     log.out("Known Names: \n" + known_names)

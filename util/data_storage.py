@@ -2,8 +2,6 @@ import pickle
 
 import util.ret as ret
 
-from obj.Series import Series
-
 ACTIVE_FILE = "data\\wot_0"
 
 def dump_pickle(object, filename):
