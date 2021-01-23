@@ -1,8 +1,10 @@
 import util.ret as ret
 
+from obj.Scene import Scene
+
 class Character:
 
-    def __init__(self, name_str: str, gender_str, r_val: int=0, g_val: int=0, b_val: int=0):
+    def __init__(self, name_str: str, gender_str: str="", r_val: int=0, g_val: int=0, b_val: int=0):
         self.name  = name_str
         self.gender = gender_str
         self.tier = ""
@@ -11,6 +13,50 @@ class Character:
         self.joins = []
         self.tags = []
         self.featured = []
+
+    @staticmethod
+    #this will need an update once we have a working prominence score sort
+    def match_character(list, name_searched: str, strict=True):
+        matches = []
+        best_match = ret.ERROR
+        best_score = 0
+        for c in list:
+            if not isinstance(c, Character):
+                continue
+            if c.name == name_searched:
+                best_match = c
+                matches.append(c)
+                continue
+            for a in c.aliases:
+                if a == name_searched:
+                    matches.append(c)
+                    continue
+            if not strict:
+                alias_terms = " ".join(c.aliases).split()
+                name_terms = name_searched.split()
+                score = 0
+                for nt in name_terms:
+                    for a in alias_terms:
+                        if nt.lower() == a.lower():
+                            score += 1
+                if score > best_score:
+                    best_match = c
+                    best_score = score
+        if len(matches) != 1:
+            return best_match
+        else:
+            return ret.ERROR
+
+    def add_alias(self, alias: str, scene: Scene):
+        self.aliases.append([alias, scene])
+
+    def add_join(self, join, scene: Scene):
+        if not isinstance(join, Character):
+            return
+        self.joins.append([join, scene])
+
+    def add_tag(self, tag: str, scene: Scene):
+        self.tags.append([tag, scene])
 
     #all methods below here are before the 1-19 object rebuild and are suspect
         
@@ -49,31 +95,6 @@ class Character:
             if str.lower(tag_check) == str.lower(t):
                 return True
         return False
-
-    @staticmethod
-    def match_character(list, name: str, strict=False):
-        best_match = ret.ERROR
-        best_score = 0
-        for c in list:
-            if not isinstance(c, Character):
-                continue
-            if c.name == name:
-                return c
-            if not strict:
-                alias_tags = c.print_aliases().split()
-                name_tags = c.name.split()
-                for n in name_tags:
-                    alias_tags.append(n)
-                name_terms = name.split()
-                score = 0
-                for i in name_terms:
-                    for a in alias_tags:
-                        if i.lower() == a.lower():
-                            score += 1
-                if score > best_score:
-                    best_match = c
-                    best_score = score
-        return best_match
     
     def prominence_score(self, scene_group, series):
         from obj.Series import Series

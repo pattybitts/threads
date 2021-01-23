@@ -1,5 +1,6 @@
 import util.ret as ret
 import util.data_storage as ds
+import util.log as log
 
 from obj.Character import Character
 from obj.Book import Book
@@ -18,6 +19,15 @@ class Series:
 
     def add_arc(self, new_arc: Arc):
         self.arcs.append(new_arc)
+
+    def add_character(self, new_char: Character):
+        if Character.match_character(self.characters, new_char.name, True) != ret.ERROR:
+            log.out("Found character: " + new_char.name + " and should not have")
+            return False
+        self.characters.append(new_char)
+        #TODO
+        #self.characters.sort(key=self.char_place)
+        return True
 
     def get_book(self, book_name: str):
         for b in self.books:
@@ -38,16 +48,17 @@ class Series:
 
     def add_char(self, new_char):
         if Character.match_character(self.characters, new_char.name, True) != ret.ERROR:
-            return ret.ERROR
+            return False
         self.characters.append(new_char)
         self.characters.sort(key=self.char_place)
-        return ret.SUCCESS
+        return True
 
     def char_place(self, c: Character):
         scene_group = []
         for b in self.books:
-            for s in b.scenes:
-                scene_group.append(s)
+            for c in b.chapters:
+                for s in b.scenes:
+                    scene_group.append(s)
         return -c.prominence_score(scene_group, self), self.first_featured(c), c.name
 
     def first_featured(self, c: Character):

@@ -35,7 +35,7 @@ def new_cmd_in():
             char_aliases=character.print_aliases(), \
             char_tier=character.tier, \
             char_gender=character.gender, \
-            char_tags=character.print_tags(),
+            char_tags=character.print_tags(), \
             char_r=character.color["r"], \
             char_g=character.color["g"], \
             char_b=character.color["b"])
@@ -48,10 +48,10 @@ def new_cmd_in():
         return render_template('index_graph_tool.html', x_val='', y_val='')
     elif action == ret.TEXT_TOOL:
         return render_template('index_text_tool.html', \
-            save_file=data["save_file"], \
-            book_file=data["book_file"], \
-            position=data["position"], \
-            known_names=data["known_names"])
+            save_file=data.save_file, \
+            book_file=data.book_file, \
+            position=data.position, \
+            known_names=",".join(data.known_names))
     elif action == ret.ERROR:
         error_msg = str(data)
         return render_template('index_home.html', cmd_out=error_msg)
@@ -88,49 +88,34 @@ def edit_char():
 def generate_summary():
     
     importer = SceneImporter()
-    status = importer.process_save_file(request.form['sf_form'])
+    status = importer.process_save_file(request.form['sf_form'], request.form['po_form'])
     if status == ret.ERROR:
         resp = "ERROR: unable to extract book data from save file"
         return render_template('index_home.html', cmd_out=resp)
-
-    known_names = request.form['kn_form']
-    position = request.form['po_form']
-    chapter = request.form['ch_form']
-    primary = request.form['pr_form']
-    locations = request.form['lo_form']
-    description = request.form['de_form']
-    wordcount = request.form['wo_form']
-    mentions = request.form['me_form']
-    quotes = request.form['qu_form']
-    char_events = request.form['ce_form']
-
-    save_file = request.form['sf_form']
-    
-    log.banner("Scene Data")
-    log.out("Known Names: \n" + known_names)
-    log.out("Postion: " + position)
-    log.out("Chapter: " + chapter)
-    log.out("Primary: " + primary)
-    log.out("Locations: " + locations)
-    log.out("Description: " + description)
-    log.out("Wordcount: " + wordcount)
-    log.out("Mentions: \n" + mentions)
-    log.out("Quotes: \n" + quotes)
-    log.out("Character Events: \n" + char_events)
+    status = importer.process_scene_data(request.form['ch_form'], request.form['pr_form'], \
+        request.form['lo_form'], request.form['de_form'], \
+        request.form['wo_form'], request.form['me_form'], \
+        request.form['qu_form'], request.form['ce_form'])
+    if status == ret.ERROR:
+        resp = "ERROR: unable to compile scene data with importer"
+        return render_template('index_home.html', cmd_out=resp)
+    log.banner("IMPORTER ALERTS")
+    for a in importer.alerts:
+        log.out(a)
 
     return render_template('index_text_tool.html', \
-        save_file=save_file, \
+        save_file=request.form['sf_form'], \
         book_file=importer.book_file, \
-        known_names=known_names, \
-        position=position, \
-        chapter=chapter, \
-        primary=primary, \
-        locations=locations, \
-        description=description, \
-        wordcount=wordcount, \
-        mentions=mentions, \
-        quotes=quotes, \
-        char_events=char_events)
+        #known_names=importer.known_names, \
+        position=importer.position, \
+        chapter=request.form['ch_form'], \
+        primary=request.form['pr_form'], \
+        locations=request.form['lo_form'], \
+        description=request.form['de_form'], \
+        wordcount=request.form['wo_form'], \
+        mentions=request.form['me_form'], \
+        quotes=request.form['qu_form'], \
+        char_events=request.form['ce_form'])
 
 @app.route('/new_graph', methods = ['POST'])
 def new_graph():
@@ -185,13 +170,13 @@ def process_cmd(cmd_string):
         msg = ""
         return ret.GRAPH_TOOL, msg
     if cmd_parts[0] == 'text_tool':
-        save_file = str(cmd_parts[1])
+        save_file_name = str(cmd_parts[1])
         importer = SceneImporter()
-        data = importer.extract_save_data(save_file)
-        if data == ret.ERROR:
+        status = importer.process_save_file(save_file_name)
+        if status == ret.ERROR:
             return ret.ERROR, "Unable to read file data\\" + save_file
         else:
-            return ret.TEXT_TOOL, data
+            return ret.TEXT_TOOL, importer
     return ret.ERROR, "Unsupported command entry: " + cmd_string
     
 if __name__ == '__main__':

@@ -1,5 +1,7 @@
-from obj.Character import Character
-from obj.ULocation import ULocation
+import util.ret as ret
+
+import obj.Character as Character
+from obj.Location import Location
 #from obj.UTime import UTime
 
 class Scene:
@@ -12,6 +14,15 @@ class Scene:
         self.description = description
         self.locations = []
         self.included = []
+
+    def get_location(self, loc_name: str):
+        for l in self.locations:
+            if l.name == loc_name:
+                return l
+        return ret.ERROR
+
+    def add_location(self, new_loc: Location):
+        self.locations.append(new_loc)
 
     #all methods below here are before the 1-19 object rework
 

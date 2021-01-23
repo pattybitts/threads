@@ -552,7 +552,7 @@
     function add_name() {
         //There's a bug here where if the user cancels the prompt, it prevents other hotkeys from functioning
         //ignoring for now
-        var alias = prompt("Enter new name:", "");
+        var alias = prompt("Enter new name:", "").trim();
         if (alias === null) {
             log("ERROR: null prompt - need to refresh for hotkey functionality");
             return;
