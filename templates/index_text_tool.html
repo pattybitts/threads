@@ -6,7 +6,7 @@
     <title>Threads of the Pattern</title>
 </head>
 
-<body onload="init('{{book_file}}', {{position}})">
+<body onload="init()">
     <h2>Interactive Text Parser</h2>
     <!--  
         This is admittedly an ugly fix to our problem of interfacing between the page and python.
@@ -17,17 +17,19 @@
         Options for elegant asynchronous data-transfer with AJAX may come, but it's essential for now that
         we begin building the database so we can create initial data models.
     -->
-    <form id="gen_form" action="/generate_summary" method="post">
+    <form hidden id="gen_form" action="/generate_summary" method="post">
         <textarea id="known_names" name="kn_form">{{known_names}}</textarea>
-        <input type="text" id="save_file" name="sf_form" value='{{save_file}}'>
-        <input type="text" id="position" name="po_form" value='{{position}}'>
-        <input type="text" id="chapter" name="ch_form" value='{{chapter}}'>
-        <input type="text" id="primary" name="pr_form" value='{{primary}}'>
+        <input type="text" id="save_file" name="sf_form" value="{{save_file}}">
+        <input type="text" id="book_file" name="bf_form" value="{{book_file}}">
+        <input type="text" id="position" name="po_form" value="{{position}}">
+        <input type="text" id="chapter" name="ch_form" value="{{chapter}}">
+        <input type="text" id="primary" name="pr_form" value="{{primary}}">
         <textarea id="locations" name="lo_form">{{locations}}</textarea>
         <textarea id="description" name="de_form">{{description}}</textarea>
-        <input type="text" id="wordcount" name="wo_form" value='{{wordcount}}'>
+        <input type="text" id="wordcount" name="wo_form" value="{{wordcount}}">
         <textarea id="mentions" name="me_form">{{mentions}}</textarea>
         <textarea id="quotes" name="qu_form">{{quotes}}</textarea>
+        <textarea id="features" name="fe_form">{{features}}</textarea>
         <textarea id="char_events" name="ce_form">{{char_events}}</textarea>
         <input type="submit" value="Submit">
     </form>
@@ -62,15 +64,13 @@
                 </div>
             </div>
             <div id="buttons_div">
-                <button id="next_page_button" class="button light">Next Page</button>
-                <button id="event_button" class="button light">Char Event</button>
-                <button id="add_button" class="button light">Add Name</button>
-                <button id="quote_button" class="button light">Set Quote</button>
-                <button id="reset_button" class="button light">Reset</button>
-                <button id="summary_button" class="button light">Sum</button>
-                <button id="mark_button" class="button light">Mark Scene</button>
-                <button id="save_button" class="button light">Save Scene</button>
-                <button id="diagnostic_button" class="button light">Diagnostic</button>
+                <button id="next_page_button" class="button light">Next Page (N)</button>
+                <button id="event_button" class="button light">Char Event (C)</button>
+                <button id="add_button" class="button light">Add Name (A)</button>
+                <button id="summary_button" class="button light">Generate Summary (S)</button>
+                <button id="mark_button" class="button light">Mark Scene End (M)</button>
+                <button id="save_button" class="button light">Save Scene (S)</button>
+                <button id="diagnostic_button" class="button light">Diagnostic (D)</button>
             </div>
             <div id="hotkeys_log_div">
                 <div id="hotkeys">
@@ -83,6 +83,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div hidden id="report_div">
+        <pre id="page_text">{{report}}</pre>
     </div>
 </body>
 </html>
@@ -166,9 +169,9 @@
     }
 
     .button {
-        height: 50px;
-        width: 50px;
-        border-radius: 8px;
+        height: 40px;
+        width: 100px;
+        border-radius: 6px;
         font-size: 12px;
         text-align: center;
         text-decoration: none;
@@ -258,17 +261,18 @@
         $('#diagnostic_button').click(diagnostic);
     });
 
-    function init(book_file, position) {
+    function init() {
         active_hotkeys.set(110, ["next_page", []]); //n
         active_hotkeys.set(97, ["add_name", []]); //a
-        active_hotkeys.set(115, ["generate_summary", []]); //s
+        active_hotkeys.set(103, ["generate_summary", []]); //g
+        active_hotkeys.set(115, ["save_scene", []]); //s
         active_hotkeys.set(99, ["character_event", []]); //c
         active_hotkeys.set(109, ["mark_scene", []]); //m
         active_hotkeys.set(100, ["diagnostic", []]); //d
 
-        $.get(book_file, read_text);
-        abs_char_count = position;
-        known_names = $('#known_names').text().split(',');
+        $.get(get_val('book_file'), read_text);
+        abs_char_count = get_val('position');
+        known_names = get_val('known_names').split(',');
         for (var i = 0; i < 10; i++) {
             hot_names.set(i, ["", 0]);
         }
@@ -281,7 +285,9 @@
             "Add Character: A<br />" +
             "Character Event: C<br />" +
             "Mark Scene End: M<br />" +
-            "Generate Summary: S");
+            "Generate Summary: G<br />" +
+            "Diagnostic Info: D<br />" +
+            "Save Scene: S");
         $('#char_hotkeys').html("<b>Character Hotkeys:</b>");
         //this would be a small qol, but it's crashing the page (running before fully initialized?)
         //TODO
@@ -682,11 +688,13 @@
         sm_string = sm_string.trim();
         set_val('mentions', sm_string);
         var sq_string = "";
+        var sf_string = "";
         for (let [key, value] of scene_quotes.entries()) {
             sq_string = sq_string + key + "," + value + "\n";
+            sf_string = sf_string + key + "\n";
         }
-        sq_string = sq_string.trim();
-        set_val('quotes', sq_string);
+        set_val('quotes', sq_string.trim());
+        set_val('features', sf_string.trim());
         var ce_string = "";
         for (let ce of char_events) {
             ce_string = ce_string + [ce[0], ce[1].join(), ce[2].join(), ce[3].join()].join(";") + "\n";
