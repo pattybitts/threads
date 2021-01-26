@@ -1,4 +1,5 @@
 import util.ret as ret
+import util.log as log
 
 from obj.Scene import Scene
 
@@ -15,35 +16,22 @@ class Character:
         self.featured = []
 
     @staticmethod
-    #this will need an update once we have a working prominence score sort
-    def match_character(list, name_searched: str, strict=True):
-        matches = []
-        best_match = ret.ERROR
-        best_score = 0
+    def match_character(list, name_searched):
+        a_matches = []
         for c in list:
-            if not isinstance(c, Character):
-                continue
+            if not isinstance(c, Character): continue
             if c.name == name_searched:
-                best_match = c
-                matches.append(c)
-                continue
+                return c
             for a in c.aliases:
-                if a == name_searched:
-                    matches.append(c)
-                    continue
-            if not strict:
-                alias_terms = " ".join(c.aliases).split()
-                name_terms = name_searched.split()
-                score = 0
-                for nt in name_terms:
-                    for a in alias_terms:
-                        if nt.lower() == a.lower():
-                            score += 1
-                if score > best_score:
-                    best_match = c
-                    best_score = score
-        if len(matches) != 1:
-            return best_match
+                log.out("/" + a[0] + "/")
+                log.out("/" + name_searched.strip() + "/")
+                if a[0] == name_searched:
+                    a_matches.append(c)
+        if len(a_matches) == 1:
+            return a_matches[0]
+        elif len(a_matches) > 1:
+            #I will need to come up with some sorting function, for now just last added (ya, ya, lazy)
+            return a_matches[len(a_matches)-1]
         else:
             return ret.ERROR
 

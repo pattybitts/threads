@@ -21,7 +21,7 @@ class Series:
         self.arcs.append(new_arc)
 
     def add_character(self, new_char: Character):
-        if Character.match_character(self.characters, new_char.name, True) != ret.ERROR:
+        if Character.match_character(self.characters, new_char.name) != ret.ERROR:
             log.out("Found character: " + new_char.name + " and should not have")
             return False
         self.characters.append(new_char)
