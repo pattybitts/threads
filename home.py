@@ -86,28 +86,28 @@ def edit_char():
 
 @app.route('/generate_summary', methods = ['POST'])
 def generate_summary():
-    
     importer = SceneImporter()
     status = importer.process_save_file(request.form['sf_form'], request.form['po_form'])
-    if status == ret.ERROR:
-        resp = "ERROR: unable to extract book data from save file"
-        return render_template('index_home.html', cmd_out=resp)
-    status = importer.process_scene_data(request.form['ch_form'], request.form['pr_form'], \
-        request.form['lo_form'], request.form['de_form'], \
-        request.form['wo_form'], request.form['me_form'], \
-        request.form['qu_form'], request.form['ce_form'])
-    if status == ret.ERROR:
-        resp = "ERROR: unable to compile scene data with importer"
-        return render_template('index_home.html', cmd_out=resp)
-    log.banner("IMPORTER ALERTS")
-    for a in importer.alerts:
-        log.out(a)
+    if status == ret.SUCCESS:
+        status = importer.process_scene_data(request.form['ch_form'], request.form['pr_form'], \
+            request.form['lo_form'], request.form['de_form'], \
+            request.form['wo_form'], request.form['me_form'], \
+            request.form['qu_form'], request.form['fe_form'], \
+            request.form['ce_form'])
+    if status == ret.SUCCESS:
+        status = importer.generate_summary()
+    if status == ret.SUCCESS:
+        resp = importer.report
+    else:
+        resp = "ERROR: FAILED TO IMPORT"
+        for a in importer.alerts:
+            resp += "\n" + a
 
     return render_template('index_text_tool.html', \
         save_file=request.form['sf_form'], \
-        book_file=importer.book_file, \
-        #known_names=importer.known_names, \
-        position=importer.position, \
+        book_file=request.form['bf_form'], \
+        known_names=request.form['kn_form'], \
+        position=request.form['po_form'], \
         chapter=request.form['ch_form'], \
         primary=request.form['pr_form'], \
         locations=request.form['lo_form'], \
@@ -115,7 +115,9 @@ def generate_summary():
         wordcount=request.form['wo_form'], \
         mentions=request.form['me_form'], \
         quotes=request.form['qu_form'], \
-        char_events=request.form['ce_form'])
+        features=request.form['fe_form'], \
+        char_events=request.form['ce_form'], \
+        report=resp)
 
 @app.route('/new_graph', methods = ['POST'])
 def new_graph():
@@ -175,8 +177,8 @@ def process_cmd(cmd_string):
         status = importer.process_save_file(save_file_name)
         if status == ret.ERROR:
             return ret.ERROR, "Unable to read file data\\" + save_file
-        else:
-            return ret.TEXT_TOOL, importer
+        status = importer.generate_known_names()
+        return ret.TEXT_TOOL, importer
     return ret.ERROR, "Unsupported command entry: " + cmd_string
     
 if __name__ == '__main__':

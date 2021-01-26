@@ -1,7 +1,6 @@
 import util.ret as ret
 
 from obj.Chapter import Chapter
-from obj.Scene import Scene
 from obj.Milestone import Milestone
 
 class Book:
@@ -20,9 +19,6 @@ class Book:
 
     def add_chapter(self, new_chapter: Chapter):
         self.chapters.append(new_chapter)
-        
-    def add_scene(self, new_scene: Scene):
-        self.scenes.append(new_scene)
         
     def add_milestone(self, new_milestone: Milestone):
         self.milestones.append(new_milestone)

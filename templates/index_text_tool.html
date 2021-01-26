@@ -17,7 +17,7 @@
         Options for elegant asynchronous data-transfer with AJAX may come, but it's essential for now that
         we begin building the database so we can create initial data models.
     -->
-    <form hidden id="gen_form" action="/generate_summary" method="post">
+    <form id="gen_form" action="/generate_summary" method="post">
         <textarea id="known_names" name="kn_form">{{known_names}}</textarea>
         <input type="text" id="save_file" name="sf_form" value="{{save_file}}">
         <input type="text" id="book_file" name="bf_form" value="{{book_file}}">
@@ -67,7 +67,7 @@
                 <button id="next_page_button" class="button light">Next Page (N)</button>
                 <button id="event_button" class="button light">Char Event (C)</button>
                 <button id="add_button" class="button light">Add Name (A)</button>
-                <button id="summary_button" class="button light">Generate Summary (S)</button>
+                <button id="summary_button" class="button light">Generate Summary (G)</button>
                 <button id="mark_button" class="button light">Mark Scene End (M)</button>
                 <button id="save_button" class="button light">Save Scene (S)</button>
                 <button id="diagnostic_button" class="button light">Diagnostic (D)</button>
@@ -85,7 +85,7 @@
         </div>
     </div>
     <div hidden id="report_div">
-        <pre id="page_text">{{report}}</pre>
+        <pre id="report_text">{{report}}</pre>
     </div>
 </body>
 </html>
@@ -271,7 +271,7 @@
         active_hotkeys.set(100, ["diagnostic", []]); //d
 
         $.get(get_val('book_file'), read_text);
-        abs_char_count = get_val('position');
+        abs_char_count = Number(get_val('position'));
         known_names = get_val('known_names').split(',');
         for (var i = 0; i < 10; i++) {
             hot_names.set(i, ["", 0]);
@@ -394,7 +394,7 @@
 
         page_text = full_text.substr(abs_char_count, char_inc);
         process_page_text();
-        update_hotkeys(!last_page);
+        //update_hotkeys(!last_page);
 
         abs_char_count += char_inc;
     }
@@ -702,7 +702,7 @@
         ce_string = ce_string.trim();
         set_val('char_events', ce_string);
 
-        //log_report
+        /*//log_report
         log("Current Summary:", true);
         log("Known Names: " + get_val('known_names'));
         log("Char Position: " + get_val('position'));
@@ -718,14 +718,20 @@
         log(get_val('quotes'));
         log("Character Events:");
         log(get_val('char_events'));
+        */
 
-        //diagnostic();
-        if (confirm("Submit Form?")) { $("#gen_form").submit(); }  
+        $("#gen_form").submit(); 
     }
 
     function diagnostic() {
         log("***");
         log("Diagnostic:");
         log("***");
+        log("ps: " + page_start);
+        log("acc: " + abs_char_count);
+        var test_num = abs_char_count + 100;
+        log("test: " + test_num);
+        log("Known Names:");
+        log(known_names);
     }
 </script>

@@ -7,6 +7,9 @@ class Chapter:
         self.placement = num
         self.scenes = []
 
+    def add_scene(self, new_scene: Scene):
+        self.scenes.append(new_scene)
+
     #all methods below are before 1-19
 
     def print_chapter(self):

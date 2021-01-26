@@ -6,14 +6,16 @@ from obj.Location import Location
 
 class Scene:
 
-    def __init__(self, name: str, num: int, wordcount: int, p_character: Character, description: str = ""):
+    def __init__(self, name: str, num: int, wordcount: int, description: str = ""):
         self.name = name
         self.placement = num
         self.wordcount = wordcount
-        self.primary = p_character
         self.description = description
         self.locations = []
         self.included = []
+
+    def set_primary(self, p_character: Character):
+        self.primary = p_character
 
     def get_location(self, loc_name: str):
         for l in self.locations:

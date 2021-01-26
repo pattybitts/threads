@@ -5,7 +5,7 @@ from obj.Scene import Scene
 class Character:
 
     def __init__(self, name_str: str, gender_str: str="", r_val: int=0, g_val: int=0, b_val: int=0):
-        self.name  = name_str
+        self.name  = str(name_str)
         self.gender = gender_str
         self.tier = ""
         self.color = {"r": r_val, "g": g_val, "b": b_val}
@@ -58,25 +58,35 @@ class Character:
     def add_tag(self, tag: str, scene: Scene):
         self.tags.append([tag, scene])
 
-    #all methods below here are before the 1-19 object rebuild and are suspect
-        
     def print_info(self):
         alias_str = ""
         for a in self.aliases:
-            alias_str = alias_str + "  " + str(a) + "\n"
+            alias_str = alias_str + "  " + a[0] + ": " + a[1].name + "\n"
         alias_str = alias_str.rstrip()
+        join_str = ""
+        for j in self.joins:
+            join_str = join_str + "  " + j[0].name + ": " + j[1].name + "\n"
+        join_str = join_str.rstrip()
         tag_str = ""
         for t in self.tags:
-            tag_str = tag_str + "  " + str(t) + "\n"
+            tag_str = tag_str + "  " + t[0] + ": " + t[1].name + "\n"
         tag_str = tag_str.rstrip()
+        featured_str = ""
+        for f in self.featured:
+            featured_str = featured_str + " " + f.name + "\n"
+        featured_str = featured_str.rstrip()
         color_str = "  R: " + str(self.color["r"]) + "\n"
         color_str = color_str + "  G: " + str(self.color["g"]) + "\n"
         color_str = color_str + "  B: " + str(self.color["b"])
         return "(Character) " + self.name + "\n" \
-            + "Aliases:\n" + alias_str + "\n" \
             + "Gender: " + self.gender + "\n" \
+            + "Color:\n" + color_str + "\n" \
+            + "Aliases:\n" + alias_str + "\n" \
+            + "Joins:\n" + join_str + "\n" \
             + "Tags:\n" + tag_str + "\n" \
-            + "Color:\n" + color_str
+            + "Featured:\n" + featured_str
+
+    #all methods below here are before the 1-19 object rebuild and are suspect
     
     def print_aliases(self):
         alias_str = ""
