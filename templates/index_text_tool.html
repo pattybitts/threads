@@ -34,6 +34,8 @@
                     <textarea id="locations_box" name="locations_box"></textarea><br />
                     <label for="description_box">Brief Description:</label>
                     <textarea id="description_box" name="description_box"></textarea><br />
+                    <label for="features_box">Featuring:</label>
+                    <textarea id="features_box" name="features_box"></textarea><br />
                 </div>
                 <div id="char_div">
                     Character Update:<br /><br />
@@ -85,13 +87,13 @@
                 <input type="text" id="chapter" name="ch_form" value="{{chapter}}"><br />
                 <label for="primary">Primary:</label>
                 <input type="text" id="primary" name="pr_form" value="{{primary}}"><br />
+                <label for="wordcount">Wordcount:</label>
                 <input type="text" id="wordcount" name="wo_form" value="{{wordcount}}"><br />
-                <label for="mentions">Mentions:</label>
                 <label for="locations">Locations:</label>
                 <textarea id="locations" name="lo_form">{{locations}}</textarea><br />
                 <label for="description">Description:</label>
                 <textarea id="description" name="de_form">{{description}}</textarea><br />
-                <label for="wordcount">Wordcount:</label>
+                <label for="mentions">Mentions:</label>
                 <textarea id="mentions" name="me_form">{{mentions}}</textarea><br />
                 <label for="quotes">Quotes:</label>
                 <textarea id="quotes" name="qu_form">{{quotes}}</textarea><br />
@@ -253,6 +255,7 @@
     var scene_wordcount = 0;
     var scene_mentions = new Map();
     var scene_quotes = new Map();
+    var scene_features = [];
     var char_events = [];
     var scene_end = null;
     
@@ -356,7 +359,9 @@
         }
         for (let key of page_quotes.keys()) {
             add_to_map(scene_quotes, key, page_quotes.get(key));
+            add_to_array(scene_features, key);
         }
+        set_val('features_box', scene_features.join("\n"));
         scene_wordcount += page_wordcount;
         page_start = abs_char_count;
         return true;
@@ -374,8 +379,6 @@
                 return;
             }
         }
-
-        log("New Page");
 
         page_quotes.clear();
         var quotes = [];
@@ -564,6 +567,7 @@
         if (classes.contains("assigned")) {
             $(quote).removeClass("assigned");
             //this nonsense works for now, but I should extract quote text somewhere/somehow else i think
+            //now I have get_val working stably, but i'm scared to touch this
             var quote_text = quote.textContent;
             var quote_reg = new RegExp("\".*\"", "s");
             var quote_matches = quote_text.match(quote_reg);
@@ -633,6 +637,7 @@
         return true;
     }
 
+    //does this still need to use args?
     function set_quote(args) {
         var all_quotes = document.getElementsByClassName('quote_div');
         var quote_div = null;
@@ -653,7 +658,6 @@
     }
 
     function mark_scene() {
-        //log("Called mark_scene");
         var next_words = prompt("Enter first words of next scene:", "");
         if (next_words === null) {
             log("ERROR: null prompt - need to refresh for hotkey functionality");
@@ -664,7 +668,6 @@
         } else {
             var endpoint = page_text.indexOf(next_words);
             if (endpoint >= 0) {
-                //log("Setting scene end at: " + next_words + " : " + endpoint);
                 scene_end = endpoint;
                 abs_char_count = page_start;
                 last_page = true;
@@ -698,6 +701,7 @@
         set_val('primary', get_val('primary_box'));
         set_val('locations', get_val('locations_box'));
         set_val('description', get_val('description_box'));
+        set_val('features', get_val('features_box'));
         set_val('wordcount', scene_wordcount);
         var sm_string = "";
         for (let [key, value] of scene_mentions.entries()) {
@@ -706,13 +710,10 @@
         sm_string = sm_string.trim();
         set_val('mentions', sm_string);
         var sq_string = "";
-        var sf_string = "";
         for (let [key, value] of scene_quotes.entries()) {
             sq_string = sq_string + key + "," + value + "\n";
-            sf_string = sf_string + key + "\n";
         }
         set_val('quotes', sq_string.trim());
-        set_val('features', sf_string.trim());
         var ce_string = "";
         for (let ce of char_events) {
             ce_string = ce_string + [ce[0], ce[1].join(), ce[2].join(), ce[3].join()].join(";") + "\n";
@@ -729,6 +730,7 @@
         set_val('primary_box', get_val('primary'));
         set_val('locations_box', get_val('locations'));
         set_val('description_box', get_val('description'));
+        set_val('features_box', get_val('features'));
         scene_wordcount = Number(get_val('wordcount'));
         scene_mentions.clear;
         if (get_val('mentions') != "") { var sm_strings = get_val('mentions').split(/[\v\r\n]+(?!$)/); }
