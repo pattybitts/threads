@@ -11,6 +11,7 @@ class Scene:
         self.placement = num
         self.wordcount = wordcount
         self.description = description
+        self.primary = None
         self.locations = []
         self.included = []
 

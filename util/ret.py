@@ -5,8 +5,11 @@ INVALID_INPUT = -2
 NOT_FOUND = -3 #as in, not found in search. not fatal in match
 
 #Website Directions
-HOME = 0
-ADD_CHAR = 1
-EDIT_CHAR = 2
-GRAPH_TOOL = 3
-TEXT_TOOL = 4
+HOME = 1
+ADD_CHAR = 2
+EDIT_CHAR = 3
+GRAPH_TOOL = 4
+TEXT_TOOL = 5
+
+def success(ret):
+    return ret >= 0

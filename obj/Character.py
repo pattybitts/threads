@@ -16,24 +16,44 @@ class Character:
         self.featured = []
 
     @staticmethod
-    def match_character(list, name_searched):
-        a_matches = []
+    def match_character(list, search_str: str, scene=None):
+        #first, matches all characters with this alias
+        matches = []
         for c in list:
             if not isinstance(c, Character): continue
-            if c.name == name_searched:
-                return c
             for a in c.aliases:
-                log.out("/" + a[0] + "/")
-                log.out("/" + name_searched.strip() + "/")
-                if a[0] == name_searched:
-                    a_matches.append(c)
-        if len(a_matches) == 1:
-            return a_matches[0]
-        elif len(a_matches) > 1:
-            #I will need to come up with some sorting function, for now just last added (ya, ya, lazy)
-            return a_matches[len(a_matches)-1]
+                if a[0] == search_str:
+                    matches.append(c)
+                    break
+        if len(matches) == 1:
+            return matches[0]
+        elif len(matches) == 0:
+            return ret.NOT_FOUND
         else:
-            return ret.ERROR
+            #next, checks to see if any character has been prioritized with an !alias
+            priority_matches = []
+            for m in matches:
+                for a in m.aliases:
+                    if a[0] == "!" + search_str:
+                        priority_matches.append(m)
+                        break
+            if len(priority_matches) == 1:
+                return priority_matches[0]
+            elif len(priority_matches) > 1:
+                return ret.ERROR
+            else:
+                #last, checks to see if only one character is included in the scene
+                if scene is None: return ret.ERROR
+                included_matches = []
+                for m in matches:
+                    for i in scene.included:
+                        if m == i["character"]:
+                            included_matches.append(m)
+                            break
+                if len(included_matches) == 1:
+                    return included_matches[0]
+                else:
+                    return ret.ERROR
 
     def add_alias(self, alias: str, scene: Scene):
         self.aliases.append([alias, scene])

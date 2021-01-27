@@ -5,6 +5,7 @@ import util.log as log
 from obj.Character import Character
 from obj.Book import Book
 from obj.Arc import Arc
+from obj.Scene import Scene
 
 class Series:
 
@@ -21,19 +22,27 @@ class Series:
         self.arcs.append(new_arc)
 
     def add_character(self, new_char: Character):
-        if Character.match_character(self.characters, new_char.name) != ret.ERROR:
-            log.out("Found character: " + new_char.name + " and should not have")
-            return False
+        #this used to contain a sceondary match_character to doublecheck for missed additions
+        #I'm removing that for now as the system is more procedural    
         self.characters.append(new_char)
         #TODO
         #self.characters.sort(key=self.char_place)
-        return True
 
     def get_book(self, book_name: str):
         for b in self.books:
             if b.name == book_name:
                 return b
         return ret.ERROR
+
+    def match_or_make_char(self, search_str: str, scene: Scene):
+        character = Character.match_character(self.characters, search_str, scene)
+        if character == ret.ERROR:
+            return ret.ERROR
+        if character == ret.NOT_FOUND:
+            character = Character(search_str)
+            character.add_alias(search_str, scene)
+            self.add_character(character)
+        return character
 
     #all methods below here are from before the 1-19 obj rework and are therefore suspect
 

@@ -71,14 +71,6 @@ class SceneImporter:
         scene_placement = len(chapter.scenes)+1
         scene_name = chapter.name.lower().replace(" ", "_") + "_" + str(scene_placement)
         scene = Scene(scene_name, scene_placement, wo_form, de_form)
-        pr_char = Character.match_character(series.characters, pr_form)
-        if pr_char == ret.ERROR:
-            log.out("New char from PR: " + pr_form)
-            pr_char = Character(pr_form)
-            pr_char.add_alias(pr_form, scene)
-            if not series.add_character(pr_char): 
-                self.alerts.append("Failed to add character for PR: " + pr_form)
-        scene.set_primary(pr_char)
         scene_locations = lo_form.split("\n")
         for sl in scene_locations:
             scene.add_location(Location(sl))
@@ -87,7 +79,6 @@ class SceneImporter:
         char_events = ce_form.split("\n")
         for ce in char_events:
             ce = ce.strip()
-            log.out("ce: " + ce)
             ce_fields = ce.split(";")
             if len(ce_fields) < 4: 
                 self.alerts.append("Invalid CE: " + ce)
@@ -96,14 +87,10 @@ class SceneImporter:
             ce_aliases = ce_fields[1].split(",")
             ce_joins = ce_fields[2].split(",")
             ce_tags = ce_fields[3].split(",")
-            ce_char = Character.match_character(series.characters, ce_name)
+            ce_char = series.match_or_make_char(ce_name, scene)
             if ce_char == ret.ERROR:
-                log.out("New char from CE: " + ce_name)
-                ce_char = Character(ce_name)
-                ce_char.add_alias(ce_name, scene)
-                if not series.add_character(ce_char): 
-                    self.alerts.append("Failed to add character for CE: " + ce)
-                    continue
+                self.alerts.append("Failed to match or make character: " + ce_name)
+                continue
             for ce_a in ce_aliases:
                 if ce_a == "": continue
                 ce_char.add_alias(ce_a, scene)
@@ -117,56 +104,28 @@ class SceneImporter:
             for ce_t in ce_tags:
                 if ce_t == "": continue
                 ce_char.add_tag(ce_t, scene)
+        #adding primary character
+        pr_char = series.match_or_make_char(pr_form, scene)
+        if pr_char == ret.ERROR:
+            self.alerts.append("Failed to match or make character: " + pr_form)
+            scene.set_primary(Character("null"))
+        else:
+            scene.set_primary(pr_char)
         #populating scene included
-        scene.included = []
-        scene_mentions = me_form.split("\n")
-        for sm in scene_mentions:
-            sm = sm.strip()
-            log.out("sm: " + sm)
-            sm_fields = sm.split(",")
-            if len(sm_fields) < 2:
-                self.alerts.append("Invalid SM: " + sm)
-                continue
-            sm_name = sm_fields[0]
-            sm_count = int(sm_fields[1])
-            log.out(sm_name)
-            log.out(sm_count)
-            sm_char = Character.match_character(series.characters, sm_name)
-            if sm_char == ret.ERROR:
-                log.out("New char from SM: " + sm_name)
-                sm_char = Character(sm_name)
-                sm_char.add_alias(sm_name, scene)
-                if not series.add_character(sm_char):
-                    self.alerts.append("Failed to add character for SM: " + sm)
-                    continue
-            found_in_included = False
-            for i in scene.included:
-                if i["character"] == sm_char:
-                    i["mentions"] += sm_count
-                    found_in_included = True
-            if not found_in_included:
-                scene.included.append({"character": sm_char, "featured": False, "mentions": sm_count, "quotes": 0})
-        #just noting here, we could methodize this (it would be shorter, not neater I think)
+        #scene quotes
         scene_quotes = qu_form.split("\n")
         for sq in scene_quotes:
             sq = sq.strip()
-            log.out("sq: " + sq)
             sq_fields = sq.split(",")
             if len(sq_fields) < 2:
                 self.alerts.append("Invalid SQ: " + sq)
                 continue
             sq_name = sq_fields[0]
             sq_count = int(sq_fields[1])
-            log.out(sq_name)
-            log.out(sq_count)
-            sq_char = Character.match_character(series.characters, sq_name)
+            sq_char = series.match_or_make_char(sq_name, scene)
             if sq_char == ret.ERROR:
-                log.out("New char from SQ: " + sq_name)
-                sq_char = Character(sq_name)
-                sq_char.add_alias(sq_name, scene)
-                if not series.add_character(sq_char):
-                    self.alerts.append("Failed to add character for SQ: " + sq)
-                    continue
+                self.alerts.append("Failed to match or make character: " + sq_name)
+                continue
             found_in_included = False
             for i in scene.included:
                 if i["character"] == sq_char:
@@ -175,17 +134,14 @@ class SceneImporter:
                     found_in_included = True
             if not found_in_included:
                 scene.included.append({"character": sq_char, "featured": True, "mentions": 0, "quotes": sq_count})
+        #scene features
         scene_features = fe_form.split("\n")
         for sf in scene_features:
             sf = sf.strip()
-            sf_char = Character.match_character(series.characters, sf)
+            sf_char = series.match_or_make_char(sf, scene)
             if sf_char == ret.ERROR:
-                log.out("New char from SF: " + sf)
-                sf_char = Character(sf)
-                sf_char.add_alias(sf_char.name, scene)
-                if not series.add_character(sf_char):
-                    self.alerts.append("Failed to add character for SF: " + sf)
-                    continue
+                self.alerts.append("Failed to match or make character: " + sf)
+                continue
             found_in_included = False
             for i in scene.included:
                 if i["character"] == sf_char:
@@ -193,6 +149,27 @@ class SceneImporter:
                     found_in_included = True
             if not found_in_included:
                 scene.included.append({"character": sf_char, "featured": True, "mentions": 0, "quotes": 0})
+        #scene mentions
+        scene_mentions = me_form.split("\n")
+        for sm in scene_mentions:
+            sm = sm.strip()
+            sm_fields = sm.split(",")
+            if len(sm_fields) < 2:
+                self.alerts.append("Invalid SM: " + sm)
+                continue
+            sm_name = sm_fields[0]
+            sm_count = int(sm_fields[1])
+            sm_char = series.match_or_make_char(sm_name, scene)
+            if sm_char == ret.ERROR:
+                self.alerts.append("Failed to match or make character: " + sm_name)
+                continue
+            found_in_included = False
+            for i in scene.included:
+                if i["character"] == sm_char:
+                    i["mentions"] += sm_count
+                    found_in_included = True
+            if not found_in_included:
+                scene.included.append({"character": sm_char, "featured": False, "mentions": sm_count, "quotes": 0})
         return ret.SUCCESS
 
     def generate_known_names(self):
@@ -217,7 +194,7 @@ class SceneImporter:
         chapter = book.chapters[len(book.chapters)-1]
         scene = chapter.scenes[len(chapter.scenes)-1]
         self.report += chapter.name + " (" + str(chapter.placement) + "); Scene #" + str(scene.placement) + "\n"
-        self.report += "Prespective: " + scene.primary.name + "; Words: " + str(scene.wordcount) + "\nLocations: "
+        self.report += "Perspective: " + scene.primary.name + "; Words: " + str(scene.wordcount) + "\nLocations: "
         for l in scene.locations:
             self.report += l.name + ", "
         self.report += "\n" + scene.description + "\n\n"
