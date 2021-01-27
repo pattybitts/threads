@@ -17,22 +17,6 @@
         Options for elegant asynchronous data-transfer with AJAX may come, but it's essential for now that
         we begin building the database so we can create initial data models.
     -->
-    <form id="gen_form" action="/generate_summary" method="post">
-        <textarea id="known_names" name="kn_form">{{known_names}}</textarea>
-        <input type="text" id="save_file" name="sf_form" value="{{save_file}}">
-        <input type="text" id="book_file" name="bf_form" value="{{book_file}}">
-        <input type="text" id="position" name="po_form" value="{{position}}">
-        <input type="text" id="chapter" name="ch_form" value="{{chapter}}">
-        <input type="text" id="primary" name="pr_form" value="{{primary}}">
-        <textarea id="locations" name="lo_form">{{locations}}</textarea>
-        <textarea id="description" name="de_form">{{description}}</textarea>
-        <input type="text" id="wordcount" name="wo_form" value="{{wordcount}}">
-        <textarea id="mentions" name="me_form">{{mentions}}</textarea>
-        <textarea id="quotes" name="qu_form">{{quotes}}</textarea>
-        <textarea id="features" name="fe_form">{{features}}</textarea>
-        <textarea id="char_events" name="ce_form">{{char_events}}</textarea>
-        <input type="submit" value="Submit">
-    </form>
     <div id="main_div">
         <div id="page_div">
             <pre id="page_text"></pre>
@@ -63,18 +47,18 @@
                     <textarea id="tags_box" name="tags_box"></textarea><br />
                 </div>
             </div>
-            <div id="buttons_div">
-                <button id="next_page_button" class="button light">Next Page (N)</button>
-                <button id="event_button" class="button light">Char Event (C)</button>
-                <button id="add_button" class="button light">Add Name (A)</button>
-                <button id="summary_button" class="button light">Generate Summary (G)</button>
-                <button id="mark_button" class="button light">Mark Scene End (M)</button>
-                <button id="save_button" class="button light">Save Scene (S)</button>
-                <button id="diagnostic_button" class="button light">Diagnostic (D)</button>
-            </div>
             <div id="hotkeys_log_div">
                 <div id="hotkeys">
-                    <div id="fixed_hotkeys"></div>
+                    <div id="buttons_div">
+                        <button id="next_page_button" class="button light">Next Page (N)</button>
+                        <button id="event_button" class="button light">Char Event (C)</button>
+                        <button id="add_button" class="button light">Add Name (A)</button>
+                        <button id="summary_button" class="button light">Generate Summary (G)</button>
+                        <button id="mark_button" class="button light">Mark Scene End (M)</button>
+                        <button id="save_button" class="button light">Save Scene (S)</button>
+                        <button id="diagnostic_button" class="button light">Diagnostic (D)</button>
+                        <button id="translate_button" class="button light">Translate Summary (T)</button>
+                    </div>
                     <div id="char_hotkeys"></div>
                 </div>
                 <div id="log">
@@ -84,8 +68,41 @@
             </div>
         </div>
     </div>
-    <div hidden id="report_div">
-        <pre id="report_text">{{report}}</pre>
+    <div id="report_div">
+        <div id="sum_div">
+            <pre id="report_text">{{report}}</pre>
+        </div>
+        <div id="gen_div">
+            <form id="gen_form" action="/generate_summary" method="post">
+                Raw Data:<br />
+                <label for="save_file">Save File:</label>
+                <input type="text" id="save_file" name="sf_form" value="{{save_file}}"><br />
+                <label for="book_file">Book File:</label>
+                <input type="text" id="book_file" name="bf_form" value="{{book_file}}"><br />
+                <label for="position">Position:</label>
+                <input type="text" id="position" name="po_form" value="{{position}}"><br />
+                <label for="chapter">Chapter:</label>
+                <input type="text" id="chapter" name="ch_form" value="{{chapter}}"><br />
+                <label for="primary">Primary:</label>
+                <input type="text" id="primary" name="pr_form" value="{{primary}}"><br />
+                <input type="text" id="wordcount" name="wo_form" value="{{wordcount}}"><br />
+                <label for="mentions">Mentions:</label>
+                <label for="locations">Locations:</label>
+                <textarea id="locations" name="lo_form">{{locations}}</textarea><br />
+                <label for="description">Description:</label>
+                <textarea id="description" name="de_form">{{description}}</textarea><br />
+                <label for="wordcount">Wordcount:</label>
+                <textarea id="mentions" name="me_form">{{mentions}}</textarea><br />
+                <label for="quotes">Quotes:</label>
+                <textarea id="quotes" name="qu_form">{{quotes}}</textarea><br />
+                <label for="features">Features:</label>
+                <textarea id="features" name="fe_form">{{features}}</textarea><br />
+                <label for="char_events">Char Events:</label>
+                <textarea id="char_events" name="ce_form">{{char_events}}</textarea><br />
+                <label for="known_names">Known Names:</label>
+                <textarea id="known_names" name="kn_form">{{known_names}}</textarea><br />
+            </form>
+        </div>
     </div>
 </body>
 </html>
@@ -138,16 +155,13 @@
     #char_div {
         flex-direction: column;
     }
-    #buttons_div {
-        height: 10%;
-    }
     #hotkeys_log_div {
-        height: 40%;
+        height: 50%;
     }
     #hotkeys {
         width: 50%;
     }
-    #fixed_hotkeys {
+    #buttons_div {
         flex-direction: column;
     }
     #char_hotkeys {
@@ -157,15 +171,21 @@
         width: 50%;
         flex-direction: column;
     }
-
     #log_box {
-        width: 100%;
-        height: 100%;
+        width: 95%;
+        height: 95%;
         overflow: hidden;
         resize: none;
         overflow-y: scroll;
         overflow-x: scroll;
         font-family: 'Lucida Console';
+    }
+    #sum_div {
+        width: 50%;
+    }
+    #gen_div {
+        width: 50%;
+        flex-direction: column;
     }
 
     .button {
@@ -269,6 +289,7 @@
         active_hotkeys.set(99, ["character_event", []]); //c
         active_hotkeys.set(109, ["mark_scene", []]); //m
         active_hotkeys.set(100, ["diagnostic", []]); //d
+        active_hotkeys.set(116, ["translate_summary", []]); //t
 
         $.get(get_val('book_file'), read_text);
         abs_char_count = Number(get_val('position'));
@@ -280,15 +301,12 @@
         $('#log_box').text("Log output will appear here:");
         $('#page_text').text("Page text will appear here:");
         $('#page_quotes').text("Page quotes will appear here:");
-        $('#fixed_hotkeys').html("<b>Fixed Hotkeys:</b>" +
-            "Next Page: N<br />" +
-            "Add Character: A<br />" +
-            "Character Event: C<br />" +
-            "Mark Scene End: M<br />" +
-            "Generate Summary: G<br />" +
-            "Diagnostic Info: D<br />" +
-            "Save Scene: S");
         $('#char_hotkeys').html("<b>Character Hotkeys:</b>");
+
+        //this line. is fricking useful.
+        $('#report_text').html($('#report_text').text());
+
+        translate_summary();
         //this would be a small qol, but it's crashing the page (running before fully initialized?)
         //TODO
         //next_page();
@@ -702,25 +720,40 @@
         ce_string = ce_string.trim();
         set_val('char_events', ce_string);
 
-        /*//log_report
-        log("Current Summary:", true);
-        log("Known Names: " + get_val('known_names'));
-        log("Char Position: " + get_val('position'));
-        log("Chapter Name: " + get_val('chapter'));
-        log("Primary Character: " + get_val('primary'));
-        log("Locations: " + get_val('locations').replace(/[\v\r\n]+/g, ","));
-        log("Brief Description: " + get_val('description'));
-        log("");
-        log("Scene Words: " + get_val('wordcount'));
-        log("Scene Mentions:");
-        log(get_val('mentions'));
-        log("Scene Quote-Words:");
-        log(get_val('quotes'));
-        log("Character Events:");
-        log(get_val('char_events'));
-        */
-
         $("#gen_form").submit(); 
+    }
+
+    function translate_summary() {
+        abs_char_count = Number(get_val('position'));
+        set_val('chapter_box', get_val('chapter'));
+        set_val('primary_box', get_val('primary'));
+        set_val('locations_box', get_val('locations'));
+        set_val('description_box', get_val('description'));
+        scene_wordcount = Number(get_val('wordcount'));
+        scene_mentions.clear;
+        if (get_val('mentions') != "") { var sm_strings = get_val('mentions').split(/[\v\r\n]+(?!$)/); }
+        for (let sm of sm_strings) {
+            var sm_fields = sm.split(",");
+            add_to_map(scene_mentions, sm_fields[0], sm_fields[1]);
+        }
+        scene_quotes.clear;
+        if (get_val('quotes') != "") { var sq_strings = get_val('quotes').split(/[\v\r\n]+(?!$)/); }
+        for (let sq of sq_strings) {
+            var sq_fields = sq.split(",");
+            add_to_map(scene_quotes, sq_fields[0], sq_fields[1]);
+        }
+        char_events.clear;
+        if (get_val('char_events') != "") { var ce_strings = get_val('char_events').split(/[\v\r\n]+(?!$)/); }
+        for (let ce of ce_strings) {
+            var ce_fields = ce.split(";");
+            var ce_name = ce_fields[0];
+            var ce_aliases = ce_fields[1].split(",");
+            var ce_joins = ce_fields[2].split(",");
+            var ce_tags = ce_fields[3].split(",");
+            add_to_array(char_events, [ce_name, ce_aliases, ce_joins, ce_tags]);
+        }
+        known_names.clear
+        if (get_val('known_names') != "") { known_names = get_val('known_names').split(","); }
     }
 
     function diagnostic() {

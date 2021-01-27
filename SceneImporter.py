@@ -184,11 +184,11 @@ class SceneImporter:
         return ret.SUCCESS
 
     def generate_summary(self):
-        self.report += "SUMMARY REPORT:\n"
-        self.report += "Non-Fatal Alerts:\n"
+        self.report += "<b>SUMMARY REPORT:</b>\n"
+        self.report += "<b>Non-Fatal Alerts:</b>\n"
         for a in self.alerts:
             self.report += a + "\n"
-        self.report += "\nScene Info:\n"
+        self.report += "\n<b>Scene Info:</b>\n"
         self.report += self.library_file + "; " + self.series_name + "; " + self.book_name + "\n"
         book = self.library.get_series(self.series_name).get_book(self.book_name)
         chapter = book.chapters[len(book.chapters)-1]
@@ -198,7 +198,7 @@ class SceneImporter:
         for l in scene.locations:
             self.report += l.name + ", "
         self.report += "\n" + scene.description + "\n\n"
-        self.report += "Included Characters:\n"
+        self.report += "<b>Included Characters:</b>\n"
         for i in scene.included:
             character = i["character"]
             featured_str = "Featured" if i["featured"] else "Mentioned"
