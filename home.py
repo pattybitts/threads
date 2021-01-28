@@ -47,11 +47,15 @@ def new_cmd_in():
     elif action == ret.GRAPH_TOOL:
         return render_template('index_graph_tool.html', x_val='', y_val='')
     elif action == ret.TEXT_TOOL:
+        if len(data.known_names) > 0: 
+            known_names_str = ",".join(data.known_names)
+        else:
+            known_names_str = ""
         return render_template('index_text_tool.html', \
             save_file=data.save_file, \
             book_file=data.book_file, \
             position=data.position, \
-            known_names=",".join(data.known_names))
+            known_names=known_names_str)
     elif action == ret.ERROR:
         error_msg = str(data)
         return render_template('index_home.html', cmd_out=error_msg)
@@ -104,6 +108,7 @@ def generate_summary():
             resp += "\n" + a
 
     return render_template('index_text_tool.html', \
+        save_status=request.form['ss_form'], \
         save_file=request.form['sf_form'], \
         book_file=request.form['bf_form'], \
         known_names=request.form['kn_form'], \

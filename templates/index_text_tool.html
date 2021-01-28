@@ -8,21 +8,31 @@
 
 <body onload="init()">
     <h2>Interactive Text Parser</h2>
-    <!--  
-        This is admittedly an ugly fix to our problem of interfacing between the page and python.
-        We use a hidden form with fields corresponding to the data to be saved.
-        The corresponding function populates the fields and submits the form.
-        On the python side, we use request.form to pull the data into the database, perform server-side
-        operations, then re-upload the data to preserve the context.
-        Options for elegant asynchronous data-transfer with AJAX may come, but it's essential for now that
-        we begin building the database so we can create initial data models.
-    -->
     <div id="main_div">
         <div id="page_div">
             <pre id="page_text"></pre>
             <div id="page_quotes"></div>
         </div>
         <div id="utils_div">
+            <div id="hotkeys_log_div">
+                <div id="hotkeys">
+                    <div id="buttons_div">
+                        <button id="next_page_button" class="button light">Next Page (N)</button>
+                        <button id="event_button" class="button light">Char Event (C)</button>
+                        <button id="add_button" class="button light">Add Name (A)</button>
+                        <button id="summary_button" class="button light">Generate Summary (G)</button>
+                        <button id="mark_button" class="button light">Mark Scene End (M)</button>
+                        <button id="save_button" class="button light">Save Scene (S)</button>
+                        <button id="diagnostic_button" class="button light">Diagnostic (D)</button>
+                        <button id="translate_button" class="button light">Translate Summary (T)</button>
+                    </div>
+                    <div id="char_hotkeys"></div>
+                </div>
+                <div id="log">
+                    Log Output:
+                    <textarea id="log_box" readonly></textarea>
+                </div>
+            </div>
             <div id="inputs_div">
                 <div id="scene_div">
                     Scene Info:<br /><br />
@@ -49,27 +59,17 @@
                     <textarea id="tags_box" name="tags_box"></textarea><br />
                 </div>
             </div>
-            <div id="hotkeys_log_div">
-                <div id="hotkeys">
-                    <div id="buttons_div">
-                        <button id="next_page_button" class="button light">Next Page (N)</button>
-                        <button id="event_button" class="button light">Char Event (C)</button>
-                        <button id="add_button" class="button light">Add Name (A)</button>
-                        <button id="summary_button" class="button light">Generate Summary (G)</button>
-                        <button id="mark_button" class="button light">Mark Scene End (M)</button>
-                        <button id="save_button" class="button light">Save Scene (S)</button>
-                        <button id="diagnostic_button" class="button light">Diagnostic (D)</button>
-                        <button id="translate_button" class="button light">Translate Summary (T)</button>
-                    </div>
-                    <div id="char_hotkeys"></div>
-                </div>
-                <div id="log">
-                    Log Output:
-                    <textarea id="log_box" readonly></textarea>
-                </div>
-            </div>
         </div>
     </div>
+    <!--
+        This is admittedly an ugly fix to our problem of interfacing between the page and python.
+        We use a hidden form with fields corresponding to the data to be saved.
+        The corresponding function populates the fields and submits the form.
+        On the python side, we use request.form to pull the data into the database, perform server-side
+        operations, then re-upload the data to preserve the context.
+        Options for elegant asynchronous data-transfer with AJAX may come, but it's essential for now that
+        we begin building the database so we can create initial data models.
+    -->
     <div id="report_div">
         <div id="sum_div">
             <pre id="report_text">{{report}}</pre>
@@ -77,6 +77,8 @@
         <div id="gen_div">
             <form id="gen_form" action="/generate_summary" method="post">
                 Raw Data:<br />
+                <label for="save_status">Save Status:</label>
+                <input readonly type="text" id="save_status" name="ss_form" value="{{save_status}}" /><br />
                 <label for="save_file">Save File:</label>
                 <input type="text" id="save_file" name="sf_form" value="{{save_file}}"><br />
                 <label for="book_file">Book File:</label>
@@ -126,14 +128,15 @@
         border-radius: 5px;
         border: 1px solid black;
         color: black;
-        height: 100%;
+        min-height: 100%;
         width: 100%;
         flex-direction: row;
     }
     #main_div {
-        height: 700px;
+        min-height: 750px;
     }
     #page_div {
+        min-height: 100%;
         width: 50%;
         flex-direction: column;
     }
@@ -142,23 +145,24 @@
         flex-direction: column;
     }
     #page_text {
-        height: 50%;
+        min-height: 50%;
     }
     #page_quotes {
-        height: 50%;
+        min-height: 50%;
         flex-direction: column;
     }
     #inputs_div {
-        height: 50%;
+        min-height: 50%;
     }
     #scene_div {
+        width: 50%;
         flex-direction: column;
     }
     #char_div {
         flex-direction: column;
     }
     #hotkeys_log_div {
-        height: 50%;
+        min-height: 50%;
     }
     #hotkeys {
         width: 50%;
@@ -170,6 +174,7 @@
         flex-direction: column;
     }
     #log {
+        min-height: 350px;
         width: 50%;
         flex-direction: column;
     }
@@ -226,6 +231,9 @@
         background-color: palevioletred;
     }
 
+    .quote_div {
+        min-height: 100px;
+    }
     .selected {
         background-color: yellow;
     }
@@ -282,6 +290,7 @@
         $('#event_button').click(character_event);
         $('#mark_button').click(mark_scene);
         $('#diagnostic_button').click(diagnostic);
+        $('translate_button').click(translate_summary);
     });
 
     function init() {
@@ -300,6 +309,7 @@
         for (var i = 0; i < 10; i++) {
             hot_names.set(i, ["", 0]);
         }
+        if (get_val("save_status") == "") { set_val("save_status", "saved"); }
 
         $('#log_box').text("Log output will appear here:");
         $('#page_text').text("Page text will appear here:");
@@ -341,6 +351,7 @@
 
     function save_page_to_scene() {
         //checking that all previous quotes are assigned
+        log("Called Save Page");
         var checked_quotes = true;
         var all_quotes = document.getElementsByClassName('quote_div');
         for (var i = 0, len = all_quotes.length | 0; i < len; i = i + 1) {
@@ -368,8 +379,10 @@
     }
 
     function next_page() {
-        //checking that previous data has been saved
-        if (scene_end !== null && !last_page) {
+        var save_status = get_val('save_status');
+        if (save_status == "saved") {
+            set_val('save_status', "parsing");
+        } else if (save_status == "reviewing") {
             log("ERROR: cannot continue until previous scene is saved");
             return;
         }
@@ -415,6 +428,7 @@
 
         page_text = full_text.substr(abs_char_count, char_inc);
         process_page_text();
+        //TODO: examine this (and other hotkey inconsistency)
         //update_hotkeys(!last_page);
 
         abs_char_count += char_inc;
@@ -449,7 +463,7 @@
         for (let key of hot_names.keys()) {
             var name_val = hot_names.get(key)[0];
             if (name_val != "") {
-                active_hotkeys.set(48 + key, ["set_quote", [name_val]]); //48 is key 0
+                active_hotkeys.set(48 + key, ["set_quote", [name_val]]); //48 is the 0 key, 49->1, etc 
                 char_hotkey_text += name_val + ": " + key + "<br />";
                 if (inc_counters) {hot_names.set(key, [name_val, hot_names.get(key)[1] + 1]);}
             }
@@ -637,7 +651,6 @@
         return true;
     }
 
-    //does this still need to use args?
     function set_quote(args) {
         var all_quotes = document.getElementsByClassName('quote_div');
         var quote_div = null;
@@ -672,17 +685,12 @@
                 abs_char_count = page_start;
                 last_page = true;
                 next_page();
-                last_page = false;
+                set_val('save_status', "reviewing");
             }
         }
     }
 
     function generate_summary() {
-        //checking and updating last page
-        if (!save_page_to_scene()) {
-            log("ERROR: Quotes unassigned");
-            return;
-        }
         //checking form fields
         var checked_fields = true;
         checked_fields = get_val('chapter_box') != "" & checked_fields;
@@ -693,9 +701,13 @@
             log("ERROR: Scene fields empty");
             return;
         }
+        //checking and updating last page
+        if (!save_page_to_scene()) {
+            log("ERROR: Quotes unassigned");
+            return;
+        }
 
         //transferring data to gen_form
-        set_val('known_names', known_names.join());
         set_val('position', page_start);
         set_val('chapter', get_val('chapter_box'));
         set_val('primary', get_val('primary_box'));
@@ -720,6 +732,12 @@
         }
         ce_string = ce_string.trim();
         set_val('char_events', ce_string);
+        var kn_string = "";
+        for (let kn of known_names) {
+            kn_string = kn_string + kn + "\n";
+        }
+        kn_string = kn_string.trim();
+        set_val('known_names', kn_string);
 
         $("#gen_form").submit(); 
     }
@@ -754,8 +772,10 @@
             var ce_tags = ce_fields[3].split(",");
             add_to_array(char_events, [ce_name, ce_aliases, ce_joins, ce_tags]);
         }
+        scene_features.clear;
+        if (get_val('features') != "") { scene_features = get_val('features').split(/[\v\r\n]+(?!$)/); }
         known_names.clear
-        if (get_val('known_names') != "") { known_names = get_val('known_names').split(","); }
+        if (get_val('known_names') != "") { known_names = get_val('known_names').split(/[\v\r\n]+(?!$)/); }
     }
 
     function diagnostic() {
