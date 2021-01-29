@@ -1,7 +1,9 @@
-import pickle
+import pickle, re
 
 import util.ret as ret
 
+#ooh boy, we have a massive object and front end rework ahead of us
+#we need to shift the cmd in paradigm to take a save file
 ACTIVE_FILE = "data\\wot_0"
 
 def dump_pickle(object, filename):
@@ -19,6 +21,8 @@ def load_pickle(filename):
         return ret.ERROR
 
 #to be archived or repurposed, not using json for this project
+#TODO: I'm using these again for rudimentary save files, but that just highlights that I NEED to
+#rework this whole mess
 #given a section of json text and a target term, returns an array of the values it is keyed to
 def create_array(array_text, target):
     out_array = []
@@ -83,3 +87,11 @@ def find_next_bracket(text):
             or char == '[' or char == ']':
             return char
     return ret.ERROR
+
+#given a term and a replacement value, finds the unit and replaces it in the string
+def replace_unit(full_string, term, replacement):
+    new_string = re.sub("\"" + term + "\":\s\"(.*)\"", "\"" + term + "\": " + replacement, full_string)
+    if new_string != full_string:
+        return new_string
+    else:
+        return ret.NOT_FOUND

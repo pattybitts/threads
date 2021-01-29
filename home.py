@@ -107,8 +107,20 @@ def generate_summary():
         for a in importer.alerts:
             resp += "\n" + a
 
+    if request.form['ss_form'] == "saved":
+        status = importer.save_library()
+        if status == ret.SUCCESS:
+            resp = importer.report
+            return render_template('index_text_tool.html', \
+                save_status="saved", \
+                book_file=request.form['bf_form'], \
+                known_names=request.form['kn_form'], \
+                position=request.form['po_form'], \
+                report=resp)
+            
+
     return render_template('index_text_tool.html', \
-        save_status=request.form['ss_form'], \
+        save_status="reviewing", \
         save_file=request.form['sf_form'], \
         book_file=request.form['bf_form'], \
         known_names=request.form['kn_form'], \

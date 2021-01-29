@@ -214,3 +214,17 @@ class SceneImporter:
                     self.report += "New Tag: " + t[0] + "\n"
             self.report += "\n"
         return ret.SUCCESS
+
+    def save_library(self):
+        self.library.save("data\\" + self.library_file)
+        input = open("data\\" + self.save_file, r)
+        input_text = input.read()
+        output_text = ds.replace_unit(input_text, "position", str(self.position))
+        if output_text == ret.NOT_FOUND:
+            self.alerts.append("Unable to update position: " + str(self.position) + "in save file")
+            return ret.ERROR
+        output = open("data\\" + self.save_file, 'wb')
+        output.write(bytearray(output_text, 'utf-8'))
+        output.close()
+        self.alerts.append("Successfully updated library file with new scene!")
+        return ret.SUCCESS

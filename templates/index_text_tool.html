@@ -282,6 +282,7 @@
         $('#mark_button').click(mark_scene);
         $('#diagnostic_button').click(diagnostic);
         $('translate_button').click(translate_summary);
+        $('save_button').click(save_scene);
     });
 
     function init() {
@@ -321,6 +322,18 @@
             $('#log_box').text("");
         }
         $('#log_box').text($('#log_box').text() + "\n" + string);
+    }
+
+    function diagnostic() {
+        log("***");
+        log("Diagnostic:");
+        log("***");
+        log("ps: " + page_start);
+        log("acc: " + abs_char_count);
+        var test_num = abs_char_count + 100;
+        log("test: " + test_num);
+        log("Known Names:");
+        log(known_names);
     }
 
     function read_text(data, status) {
@@ -769,15 +782,14 @@
         if (get_val('known_names') != "") { known_names = get_val('known_names').split(/[\v\r\n]+(?!$)/); }
     }
 
-    function diagnostic() {
-        log("***");
-        log("Diagnostic:");
-        log("***");
-        log("ps: " + page_start);
-        log("acc: " + abs_char_count);
-        var test_num = abs_char_count + 100;
-        log("test: " + test_num);
-        log("Known Names:");
-        log(known_names);
+    function save_scene() {
+        if (get_val('save_status') != "reviewing") {
+            log("ERROR: cannot save until scene is parsed and reviewed!");
+            return;
+        }
+        if (confirm("Are you sure you are ready to upload scene data?")) {
+            set_val('save_status', 'saved');
+            $("#gen_form").submit();
+        }
     }
 </script>
