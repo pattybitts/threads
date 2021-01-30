@@ -28,7 +28,7 @@
                     </div>
                     <div id="char_hotkeys"></div>
                 </div>
-                <div id="log">
+                <div id="log_div">
                     Log Output:
                     <textarea id="log_box" readonly></textarea>
                 </div>
@@ -105,6 +105,8 @@
                 <textarea id="char_events" name="ce_form">{{char_events}}</textarea><br />
                 <label for="known_names">Known Names:</label>
                 <textarea id="known_names" name="kn_form">{{known_names}}</textarea><br />
+                <label for="log">Log:</label>
+                <textarea id="log" name="lg_form">{{log}}</textarea><br />
             </form>
         </div>
     </div>
@@ -140,10 +142,10 @@
         flex-direction: column;
     }
     #page_text {
-        min-height: 350px;
+        min-height: 150px;
     }
     #page_quotes {
-        min-height: 350px;
+        min-height: 150px;
         flex-direction: column;
     }
     #inputs_div {
@@ -165,7 +167,7 @@
     #char_hotkeys {
         flex-direction: column;
     }
-    #log {
+    #log_div {
         width: 50%;
         flex-direction: column;
     }
@@ -261,7 +263,7 @@
     var known_names = [];
     var hot_names = new Map();
 
-    $(document).ready(function () {
+    /*$(document).ready(function () {
         $(document).keypress(hotkey);
         $("input").focus(function () {
             input_focus = true;
@@ -283,9 +285,7 @@
         $('#diagnostic_button').click(diagnostic);
         $('translate_button').click(translate_summary);
         $('save_button').click(save_scene);
-    });
 
-    function init() {
         active_hotkeys.set(110, ["next_page", []]); //n
         active_hotkeys.set(97, ["add_name", []]); //a
         active_hotkeys.set(103, ["generate_summary", []]); //g
@@ -303,37 +303,90 @@
         }
         if (get_val("save_status") == "") { set_val("save_status", "saved"); }
 
-        $('#log_box').text("Log output will appear here:");
         $('#page_text').text("Page text will appear here:");
         $('#page_quotes').text("Page quotes will appear here:");
         $('#char_hotkeys').html("<b>Character Hotkeys:</b>");
 
         //this line. is fricking useful.
+        //can use this as a precedent for uploading html text and formatting it in init
+        $('#report_text').html($('#report_text').text());
+
+        log("Made it here");
+        translate_summary();
+        log("Made it here");
+    });*/
+
+    function init() {
+        $(document).keypress(hotkey);
+        $("input").focus(function () {
+            input_focus = true;
+        });
+        $("input").blur(function () {
+            input_focus = false;
+        });
+        $("textarea").focus(function () {
+            input_focus = true;
+        });
+        $("textarea").blur(function () {
+            input_focus = false;
+        });
+        $('#next_page_button').click(next_page);
+        $('#add_button').click(add_name);
+        $('#summary_button').click(generate_summary);
+        $('#event_button').click(character_event);
+        $('#mark_button').click(mark_scene);
+        $('#diagnostic_button').click(diagnostic);
+        $('#translate_button').click(translate_summary);
+        $('#save_button').click(save_scene);
+
+        active_hotkeys.set(110, ["next_page", []]); //n
+        active_hotkeys.set(97, ["add_name", []]); //a
+        active_hotkeys.set(103, ["generate_summary", []]); //g
+        active_hotkeys.set(115, ["save_scene", []]); //s
+        active_hotkeys.set(99, ["character_event", []]); //c
+        active_hotkeys.set(109, ["mark_scene", []]); //m
+        active_hotkeys.set(100, ["diagnostic", []]); //d
+        active_hotkeys.set(116, ["translate_summary", []]); //t
+
+        $.get(get_val('book_file'), read_text);
+        abs_char_count = Number(get_val('position'));
+        known_names = get_val('known_names').split(',');
+        for (var i = 0; i < 10; i++) {
+            hot_names.set(i, ["", 0]);
+        }
+        if (get_val("save_status") == "") { set_val("save_status", "saved"); }
+
+        $('#page_text').text("Page text will appear here:");
+        $('#page_quotes').text("Page quotes will appear here:");
+        $('#char_hotkeys').html("<b>Character Hotkeys:</b>");
+
+        //this line. is fricking useful.
+        //can use this as a precedent for uploading html text and formatting it in init
         $('#report_text').html($('#report_text').text());
 
         translate_summary();
-        //this would be a small qol, but it's crashing the page (running before fully initialized?)
-        //TODO
-        //next_page();
+        log("goob");
     }
 
     function log(string, clear = false) {
         if (clear) {
-            $('#log_box').text("");
+            set_val('log_box', "");
         }
-        $('#log_box').text($('#log_box').text() + "\n" + string);
+        set_val('log_box', get_val('log_box') + "\n" + string);
     }
 
     function diagnostic() {
         log("***");
         log("Diagnostic:");
         log("***");
-        log("ps: " + page_start);
-        log("acc: " + abs_char_count);
-        var test_num = abs_char_count + 100;
-        log("test: " + test_num);
-        log("Known Names:");
-        log(known_names);
+        log("Features Info: ");
+        log("Length: " + String(scene_features.length));
+        log("Terms:");
+        for (let sf of scene_features) {
+            log(sf);
+        }
+        log("Features Box: " + get_val('features_box'));
+        log("Features Form: " + get_val('features'));
     }
 
     function read_text(data, status) {
@@ -355,7 +408,6 @@
 
     function save_page_to_scene() {
         //checking that all previous quotes are assigned
-        log("Called Save Page");
         var checked_quotes = true;
         var all_quotes = document.getElementsByClassName('quote_div');
         for (var i = 0, len = all_quotes.length | 0; i < len; i = i + 1) {
@@ -431,9 +483,14 @@
         $(".quote_div:first").addClass('selected');
 
         page_text = full_text.substr(abs_char_count, char_inc);
+
         process_page_text();
-        //TODO: examine this (and other hotkey inconsistency)
-        //update_hotkeys(!last_page);
+        update_hotkeys();
+        if (!last_page) {
+            for (let [key, value] of hot_names.entries()) {
+                hot_names.set(key, [value[0], value[1] + 1]);
+            }
+        }
 
         abs_char_count += char_inc;
     }
@@ -462,14 +519,13 @@
         log("Submitted Character Event for: " + char_name);
     }
 
-    function update_hotkeys(inc_counters=false) {
+    function update_hotkeys() {
         var char_hotkey_text = "<b>Character Hotkeys:</b>";
-        for (let key of hot_names.keys()) {
-            var name_val = hot_names.get(key)[0];
+        for (let [key, value] of hot_names.entries()) {
+            var name_val = value[0];
             if (name_val != "") {
                 active_hotkeys.set(48 + key, ["set_quote", [name_val]]); //48 is the 0 key, 49->1, etc 
                 char_hotkey_text += name_val + ": " + key + "<br />";
-                if (inc_counters) {hot_names.set(key, [name_val, hot_names.get(key)[1] + 1]);}
             }
         }
         $('#char_hotkeys').html(char_hotkey_text);
@@ -481,10 +537,14 @@
         var potential_name = "";
         var best_matches = [];
         var page_caps = new Map();
-        var page_words = page_text.split(/[\s-."]+(?!$)/);
+        var page_words = (page_text.trim() == "") ? [] : page_text.split(/[\s-."]+(?!$)/);
 
         page_mentions.clear();
         page_wordcount = page_words.length;
+
+        if (page_text.trim() == "") {
+            return;
+        }
 
         //can maybe be refactored now that i can use break
         for (let p of page_words) {
@@ -641,10 +701,9 @@
         return ret;
     }
 
-    function set_val(element, new_val, clear = true) {
+    function set_val(element, new_val, clear=true) {
         var el = $('#' + element);
         if (el.length === 0) {
-            log("ERROR: failed to find element id: " + element);
             return false;
         }
         if (clear) {
@@ -695,6 +754,7 @@
     }
 
     function generate_summary() {
+        log("Generating Summary");
         //checking form fields
         var checked_fields = true;
         checked_fields = get_val('chapter_box') != "" & checked_fields;
@@ -721,13 +781,13 @@
         set_val('wordcount', scene_wordcount);
         var sm_string = "";
         for (let [key, value] of scene_mentions.entries()) {
-            sm_string = sm_string + key + "," + value + "\n";
+            sm_string = sm_string + key + "," + String(value) + "\n";
         }
         sm_string = sm_string.trim();
         set_val('mentions', sm_string);
         var sq_string = "";
         for (let [key, value] of scene_quotes.entries()) {
-            sq_string = sq_string + key + "," + value + "\n";
+            sq_string = sq_string + key + "," + String(value) + "\n";
         }
         set_val('quotes', sq_string.trim());
         var ce_string = "";
@@ -742,11 +802,18 @@
         }
         kn_string = kn_string.trim();
         set_val('known_names', kn_string);
+        
+        log("Logging final diagnostic");
 
+        diagnostic();
+
+        set_val('log', get_val('log_box'));
         $("#gen_form").submit(); 
     }
 
     function translate_summary() {
+        set_val('log_box', get_val('log'));
+        log("Translating summary data back into page");
         abs_char_count = Number(get_val('position'));
         set_val('chapter_box', get_val('chapter'));
         set_val('primary_box', get_val('primary'));
@@ -754,20 +821,23 @@
         set_val('description_box', get_val('description'));
         set_val('features_box', get_val('features'));
         scene_wordcount = Number(get_val('wordcount'));
+        var sm_strings = [];
         scene_mentions.clear;
-        if (get_val('mentions') != "") { var sm_strings = get_val('mentions').split(/[\v\r\n]+(?!$)/); }
+        if (get_val('mentions') != "") {sm_strings = get_val('mentions').split(/[\v\r\n]+(?!$)/);}
         for (let sm of sm_strings) {
             var sm_fields = sm.split(",");
             add_to_map(scene_mentions, sm_fields[0], sm_fields[1]);
         }
+        var sq_strings = [];
         scene_quotes.clear;
-        if (get_val('quotes') != "") { var sq_strings = get_val('quotes').split(/[\v\r\n]+(?!$)/); }
+        if (get_val('quotes') != "") {sq_strings = get_val('quotes').split(/[\v\r\n]+(?!$)/);}
         for (let sq of sq_strings) {
             var sq_fields = sq.split(",");
             add_to_map(scene_quotes, sq_fields[0], sq_fields[1]);
         }
+        var ce_strings = [];
         char_events.clear;
-        if (get_val('char_events') != "") { var ce_strings = get_val('char_events').split(/[\v\r\n]+(?!$)/); }
+        if (get_val('char_events') != "") {ce_strings = get_val('char_events').split(/[\v\r\n]+(?!$)/);}
         for (let ce of ce_strings) {
             var ce_fields = ce.split(";");
             var ce_name = ce_fields[0];
@@ -776,10 +846,8 @@
             var ce_tags = ce_fields[3].split(",");
             add_to_array(char_events, [ce_name, ce_aliases, ce_joins, ce_tags]);
         }
-        scene_features.clear;
-        if (get_val('features') != "") { scene_features = get_val('features').split(/[\v\r\n]+(?!$)/); }
-        known_names.clear
-        if (get_val('known_names') != "") { known_names = get_val('known_names').split(/[\v\r\n]+(?!$)/); }
+        if (get_val('features') != "") {scene_features = get_val('features').split(/[\v\r\n]+(?!$)/);}
+        if (get_val('known_names') != "") {known_names = get_val('known_names').split(/[\v\r\n]+(?!$)/);}
     }
 
     function save_scene() {
@@ -788,6 +856,7 @@
             return;
         }
         if (confirm("Are you sure you are ready to upload scene data?")) {
+            log("Saving Scene Data to Database!");
             set_val('save_status', 'saved');
             $("#gen_form").submit();
         }

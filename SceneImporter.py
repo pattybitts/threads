@@ -71,12 +71,12 @@ class SceneImporter:
         scene_placement = len(chapter.scenes)+1
         scene_name = chapter.name.lower().replace(" ", "_") + "_" + str(scene_placement)
         scene = Scene(scene_name, scene_placement, wo_form, de_form)
-        scene_locations = lo_form.split("\n")
+        scene_locations = lo_form.split("\n") if lo_form != "" else []
         for sl in scene_locations:
-            scene.add_location(Location(sl))
+            scene.add_location(Location(sl.strip()))
         chapter.add_scene(scene)
         #updating characters with character events
-        char_events = ce_form.split("\n")
+        char_events = ce_form.split("\n") if ce_form != "" else []
         for ce in char_events:
             ce = ce.strip()
             ce_fields = ce.split(";")
@@ -113,7 +113,7 @@ class SceneImporter:
             scene.set_primary(pr_char)
         #populating scene included
         #scene quotes
-        scene_quotes = qu_form.split("\n")
+        scene_quotes = qu_form.split("\n") if qu_form != "" else []
         for sq in scene_quotes:
             sq = sq.strip()
             sq_fields = sq.split(",")
@@ -135,7 +135,7 @@ class SceneImporter:
             if not found_in_included:
                 scene.included.append({"character": sq_char, "featured": True, "mentions": 0, "quotes": sq_count})
         #scene features
-        scene_features = fe_form.split("\n")
+        scene_features = fe_form.split("\n") if fe_form != "" else []
         for sf in scene_features:
             sf = sf.strip()
             sf_char = series.match_or_make_char(sf, scene)
@@ -150,7 +150,7 @@ class SceneImporter:
             if not found_in_included:
                 scene.included.append({"character": sf_char, "featured": True, "mentions": 0, "quotes": 0})
         #scene mentions
-        scene_mentions = me_form.split("\n")
+        scene_mentions = me_form.split("\n") if me_form != "" else []
         for sm in scene_mentions:
             sm = sm.strip()
             sm_fields = sm.split(",")
@@ -197,6 +197,7 @@ class SceneImporter:
         self.report += "Perspective: " + scene.primary.name + "; Words: " + str(scene.wordcount) + "\nLocations: "
         for l in scene.locations:
             self.report += l.name + ", "
+        self.report = self.report.rstrip(", ")
         self.report += "\n" + scene.description + "\n\n"
         self.report += "<b>Included Characters:</b>\n"
         for i in scene.included:
@@ -217,7 +218,7 @@ class SceneImporter:
 
     def save_library(self):
         self.library.save("data\\" + self.library_file)
-        input = open("data\\" + self.save_file, r)
+        input = open("data\\" + self.save_file, 'r')
         input_text = input.read()
         output_text = ds.replace_unit(input_text, "position", str(self.position))
         if output_text == ret.NOT_FOUND:
