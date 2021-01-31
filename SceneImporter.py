@@ -26,24 +26,21 @@ class SceneImporter:
         self.alerts = []
         self.report = ""
 
-    def process_save_file(self, save_file_name: str, tool_position=-1):
-        #I NEED to clean this try_catch atrocity
-        try:
-            input = open("data\\" + save_file_name, 'r')
-            sav_text = input.read()
-        except:
-            self.alerts.append("ERROR: unable to open save file: save_file_name")
+    def process_save_file(self, save_file_name):
+        save_data = ds.load_pickle(save_file_name)
+        if save_data == ret.ERROR:
+            self.alerts.append("ERROR: unable to open save file: " + save_file_name)
             return ret.ERROR
-        self.save_file = ds.create_array(sav_text, "save_file")[0]
-        self.library_file = ds.create_array(sav_text, "library_file")[0]
-        self.book_file = ds.create_array(sav_text, "book_file")[0]
-        self.series_name = ds.create_array(sav_text, "series_name")[0]
-        self.book_name = ds.create_array(sav_text, "book_name")[0]
-        #I think this is where we'd like to overwrite save file?
-        if int(tool_position) >= 0:
-            self.position = tool_position
-        else:
-            self.position = ds.create_array(sav_text, "position")[0]
+        self.save_file = save_data.name
+        self.library_file = save_data.library_file
+        self.book_file = save_data.book_file
+        self.series_name = save_data.series_name
+        self.book_name = save_data.book_name
+        self.position = save_data.position
+        self.library = ds.load_pickle(self.library_file)
+        if self.library is None or self.library == ret.ERROR:
+            self.library = Library()
+            self.library.save(self.library_file)
         return ret.SUCCESS
 
     def process_scene_data(self, ch_form: str, pr_form: str, lo_form: str, de_form: str, \
@@ -216,16 +213,10 @@ class SceneImporter:
             self.report += "\n"
         return ret.SUCCESS
 
-    def save_library(self):
-        self.library.save("data\\" + self.library_file)
-        input = open("data\\" + self.save_file, 'r')
-        input_text = input.read()
-        output_text = ds.replace_unit(input_text, "position", str(self.position))
-        if output_text == ret.NOT_FOUND:
-            self.alerts.append("Unable to update position: " + str(self.position) + "in save file")
-            return ret.ERROR
-        output = open("data\\" + self.save_file, 'wb')
-        output.write(bytearray(output_text, 'utf-8'))
-        output.close()
-        self.alerts.append("Successfully updated library file with new scene!")
+    def save_library(self, new_position):
+        self.library.save(self.library_file)
+        save_file = ds.load_pickle(self.save_file)
+        save_file.position = new_position
+        save_file.save()
+        self.alerts.append("Successfully updated library and save file with new scene!")
         return ret.SUCCESS

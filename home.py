@@ -19,12 +19,17 @@ def main():
     
 @app.route('/cmd_in', methods = ['POST'])
 def new_cmd_in():
-    series = ds.load_pickle(ds.ACTIVE_FILE)
-    cmd_string = request.form['cmd_box']
-    action, data = process_cmd(cmd_string)
+    save_str = request.form['save_box']
+    cmd_str = request.form['cmd_box']
+    action, importer = process_cmd(cmd_str, save_str)
     if action == ret.HOME:
-        return render_template('index_home.html', cmd_out=data)
+        resp = "\n".join(importer.alerts)
+        return render_template('index_home.html', cmd_out=resp)
     elif action == ret.EDIT_CHAR:
+        #not supported in modern paradigm yet!
+        resp = "Not yet supported in modern paradigm!"
+        return render_template('index_home.html', cmd_out=resp)
+        """
         character = Character.match_character(series.characters, data)
         if character == ret.ERROR:
             error_msg = "INTERNAL ERROR:\nValid character name not found after processing"
@@ -39,31 +44,41 @@ def new_cmd_in():
             char_r=character.color["r"], \
             char_g=character.color["g"], \
             char_b=character.color["b"])
+        """
     elif action == ret.ADD_CHAR:
+        #not supported in modern paradigm yet!
+        resp = "Not yet supported in modern paradigm!"
+        return render_template('index_home.html', cmd_out=resp)
+        """
         if Character.match_character(series.characters, data, True) != ret.ERROR:
             error_msg = "INTERNAL ERROR:\nCharacter '" + data + "' matched after processing"
             return render_template('index_home.html', cmd_out=error_msg)
         return render_template('index_char_form.html', action="add", char_name=data)
+        """
     elif action == ret.GRAPH_TOOL:
         return render_template('index_graph_tool.html', x_val='', y_val='')
     elif action == ret.TEXT_TOOL:
-        if len(data.known_names) > 0: 
-            known_names_str = ",".join(data.known_names)
+        if len(importer.known_names) > 0: 
+            known_names_str = ",".join(importer.known_names)
         else:
             known_names_str = ""
         return render_template('index_text_tool.html', \
-            save_file=data.save_file, \
-            book_file=data.book_file, \
-            position=data.position, \
+            save_file=importer.save_file, \
+            book_file=importer.book_file, \
+            position=importer.position, \
             known_names=known_names_str)
     elif action == ret.ERROR:
-        error_msg = str(data)
+        error_msg = "\n".join(importer.alerts)
         return render_template('index_home.html', cmd_out=error_msg)
     error_msg = "INTERNAL ERROR:\nInvalid return from processing"
     return render_template('index_home.html', cmd_out=error_msg)
 
 @app.route('/char_form_in', methods = ['POST'])
 def edit_char():
+    #not supported in modern paradigm yet!
+    resp = "Not yet supported in modern paradigm!"
+    return render_template('index_home.html', cmd_out=resp)
+    """
     series = ds.load_pickle(ds.ACTIVE_FILE)
     new_char = Character(request.form['name_box'], \
         request.form['alias_box'], \
@@ -87,11 +102,12 @@ def edit_char():
             resp = "Character " + new_char.name + " successfully added to database"
             series.save(ds.ACTIVE_FILE)
     return render_template('index_home.html', cmd_out=resp)
+    """
 
 @app.route('/generate_summary', methods = ['POST'])
 def generate_summary():
     importer = SceneImporter()
-    status = importer.process_save_file(request.form['sf_form'], request.form['po_form'])
+    status = importer.process_save_file(request.form['sf_form'])
     if status == ret.SUCCESS:
         status = importer.process_scene_data(request.form['ch_form'], request.form['pr_form'], \
             request.form['lo_form'], request.form['de_form'], \
@@ -108,11 +124,12 @@ def generate_summary():
             resp += "\n" + a
 
     if request.form['ss_form'] == "saved":
-        status = importer.save_library()
+        status = importer.save_library(request.form['po_form'])
         if status == ret.SUCCESS:
             resp = importer.report
             return render_template('index_text_tool.html', \
                 save_status="saved", \
+                save_file=request.form['sf_form'], \
                 book_file=request.form['bf_form'], \
                 known_names=request.form['kn_form'], \
                 log=request.form['lg_form'], \
@@ -137,6 +154,7 @@ def generate_summary():
         char_events=request.form['ce_form'], \
         report=resp)
 
+"""
 @app.route('/new_graph', methods = ['POST'])
 def new_graph():
     filter_text = str.strip(request.form['filter_box'])
@@ -146,11 +164,17 @@ def new_graph():
     query = Query(x_axis, y_axis, filters)
     query.make_query_list()
     return render_template('index_graph_tool.html', x_val=x_axis, y_val=y_axis, query_output=query.query_log, filter_text=filter_text)
+"""
 
-def process_cmd(cmd_string):
+def process_cmd(cmd_str, save_str):
     #check command supported
-    cmd_parts = cmd_string.split('=')
-    series = ds.load_pickle(ds.ACTIVE_FILE)
+    cmd_parts = cmd_str.split('=')
+    importer = SceneImporter()
+    status = importer.process_save_file(save_str)
+    if status == ret.ERROR:
+        return ret.ERROR, "Unable to import save file: " + save_str
+    """
+    This all to be updated and added once we have our text tool functioning
     if cmd_parts[0] == 'add_char':
         character = Character.match_character(series.characters, cmd_parts[1], True)
         if character == ret.ERROR:
@@ -189,12 +213,8 @@ def process_cmd(cmd_string):
     if cmd_parts[0] == 'graph_tool':
         msg = ""
         return ret.GRAPH_TOOL, msg
+    """
     if cmd_parts[0] == 'text_tool':
-        save_file_name = str(cmd_parts[1])
-        importer = SceneImporter()
-        status = importer.process_save_file(save_file_name)
-        if status == ret.ERROR:
-            return ret.ERROR, "Unable to read file data\\" + save_file
         status = importer.generate_known_names()
         return ret.TEXT_TOOL, importer
     return ret.ERROR, "Unsupported command entry: " + cmd_string

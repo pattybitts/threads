@@ -263,59 +263,6 @@
     var known_names = [];
     var hot_names = new Map();
 
-    /*$(document).ready(function () {
-        $(document).keypress(hotkey);
-        $("input").focus(function () {
-            input_focus = true;
-        });
-        $("input").blur(function () {
-            input_focus = false;
-        });
-        $("textarea").focus(function () {
-            input_focus = true;
-        });
-        $("textarea").blur(function () {
-            input_focus = false;
-        });
-        $('#next_page_button').click(next_page);
-        $('#add_button').click(add_name);
-        $('#summary_button').click(generate_summary);
-        $('#event_button').click(character_event);
-        $('#mark_button').click(mark_scene);
-        $('#diagnostic_button').click(diagnostic);
-        $('translate_button').click(translate_summary);
-        $('save_button').click(save_scene);
-
-        active_hotkeys.set(110, ["next_page", []]); //n
-        active_hotkeys.set(97, ["add_name", []]); //a
-        active_hotkeys.set(103, ["generate_summary", []]); //g
-        active_hotkeys.set(115, ["save_scene", []]); //s
-        active_hotkeys.set(99, ["character_event", []]); //c
-        active_hotkeys.set(109, ["mark_scene", []]); //m
-        active_hotkeys.set(100, ["diagnostic", []]); //d
-        active_hotkeys.set(116, ["translate_summary", []]); //t
-
-        $.get(get_val('book_file'), read_text);
-        abs_char_count = Number(get_val('position'));
-        known_names = get_val('known_names').split(',');
-        for (var i = 0; i < 10; i++) {
-            hot_names.set(i, ["", 0]);
-        }
-        if (get_val("save_status") == "") { set_val("save_status", "saved"); }
-
-        $('#page_text').text("Page text will appear here:");
-        $('#page_quotes').text("Page quotes will appear here:");
-        $('#char_hotkeys').html("<b>Character Hotkeys:</b>");
-
-        //this line. is fricking useful.
-        //can use this as a precedent for uploading html text and formatting it in init
-        $('#report_text').html($('#report_text').text());
-
-        log("Made it here");
-        translate_summary();
-        log("Made it here");
-    });*/
-
     function init() {
         $(document).keypress(hotkey);
         $("input").focus(function () {
@@ -365,7 +312,6 @@
         $('#report_text').html($('#report_text').text());
 
         translate_summary();
-        log("goob");
     }
 
     function log(string, clear = false) {
@@ -802,10 +748,6 @@
         }
         kn_string = kn_string.trim();
         set_val('known_names', kn_string);
-        
-        log("Logging final diagnostic");
-
-        diagnostic();
 
         set_val('log', get_val('log_box'));
         $("#gen_form").submit(); 
@@ -858,7 +800,7 @@
         if (confirm("Are you sure you are ready to upload scene data?")) {
             log("Saving Scene Data to Database!");
             set_val('save_status', 'saved');
-            $("#gen_form").submit();
+            generate_summary();
         }
     }
 </script>

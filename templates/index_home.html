@@ -8,12 +8,16 @@
 <body class="default">
     <h2>Welcome to Threads of the Pattern! Enter a command below.</h2>
     <p><b>Valid commands:</b><br />
+        TODO: update this!
         add_char=&lt;Character Name&gt;: Presents form to add new character to library<br />
         edit_char=&lt;Character Name&gt;: Presents form to edit character info in library. Accepts aliases.<br />
         disp_char=&lt;Character Name&gt;: Displays character info currently in library. Accepts aliases.
     </p>
     <form action="/cmd_in" method="post">
-        <input type="text" name="cmd_box">
+        <label for="save_box">Save File:</label>
+        <input type="text" name="save_box" value="data\eotw.sav"><br />
+        <label for="cmd_box">Command:</label>
+        <input type="text" name="cmd_box"><br />
         <input type="submit" value="Submit">
     </form>
     <p><br /><b>Command Output:</b></p>
