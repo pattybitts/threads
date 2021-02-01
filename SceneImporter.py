@@ -60,7 +60,7 @@ class SceneImporter:
             book = Book(self.book_name, len(series.books)+1)
             series.add_book(book)
         #finding chapter
-        chapter = book.get_chapter(ch_form)
+        chapter = book.find_chapter(ch_form)
         if chapter == ret.ERROR:
             chapter = Chapter(ch_form, len(book.chapters)+1)
             book.add_chapter(chapter)

@@ -7,7 +7,8 @@
 </head>
 <body class="default">
     <h2>Welcome to Threads of the Pattern! Enter a command below.</h2>
-    <p><b>Valid commands:</b><br />
+    <p>
+        <b>Valid commands:</b><br />
         TODO: update this!
         add_char=&lt;Character Name&gt;: Presents form to add new character to library<br />
         edit_char=&lt;Character Name&gt;: Presents form to edit character info in library. Accepts aliases.<br />
@@ -20,8 +21,11 @@
         <input type="text" name="cmd_box"><br />
         <input type="submit" value="Submit">
     </form>
-    <p><br /><b>Command Output:</b></p>
-    <textarea readonly>{{  cmd_out  }}</textarea>
+    <br />
+    <label for="prev_cmd">Previous Command:</label><br/>
+    <input readonly value="{{cmd_in}}"/>
+    <p><b>Command Output:</b></p>
+    <textarea readonly>{{cmd_out}}</textarea>
 </body>
 </html>
 <style>
@@ -31,8 +35,9 @@
     }
     textarea {
         overflow-y: scroll;
-        height: 350px;
-        width: 30%;
+        overflow-x: scroll;
+        height: 500px;
+        width: 90%;
         resize: none;
     }
 </style>

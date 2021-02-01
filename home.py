@@ -24,7 +24,7 @@ def new_cmd_in():
     action, importer = process_cmd(cmd_str, save_str)
     if action == ret.HOME:
         resp = importer.get_output()
-        return render_template('index_home.html', cmd_out=resp)
+        return render_template('index_home.html', cmd_out=resp, cmd_in=cmd_str)
     elif action == ret.EDIT_CHAR:
         #not supported in modern paradigm yet!
         resp = "Not yet supported in modern paradigm!"
@@ -177,9 +177,8 @@ def process_cmd(cmd_str, save_str):
         return ret.ERROR, importer
     if cmd_parts[0] == 'disp_char':
         if len(cmd_parts) < 2: 
-            importer.outputs.append("No character provided in: " + cmd_str)
+            importer.outputs.append("No character name provided in: " + cmd_str)
             return ret.BAD_INPUT, importer
-        #this could be methodized within importer object
         series = importer.library.get_series(importer.series_name)
         character = Character.match_character(series.characters, cmd_parts[1])
         #and now this is where loose is needed (future TODO)
@@ -187,6 +186,19 @@ def process_cmd(cmd_str, save_str):
             importer.outputs.append("Unable to match character: " + cmd_parts[1])
             return ret.ERROR, importer
         importer.outputs.append(character.print_info())
+        return ret.HOME, importer
+    if cmd_parts[0] == 'disp_chapter':
+        if len(cmd_parts) < 2: 
+            importer.outputs.append("No chapter name provided in: " + cmd_str)
+            return ret.BAD_INPUT, importer
+        book = importer.library.get_series(importer.series_name).get_book(importer.book_name)
+        chapter = book.find_chapter(cmd_parts[1])
+        if not ret.success(chapter):
+            importer.outputs.append("Unable to find chapter: " + cmd_parts[1])
+            return ret.ERROR, importer
+        importer.outputs.append(chapter.print_info())
+        for s in chapter.scenes:
+            importer.outputs.append(s.print_info())
         return ret.HOME, importer
     """
     This all to be updated and added once we have our text tool functioning
