@@ -1,7 +1,7 @@
 #Generic Errors
 SUCCESS = 0
 ERROR = -1
-INVALID_INPUT = -2
+BAD_INPUT = -2
 NOT_FOUND = -3 #as in, not found in search. not fatal in match
 
 #Website Directions
@@ -12,4 +12,5 @@ GRAPH_TOOL = 4
 TEXT_TOOL = 5
 
 def success(ret):
+    if not isinstance(ret, int): return True
     return ret >= 0

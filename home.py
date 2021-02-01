@@ -23,7 +23,7 @@ def new_cmd_in():
     cmd_str = request.form['cmd_box']
     action, importer = process_cmd(cmd_str, save_str)
     if action == ret.HOME:
-        resp = "\n".join(importer.alerts)
+        resp = importer.get_output()
         return render_template('index_home.html', cmd_out=resp)
     elif action == ret.EDIT_CHAR:
         #not supported in modern paradigm yet!
@@ -67,8 +67,8 @@ def new_cmd_in():
             book_file=importer.book_file, \
             position=importer.position, \
             known_names=known_names_str)
-    elif action == ret.ERROR:
-        error_msg = "\n".join(importer.alerts)
+    elif not ret.success(action):
+        error_msg = "\n".join(importer.outputs)
         return render_template('index_home.html', cmd_out=error_msg)
     error_msg = "INTERNAL ERROR:\nInvalid return from processing"
     return render_template('index_home.html', cmd_out=error_msg)
@@ -106,6 +106,7 @@ def edit_char():
 
 @app.route('/generate_summary', methods = ['POST'])
 def generate_summary():
+    #there's room to do this more sanely with ONE output stream
     importer = SceneImporter()
     status = importer.process_save_file(request.form['sf_form'])
     if status == ret.SUCCESS:
@@ -120,7 +121,7 @@ def generate_summary():
         resp = importer.report
     else:
         resp = "ERROR: FAILED TO IMPORT"
-        for a in importer.alerts:
+        for a in importer.outputs:
             resp += "\n" + a
 
     if request.form['ss_form'] == "saved":
@@ -171,8 +172,22 @@ def process_cmd(cmd_str, save_str):
     cmd_parts = cmd_str.split('=')
     importer = SceneImporter()
     status = importer.process_save_file(save_str)
-    if status == ret.ERROR:
-        return ret.ERROR, "Unable to import save file: " + save_str
+    if not ret.success(status):
+        importer.outputs.append("Unable to import save file: " + save_str)
+        return ret.ERROR, importer
+    if cmd_parts[0] == 'disp_char':
+        if len(cmd_parts) < 2: 
+            importer.outputs.append("No character provided in: " + cmd_str)
+            return ret.BAD_INPUT, importer
+        #this could be methodized within importer object
+        series = importer.library.get_series(importer.series_name)
+        character = Character.match_character(series.characters, cmd_parts[1])
+        #and now this is where loose is needed (future TODO)
+        if not ret.success(character):
+            importer.outputs.append("Unable to match character: " + cmd_parts[1])
+            return ret.ERROR, importer
+        importer.outputs.append(character.print_info())
+        return ret.HOME, importer
     """
     This all to be updated and added once we have our text tool functioning
     if cmd_parts[0] == 'add_char':
@@ -186,12 +201,6 @@ def process_cmd(cmd_str, save_str):
         if character == ret.ERROR:
             return ret.ERROR, "Unable to match character name: " + cmd_parts[1]
         return ret.EDIT_CHAR, character.name
-    if cmd_parts[0] == 'disp_char':
-        character = Character.match_character(series.characters, cmd_parts[1])
-        if character == ret.ERROR:
-            return ret.ERROR, "Unable to match character name: " + cmd_parts[1]
-        char_text = character.print_info()
-        return ret.HOME, char_text
     if cmd_parts[0] == 'list_chars':
         msg = "Character List:\n"
         for c in series.characters:
