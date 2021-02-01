@@ -9,6 +9,7 @@ from obj.Chapter import Chapter
 from obj.Scene import Scene
 from obj.Character import Character
 from obj.Location import Location
+from SaveFile import SaveFile
 
 class SceneImporter:
 
@@ -27,7 +28,7 @@ class SceneImporter:
         self.report = ""
 
     def process_save_file(self, save_file_name):
-        save_data = ds.load_pickle(save_file_name)
+        save_data = SaveFile.load(save_file_name)
         if save_data == ret.ERROR:
             self.outputs.append("ERROR: unable to open save file: " + save_file_name)
             return ret.ERROR
@@ -37,7 +38,7 @@ class SceneImporter:
         self.series_name = save_data.series_name
         self.book_name = save_data.book_name
         self.position = save_data.position
-        self.library = ds.load_pickle(self.library_file)
+        self.library = Library.load(self.library_file)
         if self.library is None or self.library == ret.ERROR:
             self.library = Library()
             self.library.save(self.library_file)
@@ -45,10 +46,6 @@ class SceneImporter:
 
     def process_scene_data(self, ch_form: str, pr_form: str, lo_form: str, de_form: str, \
         wo_form: str, me_form: str, qu_form: str, fe_form: str, ce_form: str):
-        #finding library
-        self.library = ds.load_pickle(self.library_file)
-        if self.library == ret.ERROR or self.library == None:
-            self.library = Library()
         #finding series
         series = self.library.get_series(self.series_name)
         if series == ret.ERROR:
@@ -215,7 +212,10 @@ class SceneImporter:
 
     def save_library(self, new_position):
         self.library.save(self.library_file)
-        save_file = ds.load_pickle(self.save_file)
+        save_file = SaveFile.load(self.save_file)
+        if not ret.success(save_file):
+            self.outputs.append("Unable to load save file: " + self.save_file)
+            return ret.ERROR
         save_file.position = new_position
         save_file.save()
         self.outputs.append("Successfully updated library and save file with new scene!")

@@ -14,6 +14,13 @@ class Library:
     def save(self, dump_file):
         ds.dump_pickle(self, dump_file)
 
+    @staticmethod
+    def load(load_file):
+        library = ds.load_pickle(load_file)
+        if not ret.success(library):
+            return ret.ERROR
+        return library
+
     def add_series(self, new_series: Series):
         self.series.append(new_series)
 

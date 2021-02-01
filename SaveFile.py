@@ -1,4 +1,5 @@
 import util.data_storage as ds
+import util.ret as ret
 
 class SaveFile:
 
@@ -13,6 +14,13 @@ class SaveFile:
     def save(self, save_str=""):
         if save_str == "": save_str = self.name
         ds.dump_pickle(self, save_str)
+
+    @staticmethod
+    def load(load_file):
+        save_file = ds.load_pickle(load_file)
+        if not ret.success(save_file):
+            return ret.ERROR
+        return save_file
 
     def print(self):
         resp = ""
