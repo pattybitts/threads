@@ -297,7 +297,6 @@
 
         $.get(get_val('book_file'), read_text);
         abs_char_count = Number(get_val('position'));
-        known_names = get_val('known_names').split(',');
         for (var i = 0; i < 10; i++) {
             hot_names.set(i, ["", 0]);
         }
@@ -450,7 +449,7 @@
             add_to_array(known_names, char_name);
             add_to_hot_names(char_name);
         }
-        var char_aliases = get_val('aliases_box').split(/[\v\r\n]+(?!$)/);
+        var char_aliases = smart_split(get_val('aliases_box'), "[\\v\\r\\n]+");
         for (ca of char_aliases) {
             add_to_array(known_names, ca);
             add_to_hot_names(ca);
@@ -458,9 +457,9 @@
         process_page_text();
         add_to_array(char_events, [
             get_val('char_name_box', true),
-            get_val('aliases_box', true).split(/[\v\r\n]+(?!$)/),
-            get_val('joins_box', true).split(/[\v\r\n]+(?!$)/),
-            get_val('tags_box', true).split(/[\v\r\n]+(?!$)/),
+            smart_split(get_val('aliases_box', true), "[\\v\\r\\n]+"),
+            smart_split(get_val('joins_box', true), "[\\v\\r\\n]+"),
+            smart_split(get_val('tags_box', true), "[\\v\\r\\n]+")
         ]);
         log("Submitted Character Event for: " + char_name);
     }
@@ -483,12 +482,13 @@
         var potential_name = "";
         var best_matches = [];
         var page_caps = new Map();
-        var page_words = (page_text.trim() == "") ? [] : page_text.split(/[\s-."]+(?!$)/);
 
         page_mentions.clear();
-        page_wordcount = page_words.length;
+        page_quotes.clear();
 
-        if (page_text.trim() == "") {
+        var page_words = smart_split(page_text, "[\\s-.\"]+");
+        page_wordcount = page_words.length;
+        if (page_wordcount == 0) {
             return;
         }
 
@@ -513,7 +513,7 @@
                         best_matches = [];
                         potential_matches = known_names;
                     } else {
-                        if (/[\s-."]+(?!$)/.test(potential_name)) { potential_name = potential_name.split(/[\s-."]+(?!$)/)[0];}
+                        if (/[\s-."]+(?!$)/.test(potential_name)) { potential_name = smart_split(potential_name, "[\\s-.\"]+")[0]; }
                         add_to_map(page_caps, potential_name);
                         potential_name = "";
                         potential_matches = known_names;
@@ -667,8 +667,9 @@
         for (var i = 0, len = all_quotes.length | 0; i < len; i = i + 1) {
             quote_div = all_quotes[i];
             if (quote_div.classList.contains("selected")) {
+                add_to_hot_names(speaker);
                 var quote_text = quote_div.textContent;
-                add_to_map(page_quotes, speaker, quote_text.split(/\s+(?!$)/).length);
+                add_to_map(page_quotes, speaker, smart_split(quote_text).length);
                 quote_div.setAttribute("class", "quote_div assigned");
                 quote_div.innerHTML = quote_div.innerHTML + "<br /><br />Assigned: " + speaker;
                 if (i + 1 < len) {
@@ -677,6 +678,16 @@
                 break;
             }
         }
+    }
+
+    function smart_split(input_text, separator="\\s+", flags="") {
+        var input_trimmed = input_text.trim();
+        if (input_trimmed == "") {
+            return []
+        }
+        var re = new RegExp(separator + "(?!$)", flags);
+        return input_trimmed.split(re);
+
     }
 
     function mark_scene() {
@@ -762,24 +773,21 @@
         set_val('locations_box', get_val('locations'));
         set_val('description_box', get_val('description'));
         set_val('features_box', get_val('features'));
-        scene_wordcount = Number(get_val('wordcount'));
-        var sm_strings = [];
+        scene_wordcount = Number(get_val('wordcount'));  
         scene_mentions.clear;
-        if (get_val('mentions') != "") {sm_strings = get_val('mentions').split(/[\v\r\n]+(?!$)/);}
+        var sm_strings = smart_split(get_val('mentions'), "[\\v\\r\\n]+");
         for (let sm of sm_strings) {
             var sm_fields = sm.split(",");
             add_to_map(scene_mentions, sm_fields[0], sm_fields[1]);
         }
-        var sq_strings = [];
         scene_quotes.clear;
-        if (get_val('quotes') != "") {sq_strings = get_val('quotes').split(/[\v\r\n]+(?!$)/);}
+        var sq_strings = smart_split(get_val('quotes'), "[\\v\\r\\n]+");
         for (let sq of sq_strings) {
             var sq_fields = sq.split(",");
             add_to_map(scene_quotes, sq_fields[0], sq_fields[1]);
         }
-        var ce_strings = [];
         char_events.clear;
-        if (get_val('char_events') != "") {ce_strings = get_val('char_events').split(/[\v\r\n]+(?!$)/);}
+        var ce_strings = smart_split(get_val('char_events'), "[\\v\\r\\n]+");
         for (let ce of ce_strings) {
             var ce_fields = ce.split(";");
             var ce_name = ce_fields[0];
@@ -788,8 +796,8 @@
             var ce_tags = ce_fields[3].split(",");
             add_to_array(char_events, [ce_name, ce_aliases, ce_joins, ce_tags]);
         }
-        if (get_val('features') != "") {scene_features = get_val('features').split(/[\v\r\n]+(?!$)/);}
-        if (get_val('known_names') != "") {known_names = get_val('known_names').split(/[\v\r\n]+(?!$)/);}
+        scene_features = smart_split(get_val('features'), "[\\v\\r\\n]+");
+        known_names = smart_split(get_val('known_names'), "[\\v\\r\\n]+");
     }
 
     function save_scene() {
