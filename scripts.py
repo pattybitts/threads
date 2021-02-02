@@ -2,11 +2,18 @@ import copy, re
 
 import util.data_storage as ds
 import util.log as log
+import util.util as util
 
 from obj.Library import Library
 from obj.Series import Series
 from obj.Character import Character
 from SaveFile import SaveFile
+
+#testing new util.strip method
+if 1:
+    test_str = ","
+    test_arr = util.split(test_str, ",")
+    log.out(str(test_arr))
 
 #reading save file (this should be in home.py!!)
 if 0:
@@ -14,7 +21,7 @@ if 0:
     log.out(save_file.print())
 
 #creating a new save file
-if 1:
+if 0:
     save_file = SaveFile("data\\eotw.sav", "static/eotw_shortened.txt", "data\\library_1_30_1", "The Wheel of Time", "The Eye of the World", 0)
     log.out(save_file.print())
     save_file.save()

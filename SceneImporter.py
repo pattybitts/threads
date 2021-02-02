@@ -1,6 +1,7 @@
 import util.ret as ret
 import util.data_storage as ds
 import util.log as log
+import util.util as util
 
 from obj.Library import Library
 from obj.Series import Series
@@ -65,16 +66,16 @@ class SceneImporter:
         scene_placement = len(chapter.scenes)+1
         scene_name = chapter.name.lower().replace(" ", "_") + "_" + str(scene_placement)
         scene = Scene(scene_name, scene_placement, wo_form, de_form)
-        scene_locations = lo_form.split("\n") if lo_form != "" else []
+        scene_locations = util.split(lo_form, "\\n")
         for sl in scene_locations:
             scene.add_location(Location(sl.strip()))
         chapter.add_scene(scene)
         #updating characters with character events
-        char_events = ce_form.split("\n") if ce_form != "" else []
+        char_events = util.split(ce_form, "\\n")
         for ce in char_events:
             ce = ce.strip()
             ce_fields = ce.split(";")
-            if len(ce_fields) < 4: 
+            if len(ce_fields) != 4: 
                 self.outputs.append("Invalid CE: " + ce)
                 continue
             ce_name = ce_fields[0]
@@ -107,11 +108,11 @@ class SceneImporter:
             scene.set_primary(pr_char)
         #populating scene included
         #scene quotes
-        scene_quotes = qu_form.split("\n") if qu_form != "" else []
+        scene_quotes = util.split(qu_form, "\\n")
         for sq in scene_quotes:
             sq = sq.strip()
             sq_fields = sq.split(",")
-            if len(sq_fields) < 2:
+            if len(sq_fields) != 2:
                 self.outputs.append("Invalid SQ: " + sq)
                 continue
             sq_name = sq_fields[0]
@@ -129,7 +130,7 @@ class SceneImporter:
             if not found_in_included:
                 scene.included.append({"character": sq_char, "featured": True, "mentions": 0, "quotes": sq_count})
         #scene features
-        scene_features = fe_form.split("\n") if fe_form != "" else []
+        scene_features = util.split(fe_form, "\\n")
         for sf in scene_features:
             sf = sf.strip()
             sf_char = series.match_or_make_char(sf, scene)
@@ -144,11 +145,11 @@ class SceneImporter:
             if not found_in_included:
                 scene.included.append({"character": sf_char, "featured": True, "mentions": 0, "quotes": 0})
         #scene mentions
-        scene_mentions = me_form.split("\n") if me_form != "" else []
+        scene_mentions = util.split(me_form, "\\n")
         for sm in scene_mentions:
             sm = sm.strip()
             sm_fields = sm.split(",")
-            if len(sm_fields) < 2:
+            if len(sm_fields) != 2:
                 self.outputs.append("Invalid SM: " + sm)
                 continue
             sm_name = sm_fields[0]
@@ -222,4 +223,4 @@ class SceneImporter:
         return ret.SUCCESS
 
     def get_output(self):
-        return "\n".join(self.outputs)
+        return util.join(self.outputs, "\n")

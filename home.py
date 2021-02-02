@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect
 import util.ret as ret
 import util.data_storage as ds
 import util.log as log
+import util.util as util
 
 from SceneImporter import SceneImporter
 from obj.Library import Library
@@ -58,18 +59,13 @@ def new_cmd_in():
     elif action == ret.GRAPH_TOOL:
         return render_template('index_graph_tool.html', x_val='', y_val='')
     elif action == ret.TEXT_TOOL:
-        if len(importer.known_names) > 0: 
-            known_names_str = ",".join(importer.known_names)
-        else:
-            known_names_str = ""
         return render_template('index_text_tool.html', \
             save_file=importer.save_file, \
             book_file=importer.book_file, \
             position=importer.position, \
-            known_names=known_names_str)
+            known_names=util.join(importer.known_names))
     elif not ret.success(action):
-        error_msg = "\n".join(importer.outputs)
-        return render_template('index_home.html', cmd_out=error_msg)
+        return render_template('index_home.html', cmd_out=importer.get_output())
     error_msg = "INTERNAL ERROR:\nInvalid return from processing"
     return render_template('index_home.html', cmd_out=error_msg)
 
@@ -168,9 +164,11 @@ def new_graph():
 """
 
 def process_cmd(cmd_str, save_str):
-    #check command supported
-    cmd_parts = cmd_str.split('=')
     importer = SceneImporter()
+    cmd_parts = util.split(cmd_str, '=')
+    if len(cmd_parts) < 1:
+        importer.outputs.append("No command entry in: " + cmd_str)
+        return ret.ERROR, importer
     status = importer.process_save_file(save_str)
     if not ret.success(status):
         importer.outputs.append("Unable to import save file: " + save_str)
