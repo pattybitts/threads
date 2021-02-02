@@ -28,7 +28,7 @@ class Library:
         for s in self.series:
             if s.name == series_name:
                 return s
-        return ret.ERROR
+        return ret.NOT_FOUND
 
     def get_info(self):
         resp = "Created: " + self.last_updated.strftime("%m_%d_%y_%H%M")

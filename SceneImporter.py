@@ -26,12 +26,11 @@ class SceneImporter:
         self.known_names = []
         self.summary_characters = []
         self.outputs = []
-        self.report = ""
 
     def process_save_file(self, save_file_name):
         save_data = SaveFile.load(save_file_name)
-        if save_data == ret.ERROR:
-            self.outputs.append("ERROR: unable to open save file: " + save_file_name)
+        if not ret.success(save_data):
+            self.log("ERROR: unable to open save file: " + save_file_name)
             return ret.ERROR
         self.save_file = save_data.name
         self.library_file = save_data.library_file
@@ -40,7 +39,7 @@ class SceneImporter:
         self.book_name = save_data.book_name
         self.position = save_data.position
         self.library = Library.load(self.library_file)
-        if self.library is None or self.library == ret.ERROR:
+        if not ret.success(self.library):
             self.library = Library()
             self.library.save(self.library_file)
         return ret.SUCCESS
@@ -49,17 +48,17 @@ class SceneImporter:
         wo_form: str, me_form: str, qu_form: str, fe_form: str, ce_form: str):
         #finding series
         series = self.library.get_series(self.series_name)
-        if series == ret.ERROR:
+        if series == ret.NOT_FOUND:
             series = Series(self.series_name)
             self.library.add_series(series)
         #finding book
         book = series.get_book(self.book_name)
-        if book == ret.ERROR:
+        if book == ret.NOT_FOUND:
             book = Book(self.book_name, len(series.books)+1)
             series.add_book(book)
         #finding chapter
         chapter = book.find_chapter(ch_form)
-        if chapter == ret.ERROR:
+        if chapter == ret.NOT_FOUND:
             chapter = Chapter(ch_form, len(book.chapters)+1)
             book.add_chapter(chapter)
         #making new scene
@@ -76,15 +75,15 @@ class SceneImporter:
             ce = ce.strip()
             ce_fields = ce.split(";")
             if len(ce_fields) != 4: 
-                self.outputs.append("Invalid CE: " + ce)
+                self.log("Invalid CE: " + ce)
                 continue
             ce_name = ce_fields[0]
             ce_aliases = ce_fields[1].split(",")
             ce_joins = ce_fields[2].split(",")
             ce_tags = ce_fields[3].split(",")
             ce_char = series.match_or_make_char(ce_name, scene)
-            if ce_char == ret.ERROR:
-                self.outputs.append("Failed to match or make character: " + ce_name)
+            if not ret.success(ce_char):
+                self.log("Failed to match or make character: " + ce_name)
                 continue
             for ce_a in ce_aliases:
                 if ce_a == "": continue
@@ -92,8 +91,8 @@ class SceneImporter:
             for ce_j in ce_joins:
                 if ce_j == "": continue
                 join_character = Character.match_character(series.characters, ce_j)
-                if join_character == ret.ERROR:
-                    self.outputs.append("Cannot find Join for CE: " + ce)
+                if not ret.success(join_character):
+                    self.log("Cannot find Join for CE: " + ce)
                     continue
                 ce_char.add_join(ce_j, scene)
             for ce_t in ce_tags:
@@ -101,8 +100,8 @@ class SceneImporter:
                 ce_char.add_tag(ce_t, scene)
         #adding primary character
         pr_char = series.match_or_make_char(pr_form, scene)
-        if pr_char == ret.ERROR:
-            self.outputs.append("Failed to match or make character: " + pr_form)
+        if not ret.success(pr_char):
+            self.log("Failed to match or make character: " + pr_form)
             scene.set_primary(Character("null"))
         else:
             scene.set_primary(pr_char)
@@ -113,13 +112,13 @@ class SceneImporter:
             sq = sq.strip()
             sq_fields = sq.split(",")
             if len(sq_fields) != 2:
-                self.outputs.append("Invalid SQ: " + sq)
+                self.log("Invalid SQ: " + sq)
                 continue
             sq_name = sq_fields[0]
             sq_count = int(sq_fields[1])
             sq_char = series.match_or_make_char(sq_name, scene)
-            if sq_char == ret.ERROR:
-                self.outputs.append("Failed to match or make character: " + sq_name)
+            if not ret.success(sq_char):
+                self.log("Failed to match or make character: " + sq_name)
                 continue
             found_in_included = False
             for i in scene.included:
@@ -134,8 +133,8 @@ class SceneImporter:
         for sf in scene_features:
             sf = sf.strip()
             sf_char = series.match_or_make_char(sf, scene)
-            if sf_char == ret.ERROR:
-                self.outputs.append("Failed to match or make character: " + sf)
+            if not ret.success(sf_char):
+                self.log("Failed to match or make character: " + sf)
                 continue
             found_in_included = False
             for i in scene.included:
@@ -150,13 +149,13 @@ class SceneImporter:
             sm = sm.strip()
             sm_fields = sm.split(",")
             if len(sm_fields) != 2:
-                self.outputs.append("Invalid SM: " + sm)
+                self.log("Invalid SM: " + sm)
                 continue
             sm_name = sm_fields[0]
             sm_count = int(sm_fields[1])
             sm_char = series.match_or_make_char(sm_name, scene)
-            if sm_char == ret.ERROR:
-                self.outputs.append("Failed to match or make character: " + sm_name)
+            if not ret.success(sm_char):
+                self.log("Failed to match or make character: " + sm_name)
                 continue
             found_in_included = False
             for i in scene.included:
@@ -171,7 +170,7 @@ class SceneImporter:
         try:
             character_list = self.library.get_series(self.series_name).characters
         except:
-            self.outputs.append("Failed to find character list for series: " + self.series_name)
+            self.log("Failed to find character list for series: " + self.series_name)
             return ret.ERROR
         for c in character_list:
             for a in c.aliases:
@@ -179,48 +178,51 @@ class SceneImporter:
         return ret.SUCCESS
 
     def generate_summary(self):
-        self.report += "<b>SUMMARY REPORT:</b>\n"
-        self.report += "<b>Non-Fatal Alerts:</b>\n"
-        for a in self.outputs:
-            self.report += a + "\n"
-        self.report += "\n<b>Scene Info:</b>\n"
-        self.report += self.library_file + "; " + self.series_name + "; " + self.book_name + "\n"
-        book = self.library.get_series(self.series_name).get_book(self.book_name)
+        series = self.library.get_series(self.series_name)
+        book = series.get_book(self.book_name)
         chapter = book.chapters[len(book.chapters)-1]
         scene = chapter.scenes[len(chapter.scenes)-1]
-        self.report += chapter.name + " (" + str(chapter.placement) + "); Scene #" + str(scene.placement) + "\n"
-        self.report += "Perspective: " + scene.primary.name + "; Words: " + str(scene.wordcount) + "\nLocations: "
+        self.log("<b>SUMMARY REPORT:</b>")
+        self.log("\n<b>Scene Info:</b>")
+        self.log("Save Info: " + self.library_file + "; " + self.save_file)
+        self.log("Series Info: " + series.name + "; " + book.name + " (" + str(book.placement) + ")")
+        self.log("Chapter: " + chapter.name + " (" + str(chapter.placement) + "); Scene: " + scene.name)
+        loc_str = ""
         for l in scene.locations:
-            self.report += l.name + ", "
-        self.report = self.report.rstrip(", ")
-        self.report += "\n" + scene.description + "\n\n"
-        self.report += "<b>Included Characters:</b>\n"
+            loc_str += l.name + ", "
+        loc_str = loc_str.rstrip(", ")
+        self.log("Perspective: " + scene.primary.name + "; Words: " + str(scene.wordcount) + "\nLocations: " + loc_str)
+        self.log("Description: " + scene.description + "\n")
+        self.log("<b>Included Characters:</b>")
         for i in scene.included:
             character = i["character"]
             featured_str = "Featured" if i["featured"] else "Mentioned"
-            self.report += character.name + " (" + featured_str + ", Words: " + str(i["quotes"]) + ", Calls: " + str(i["mentions"]) + ")\n"
+            self.log(character.name + " (" + featured_str + ", Words: " + str(i["quotes"]) + ", Calls: " + str(i["mentions"]) + ")")
             for a in character.aliases:
                 if a[1] == scene:
-                    self.report += "New Alias: " + a[0] + "\n"
+                    self.log("New Alias: " + a[0])
             for j in character.joins:
                 if j[1] == scene:
-                    self.report += "New Join: " + j[0].name + "\n"
+                    self.log("New Join: " + j[0].name)
             for t in character.tags:
                 if t[1] == scene:
-                    self.report += "New Tag: " + t[0] + "\n"
-            self.report += "\n"
+                    self.log("New Tag: " + t[0])
+            self.log("")
         return ret.SUCCESS
 
     def save_library(self, new_position):
         self.library.save(self.library_file)
         save_file = SaveFile.load(self.save_file)
         if not ret.success(save_file):
-            self.outputs.append("Unable to load save file: " + self.save_file)
+            self.log("Unable to load save file: " + self.save_file)
             return ret.ERROR
         save_file.position = new_position
         save_file.save()
-        self.outputs.append("Successfully updated library and save file with new scene!")
+        self.log("Successfully updated library and save file with new scene!")
         return ret.SUCCESS
 
-    def get_output(self):
+    def log(self, input_str):
+        self.outputs.append(input_str)
+
+    def print_log(self):
         return util.join(self.outputs, "\n")

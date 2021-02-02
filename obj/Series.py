@@ -32,7 +32,7 @@ class Series:
         for b in self.books:
             if b.name == book_name:
                 return b
-        return ret.ERROR
+        return ret.NOT_FOUND
 
     def match_or_make_char(self, search_str: str, scene: Scene):
         character = Character.match_character(self.characters, search_str, scene)

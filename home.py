@@ -11,6 +11,7 @@ from obj.Series import Series
 from obj.Book import Book
 from obj.Character import Character
 from Query import Query
+from SaveFile import SaveFile
 app = Flask(__name__)
 
 @app.route('/')
@@ -24,7 +25,7 @@ def new_cmd_in():
     cmd_str = request.form['cmd_box']
     action, importer = process_cmd(cmd_str, save_str)
     if action == ret.HOME:
-        resp = importer.get_output()
+        resp = importer.print_log()
         return render_template('index_home.html', cmd_out=resp, cmd_in=cmd_str)
     elif action == ret.EDIT_CHAR:
         #not supported in modern paradigm yet!
@@ -65,7 +66,7 @@ def new_cmd_in():
             position=importer.position, \
             known_names=util.join(importer.known_names))
     elif not ret.success(action):
-        return render_template('index_home.html', cmd_out=importer.get_output())
+        return render_template('index_home.html', cmd_out=importer.print_log(), cmd_in=cmd_str)
     error_msg = "INTERNAL ERROR:\nInvalid return from processing"
     return render_template('index_home.html', cmd_out=error_msg)
 
@@ -113,17 +114,10 @@ def generate_summary():
             request.form['ce_form'])
     if status == ret.SUCCESS:
         status = importer.generate_summary()
-    if status == ret.SUCCESS:
-        resp = importer.report
-    else:
-        resp = "ERROR: FAILED TO IMPORT"
-        for a in importer.outputs:
-            resp += "\n" + a
 
     if request.form['ss_form'] == "saved":
         status = importer.save_library(request.form['po_form'])
         if status == ret.SUCCESS:
-            resp = importer.report
             return render_template('index_text_tool.html', \
                 save_status="saved", \
                 save_file=request.form['sf_form'], \
@@ -131,7 +125,7 @@ def generate_summary():
                 known_names=request.form['kn_form'], \
                 log=request.form['lg_form'], \
                 position=request.form['po_form'], \
-                report=resp)
+                report=importer.print_log())
 
     return render_template('index_text_tool.html', \
         save_status="reviewing", \
@@ -149,7 +143,7 @@ def generate_summary():
         quotes=request.form['qu_form'], \
         features=request.form['fe_form'], \
         char_events=request.form['ce_form'], \
-        report=resp)
+        report=importer.print_log())
 
 """
 @app.route('/new_graph', methods = ['POST'])
@@ -167,37 +161,53 @@ def process_cmd(cmd_str, save_str):
     importer = SceneImporter()
     cmd_parts = util.split(cmd_str, '=')
     if len(cmd_parts) < 1:
-        importer.outputs.append("No command entry in: " + cmd_str)
+        importer.log("No command entry in: " + cmd_str)
         return ret.ERROR, importer
     status = importer.process_save_file(save_str)
     if not ret.success(status):
-        importer.outputs.append("Unable to import save file: " + save_str)
+        importer.log("Unable to import save file: " + save_str)
         return ret.ERROR, importer
     if cmd_parts[0] == 'disp_char':
         if len(cmd_parts) < 2: 
-            importer.outputs.append("No character name provided in: " + cmd_str)
+            importer.log("No character name provided in: " + cmd_str)
             return ret.BAD_INPUT, importer
         series = importer.library.get_series(importer.series_name)
         character = Character.match_character(series.characters, cmd_parts[1])
         #and now this is where loose is needed (future TODO)
         if not ret.success(character):
-            importer.outputs.append("Unable to match character: " + cmd_parts[1])
+            importer.log("Unable to match character: " + cmd_parts[1])
             return ret.ERROR, importer
-        importer.outputs.append(character.print_info())
+        importer.log(character.print_info())
         return ret.HOME, importer
     if cmd_parts[0] == 'disp_chapter':
         if len(cmd_parts) < 2: 
-            importer.outputs.append("No chapter name provided in: " + cmd_str)
+            importer.log("No chapter name provided in: " + cmd_str)
             return ret.BAD_INPUT, importer
         book = importer.library.get_series(importer.series_name).get_book(importer.book_name)
         chapter = book.find_chapter(cmd_parts[1])
         if not ret.success(chapter):
-            importer.outputs.append("Unable to find chapter: " + cmd_parts[1])
+            importer.log("Unable to find chapter: " + cmd_parts[1])
             return ret.ERROR, importer
-        importer.outputs.append(chapter.print_info())
+        importer.log(chapter.print_info())
         for s in chapter.scenes:
-            importer.outputs.append(s.print_info())
+            importer.log(s.print_info())
         return ret.HOME, importer
+    if cmd_parts[0] == 'disp_book':
+        book = importer.library.get_series(importer.series_name).get_book(importer.book_name)
+        importer.log(book.print_info())
+        return ret.HOME, importer
+    if cmd_parts[0] == 'disp_save':
+        save_data = SaveFile.load(importer.save_file)
+        if not ret.success(save_data):
+            importer.log("ERROR: unable to open save file: " + importer.save_file)
+            return ret.HOME, importer
+        importer.log(save_data.print_info())
+        return ret.HOME, importer
+    if cmd_parts[0] == 'text_tool':
+        status = importer.generate_known_names()
+        return ret.TEXT_TOOL, importer
+    importer.log("Unsupported command entry: " +  cmd_str)
+    return ret.ERROR, importer
     """
     This all to be updated and added once we have our text tool functioning
     if cmd_parts[0] == 'add_char':
@@ -233,10 +243,6 @@ def process_cmd(cmd_str, save_str):
         msg = ""
         return ret.GRAPH_TOOL, msg
     """
-    if cmd_parts[0] == 'text_tool':
-        status = importer.generate_known_names()
-        return ret.TEXT_TOOL, importer
-    return ret.ERROR, "Unsupported command entry: " + cmd_string
     
 if __name__ == '__main__':
     app.run()

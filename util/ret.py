@@ -12,5 +12,6 @@ GRAPH_TOOL = 4
 TEXT_TOOL = 5
 
 def success(ret):
+    if ret is None: return False
     if not isinstance(ret, int): return True
     return ret >= 0

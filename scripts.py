@@ -10,7 +10,7 @@ from obj.Character import Character
 from SaveFile import SaveFile
 
 #testing new util.strip method
-if 1:
+if 0:
     test_str = ","
     test_arr = util.split(test_str, ",")
     log.out(str(test_arr))
@@ -21,9 +21,9 @@ if 0:
     log.out(save_file.print())
 
 #creating a new save file
-if 0:
-    save_file = SaveFile("data\\eotw.sav", "static/eotw_shortened.txt", "data\\library_1_30_1", "The Wheel of Time", "The Eye of the World", 0)
-    log.out(save_file.print())
+if 1:
+    save_file = SaveFile("data\\eotw.sav", "static/eotw_shortened.txt", "data\\library_2_2", "The Wheel of Time", "The Eye of the World", 0)
+    log.out(save_file.print_info())
     save_file.save()
 
 #getting library object and info

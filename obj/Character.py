@@ -147,7 +147,7 @@ class Character:
             elif comp == ">=":
                 return (Character.match_character([self], obj) != ret.ERROR)
             elif comp == "<=":
-                return (Character.match_character([self], obj) == ret.ERROR)
+                return (Character.match_character([self], obj))
         elif sub == "tag":
             if comp == ">=":
                 return self.has_tag(obj)

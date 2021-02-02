@@ -117,9 +117,10 @@
     * {
         font-family: Calibri;
     }
-    *:focus {
-        outline: none;
-    }
+
+        *:focus {
+            outline: none;
+        }
 
     div {
         position: relative;
@@ -133,46 +134,58 @@
         width: 100%;
         flex-direction: row;
     }
+
     #page_div {
         width: 50%;
         flex-direction: column;
     }
+
     #utils_div {
         width: 50%;
         flex-direction: column;
     }
+
     #page_text {
         min-height: 150px;
     }
+
     #page_quotes {
         min-height: 150px;
         flex-direction: column;
     }
+
     #inputs_div {
         min-height: 50%;
     }
+
     #scene_div {
         width: 50%;
         flex-direction: column;
     }
+
     #char_div {
         flex-direction: column;
     }
+
     #hotkeys {
         width: 50%;
     }
+
     #buttons_div {
         flex-direction: column;
     }
+
     #char_hotkeys {
         flex-direction: column;
     }
+
     #log_div {
         width: 50%;
         flex-direction: column;
     }
+
     #log_box {
-        min-height:350px;
+        min-height: 350px;
         width: 97%;
         overflow: hidden;
         resize: none;
@@ -180,9 +193,11 @@
         overflow-x: scroll;
         font-family: 'Lucida Console';
     }
+
     #sum_div {
         width: 50%;
     }
+
     #gen_div {
         width: 50%;
         flex-direction: column;
@@ -198,46 +213,55 @@
         transition-duration: 0.2s;
         border: 1px solid black;
     }
-    .button:hover {
-        background-color: lightgray;
-    }
-    .button:active {
-        background-color: grey;
-    }
+
+        .button:hover {
+            background-color: lightgray;
+        }
+
+        .button:active {
+            background-color: grey;
+        }
 
     .light {
         background-color: white;
         color: black;
     }
+
     .dark {
         background-color: black;
         color: white;
     }
 
     .hgreen {
-        background-color:  lime;
+        background-color: lime;
     }
+
     .hyellow {
         background-color: yellow;
     }
+
     .hred {
         background-color: palevioletred;
     }
 
     .quote_div {
-        min-height: 100px;
+        min-height: 50px;
     }
+
     .selected {
         background-color: yellow;
     }
+
     .assigned {
         background-color: lime;
     }
-
 </style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+    //imports
+    //import {default as get_val, set_val, add_to_array, add_to_map} from "./util"
+
     //page utilities
     var active_hotkeys = new Map();
     var input_focus = false;
@@ -259,7 +283,7 @@
     var scene_features = [];
     var char_events = [];
     var scene_end = null;
-    
+
     var known_names = [];
     var hot_names = new Map();
 
@@ -311,6 +335,48 @@
         $('#report_text').html($('#report_text').text());
 
         translate_summary();
+    }
+
+    function add_to_map(list, term, count = 1) {
+        for (let key of list.keys()) {
+            if (key == term) {
+                list.set(key, list.get(key) + count);
+                return;
+            }
+        }
+        list.set(term, count);
+    }
+
+    function add_to_array(list, term) {
+        if (!list.includes(term)) {
+            list.push(term);
+        }
+    }
+
+    function get_val(element, clear = false) {
+        var el = $('#' + element);
+        if (el.length === 0) {
+            log("ERROR: failed to find element id: " + element);
+            return null;
+        }
+        var ret = el.val();
+        if (clear) {
+            el.val("");
+        }
+        return ret;
+    }
+
+    function set_val(element, new_val, clear = true) {
+        var el = $('#' + element);
+        if (el.length === 0) {
+            return false;
+        }
+        if (clear) {
+            el.val(String(new_val));
+        } else {
+            el.val(el.val() + new_val);
+        }
+        return true;
     }
 
     function log(string, clear = false) {
@@ -618,48 +684,6 @@
         }
     }
 
-    function add_to_map(list, term, count=1) {
-        for (let key of list.keys()) {
-            if (key == term) {
-                list.set(key, list.get(key) + count);
-                return;
-            }
-        }
-        list.set(term, count);
-    }
-
-    function add_to_array(list, term) {
-        if (!list.includes(term)) {
-            list.push(term);
-        }
-    }
-
-    function get_val(element, clear=false) {
-        var el = $('#' + element);
-        if (el.length === 0) {
-            log("ERROR: failed to find element id: " + element);
-            return null;
-        }
-        var ret = el.val();
-        if (clear) {
-            el.val("");
-        }
-        return ret;
-    }
-
-    function set_val(element, new_val, clear=true) {
-        var el = $('#' + element);
-        if (el.length === 0) {
-            return false;
-        }
-        if (clear) {
-            el.val(String(new_val));
-        } else {
-            el.val(el.val() + new_val);
-        }
-        return true;
-    }
-
     function set_quote(args) {
         var all_quotes = document.getElementsByClassName('quote_div');
         var quote_div = null;
@@ -673,14 +697,14 @@
                 quote_div.setAttribute("class", "quote_div assigned");
                 quote_div.innerHTML = quote_div.innerHTML + "<br /><br />Assigned: " + speaker;
                 if (i + 1 < len) {
-                    all_quotes[i+1].setAttribute("class", "quote_div selected");
+                    all_quotes[i + 1].setAttribute("class", "quote_div selected");
                 }
                 break;
             }
         }
     }
 
-    function smart_split(input_text, separator="\\s+", flags="") {
+    function smart_split(input_text, separator = "\\s+", flags = "") {
         var input_trimmed = input_text.trim();
         if (input_trimmed == "") {
             return []
@@ -761,7 +785,7 @@
         set_val('known_names', kn_string);
 
         set_val('log', get_val('log_box'));
-        $("#gen_form").submit(); 
+        $("#gen_form").submit();
     }
 
     function translate_summary() {
@@ -773,7 +797,7 @@
         set_val('locations_box', get_val('locations'));
         set_val('description_box', get_val('description'));
         set_val('features_box', get_val('features'));
-        scene_wordcount = Number(get_val('wordcount'));  
+        scene_wordcount = Number(get_val('wordcount'));
         scene_mentions.clear;
         var sm_strings = smart_split(get_val('mentions'), "[\\v\\r\\n]+");
         for (let sm of sm_strings) {

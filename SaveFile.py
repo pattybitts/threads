@@ -22,9 +22,8 @@ class SaveFile:
             return ret.ERROR
         return save_file
 
-    def print(self):
-        resp = ""
-        resp += "Name: " + self.name + "\n"
+    def print_info(self):
+        resp = "Name: " + self.name + "\n"
         resp += "Book File: " + self.book_file + "\n"
         resp += "Library File: " + self.library_file + "\n"
         resp += "Series Name: " + self.series_name + "\n"
