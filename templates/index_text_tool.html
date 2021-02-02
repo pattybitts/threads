@@ -8,105 +8,98 @@
 
 <body onload="init()">
     <div id="main_div">
-        <div id="page_div">
-            <pre id="page_text"></pre>
-            <div id="page_quotes"></div>
+        <div id="page_report_div">
+            <div id="page_div">
+                <pre id="page_text"></pre>
+                <div id="page_quotes"></div>
+            </div>
+            <div id="report_div">
+                <pre id="report_text">{{report}}</pre>
+            </div>
         </div>
-        <div id="utils_div">
-            <div id="hotkeys_log_div">
-                <div id="hotkeys">
-                    <div id="buttons_div">
-                        <button id="next_page_button" class="button light">Next Page (N)</button>
-                        <button id="event_button" class="button light">Char Event (C)</button>
-                        <button id="add_button" class="button light">Add Name (A)</button>
-                        <button id="summary_button" class="button light">Generate Summary (G)</button>
-                        <button id="mark_button" class="button light">Mark Scene End (M)</button>
-                        <button id="save_button" class="button light">Save Scene (S)</button>
-                        <button id="diagnostic_button" class="button light">Diagnostic (D)</button>
-                        <button id="translate_button" class="button light">Translate Summary (T)</button>
+        <div id="utils_gen_div">
+            <div id="utils_div">
+                <div id="hotkeys_log_div">
+                    <div id="hotkeys">
+                        <div id="buttons_div">
+                            <button id="next_page_button" class="button">Next Page (N)</button>
+                            <button id="event_button" class="button">Char Event (C)</button>
+                            <button id="add_button" class="button">Add Name (A)</button>
+                            <button id="summary_button" class="button">Generate Summary (G)</button>
+                            <button id="mark_button" class="button">Mark Scene End (M)</button>
+                            <button id="save_button" class="button">Save Scene (S)</button>
+                            <button id="diagnostic_button" class="button">Diagnostic (D)</button>
+                            <button id="translate_button" class="button">Translate Summary (T)</button>
+                        </div>
+                        <div id="char_hotkeys"></div>
                     </div>
-                    <div id="char_hotkeys"></div>
+                    <div id="log_div">
+                        Log Output:
+                        <textarea id="log_box" readonly></textarea>
+                    </div>
                 </div>
-                <div id="log_div">
-                    Log Output:
-                    <textarea id="log_box" readonly></textarea>
+                <div id="inputs_div">
+                    <div id="scene_div">
+                        Scene Info:<br /><br />
+                        <label for="chapter_box">Chapter Name:</label>
+                        <input type="text" id="chapter_box" name="chapter_box"><br />
+                        <label for="primary_box">Primary Character Name:</label>
+                        <input type="text" id="primary_box" name="primary_box"><br />
+                        <label for="locations_box">Location Names:</label>
+                        <textarea id="locations_box" name="locations_box"></textarea><br />
+                        <label for="description_box">Brief Description:</label>
+                        <textarea id="description_box" name="description_box"></textarea><br />
+                        <label for="features_box">Featuring:</label>
+                        <textarea id="features_box" name="features_box"></textarea><br />
+                    </div>
+                    <div id="char_div">
+                        Character Update:<br /><br />
+                        <label for="char_name_box">Character Name:</label>
+                        <input type="text" id="char_name_box" name="char_name_box" /><br />
+                        <label for="aliases_box">New Aliases:</label>
+                        <textarea id="aliases_box" name="aliases_box"></textarea><br />
+                        <label for="joins_box">Joined Characters:</label>
+                        <textarea id="joins_box" name="joins_box"></textarea><br />
+                        <label for="tags_box">New Tags:</label>
+                        <textarea id="tags_box" name="tags_box"></textarea><br />
+                    </div>
                 </div>
             </div>
-            <div id="inputs_div">
-                <div id="scene_div">
-                    Scene Info:<br /><br />
-                    <label for="chapter_box">Chapter Name:</label>
-                    <input type="text" id="chapter_box" name="chapter_box"><br />
-                    <label for="primary_box">Primary Character Name:</label>
-                    <input type="text" id="primary_box" name="primary_box"><br />
-                    <label for="locations_box">Location Names:</label>
-                    <textarea id="locations_box" name="locations_box"></textarea><br />
-                    <label for="description_box">Brief Description:</label>
-                    <textarea id="description_box" name="description_box"></textarea><br />
-                    <label for="features_box">Featuring:</label>
-                    <textarea id="features_box" name="features_box"></textarea><br />
-                </div>
-                <div id="char_div">
-                    Character Update:<br /><br />
-                    <label for="char_name_box">Character Name:</label>
-                    <input type="text" id="char_name_box" name="char_name_box" /><br />
-                    <label for="aliases_box">New Aliases:</label>
-                    <textarea id="aliases_box" name="aliases_box"></textarea><br />
-                    <label for="joins_box">Joined Characters:</label>
-                    <textarea id="joins_box" name="joins_box"></textarea><br />
-                    <label for="tags_box">New Tags:</label>
-                    <textarea id="tags_box" name="tags_box"></textarea><br />
-                </div>
+            <div id="gen_div">
+                <form id="gen_form" action="/generate_summary" method="post">
+                    Raw Data:<br />
+                    <label for="save_status">Save Status:</label>
+                    <input readonly type="text" id="save_status" name="ss_form" value="{{save_status}}" /><br />
+                    <label for="save_file">Save File:</label>
+                    <input type="text" id="save_file" name="sf_form" value="{{save_file}}"><br />
+                    <label for="book_file">Book File:</label>
+                    <input type="text" id="book_file" name="bf_form" value="{{book_file}}"><br />
+                    <label for="position">Position:</label>
+                    <input type="text" id="position" name="po_form" value="{{position}}"><br />
+                    <label for="chapter">Chapter:</label>
+                    <input type="text" id="chapter" name="ch_form" value="{{chapter}}"><br />
+                    <label for="primary">Primary:</label>
+                    <input type="text" id="primary" name="pr_form" value="{{primary}}"><br />
+                    <label for="wordcount">Wordcount:</label>
+                    <input type="text" id="wordcount" name="wo_form" value="{{wordcount}}"><br />
+                    <label for="locations">Locations:</label>
+                    <textarea id="locations" name="lo_form">{{locations}}</textarea><br />
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="de_form">{{description}}</textarea><br />
+                    <label for="mentions">Mentions:</label>
+                    <textarea id="mentions" name="me_form">{{mentions}}</textarea><br />
+                    <label for="quotes">Quotes:</label>
+                    <textarea id="quotes" name="qu_form">{{quotes}}</textarea><br />
+                    <label for="features">Features:</label>
+                    <textarea id="features" name="fe_form">{{features}}</textarea><br />
+                    <label for="char_events">Char Events:</label>
+                    <textarea id="char_events" name="ce_form">{{char_events}}</textarea><br />
+                    <label for="known_names">Known Names:</label>
+                    <textarea id="known_names" name="kn_form">{{known_names}}</textarea><br />
+                    <label for="log">Log:</label>
+                    <textarea id="log" name="lg_form">{{log}}</textarea><br />
+                </form>
             </div>
-        </div>
-    </div>
-    <!--
-        This is admittedly an ugly fix to our problem of interfacing between the page and python.
-        We use a hidden form with fields corresponding to the data to be saved.
-        The corresponding function populates the fields and submits the form.
-        On the python side, we use request.form to pull the data into the database, perform server-side
-        operations, then re-upload the data to preserve the context.
-        Options for elegant asynchronous data-transfer with AJAX may come, but it's essential for now that
-        we begin building the database so we can create initial data models.
-    -->
-    <div id="report_div">
-        <div id="sum_div">
-            <pre id="report_text">{{report}}</pre>
-        </div>
-        <div id="gen_div">
-            <form id="gen_form" action="/generate_summary" method="post">
-                Raw Data:<br />
-                <label for="save_status">Save Status:</label>
-                <input readonly type="text" id="save_status" name="ss_form" value="{{save_status}}" /><br />
-                <label for="save_file">Save File:</label>
-                <input type="text" id="save_file" name="sf_form" value="{{save_file}}"><br />
-                <label for="book_file">Book File:</label>
-                <input type="text" id="book_file" name="bf_form" value="{{book_file}}"><br />
-                <label for="position">Position:</label>
-                <input type="text" id="position" name="po_form" value="{{position}}"><br />
-                <label for="chapter">Chapter:</label>
-                <input type="text" id="chapter" name="ch_form" value="{{chapter}}"><br />
-                <label for="primary">Primary:</label>
-                <input type="text" id="primary" name="pr_form" value="{{primary}}"><br />
-                <label for="wordcount">Wordcount:</label>
-                <input type="text" id="wordcount" name="wo_form" value="{{wordcount}}"><br />
-                <label for="locations">Locations:</label>
-                <textarea id="locations" name="lo_form">{{locations}}</textarea><br />
-                <label for="description">Description:</label>
-                <textarea id="description" name="de_form">{{description}}</textarea><br />
-                <label for="mentions">Mentions:</label>
-                <textarea id="mentions" name="me_form">{{mentions}}</textarea><br />
-                <label for="quotes">Quotes:</label>
-                <textarea id="quotes" name="qu_form">{{quotes}}</textarea><br />
-                <label for="features">Features:</label>
-                <textarea id="features" name="fe_form">{{features}}</textarea><br />
-                <label for="char_events">Char Events:</label>
-                <textarea id="char_events" name="ce_form">{{char_events}}</textarea><br />
-                <label for="known_names">Known Names:</label>
-                <textarea id="known_names" name="kn_form">{{known_names}}</textarea><br />
-                <label for="log">Log:</label>
-                <textarea id="log" name="lg_form">{{log}}</textarea><br />
-            </form>
         </div>
     </div>
 </body>
@@ -115,11 +108,13 @@
 <style>
     * {
         font-family: Calibri;
+        background-color: lightgrey;
+        color: black;
     }
 
-        *:focus {
-            outline: none;
-        }
+    *:focus {
+        outline: none;
+    }
 
     div {
         position: relative;
@@ -127,62 +122,56 @@
         left: 0px;
         display: flex;
         align-items: flex-start;
-        border-radius: 5px;
-        border: 1px solid black;
-        color: black;
+        /*border-radius: 5px;*/
+        border: 1px solid white;
         width: 100%;
         flex-direction: row;
     }
-
+    #page_report_div {
+        width: 50%;
+        flex-direction: column;
+    }
     #page_div {
+        min-height: 750px;
+        flex-direction: column;
+    }
+    #utils_gen_div {
         width: 50%;
         flex-direction: column;
     }
-
-    #utils_div {
-        width: 50%;
-        flex-direction: column;
-    }
-
     #page_text {
         min-height: 150px;
     }
-
     #page_quotes {
         min-height: 150px;
         flex-direction: column;
     }
-
+    #utils_div {
+        flex-direction: column;
+    }
     #inputs_div {
         min-height: 50%;
     }
-
     #scene_div {
         width: 50%;
         flex-direction: column;
     }
-
     #char_div {
         flex-direction: column;
     }
-
     #hotkeys {
         width: 50%;
     }
-
     #buttons_div {
         flex-direction: column;
     }
-
     #char_hotkeys {
         flex-direction: column;
     }
-
     #log_div {
         width: 50%;
         flex-direction: column;
     }
-
     #log_box {
         min-height: 350px;
         width: 97%;
@@ -192,67 +181,47 @@
         overflow-x: scroll;
         font-family: 'Lucida Console';
     }
-
-    #sum_div {
-        width: 50%;
-    }
-
     #gen_div {
-        width: 50%;
         flex-direction: column;
     }
 
     .button {
         height: 40px;
         width: 100px;
-        border-radius: 6px;
         font-size: 12px;
         text-align: center;
         text-decoration: none;
         transition-duration: 0.2s;
-        border: 1px solid black;
-    }
-
-        .button:hover {
-            background-color: lightgray;
-        }
-
-        .button:active {
-            background-color: grey;
-        }
-
-    .light {
-        background-color: white;
+        border: 1px solid white;
+        background-color: lightgrey;
         color: black;
     }
-
-    .dark {
-        background-color: black;
-        color: white;
+    .button:hover {
+        background-color: grey;
     }
-
+    .button:active {
+        background-color: dimgrey;
+    }
     .hgreen {
         background-color: lime;
     }
-
     .hyellow {
         background-color: yellow;
     }
-
     .hred {
         background-color: palevioletred;
     }
-
     .quote_div {
         min-height: 50px;
     }
-
     .selected {
         background-color: yellow;
     }
-
     .assigned {
         background-color: lime;
+    }
+    input {
+        border: groove;
     }
 </style>
 
@@ -319,19 +288,24 @@
         active_hotkeys.set(116, ["translate_summary", []]); //t
 
         $.get(get_val('book_file'), read_text);
-        abs_char_count = Number(get_val('position'));
         for (var i = 0; i < 10; i++) {
             hot_names.set(i, ["", 0]);
         }
-        if (get_val("save_status") == "") { set_val("save_status", "saved"); }
+        if (get_val("save_status") == "") {
+            set_val("save_status", "saved");
+        } else if (get_val("save_status") == "reviewing") {
+            $('#page_div').hide();
+        }
 
         $('#page_text').text("Page text will appear here:");
         $('#page_quotes').text("Page quotes will appear here:");
         $('#char_hotkeys').html("<b>Character Hotkeys:</b>");
 
-        //this line. is fricking useful.
-        //can use this as a precedent for uploading html text and formatting it in init
-        $('#report_text').html($('#report_text').text());
+        if (get_val("save_status") == "saved") {
+            $('#report_text').html("");
+        } else {
+            $('#report_text').html($('#report_text').text());
+        }
 
         translate_summary();
     }

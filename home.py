@@ -10,7 +10,6 @@ from obj.Library import Library
 from obj.Series import Series
 from obj.Book import Book
 from obj.Character import Character
-from Query import Query
 from SaveFile import SaveFile
 app = Flask(__name__)
 
