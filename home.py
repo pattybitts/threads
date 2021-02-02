@@ -145,18 +145,6 @@ def generate_summary():
         char_events=request.form['ce_form'], \
         report=importer.print_log())
 
-"""
-@app.route('/new_graph', methods = ['POST'])
-def new_graph():
-    filter_text = str.strip(request.form['filter_box'])
-    filters = filter_text.split("\n")
-    x_axis = request.form['x_axis']
-    y_axis = request.form['y_axis']
-    query = Query(x_axis, y_axis, filters)
-    query.make_query_list()
-    return render_template('index_graph_tool.html', x_val=x_axis, y_val=y_axis, query_output=query.query_log, filter_text=filter_text)
-"""
-
 def process_cmd(cmd_str, save_str):
     importer = SceneImporter()
     cmd_parts = util.split(cmd_str, '=')
