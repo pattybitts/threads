@@ -13,7 +13,8 @@ class Character:
         self.aliases = []
         self.joins = []
         self.tags = []
-        self.featured = []
+        #not yet. see notes
+        #self.featured = []
 
     @staticmethod
     def match_character(list, search_str: str, scene=None):
