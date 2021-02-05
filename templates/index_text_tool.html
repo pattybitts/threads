@@ -413,6 +413,8 @@
             add_to_array(scene_features, key);
         }
         set_val('features_box', scene_features.join("\n"));
+        log("sw: " + scene_wordcount);
+        log("pw: " + page_wordcount);
         scene_wordcount += page_wordcount;
         page_start = abs_char_count;
         return true;
@@ -525,8 +527,9 @@
         page_mentions.clear();
         page_quotes.clear();
 
-        var page_words = smart_split(page_text, "[\\s-.\"]+");
+        var page_words = smart_split(page_text, "[\\s.\"]+");
         page_wordcount = page_words.length;
+        log("last word: " + page_words[page_wordcount - 1]);
         if (page_wordcount == 0) {
             return;
         }
@@ -678,13 +681,15 @@
     }
 
     function smart_split(input_text, separator = "\\s+", flags = "") {
-        var input_trimmed = input_text.trim();
+        var input_trimmed = input_text.trim(separator);
         if (input_trimmed == "") {
             return []
         }
-        var re = new RegExp(separator + "(?!$)", flags);
-        return input_trimmed.split(re);
-
+        var re = new RegExp(separator, flags);
+        var ret_arr = input_trimmed.split(re);
+        if (ret_arr[0] == "") { ret_arr.shift(); }
+        if (ret_arr[ret_arr.length - 1] == "") { ret_arr.pop(); }
+        return ret_arr
     }
 
     function mark_scene() {
