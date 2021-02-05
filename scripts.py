@@ -22,7 +22,7 @@ if 0:
 
 #creating a new save file
 if 1:
-    save_file = SaveFile("data\\eotw.sav", "static/eotw_shortened.txt", "data\\library_2_5", "The Wheel of Time", "The Eye of the World", 0)
+    save_file = SaveFile("data\\eotw.sav", "static/eotw_shortened.txt", "data\\library_2_5_1", "The Wheel of Time", "The Eye of the World", 0)
     log.out(save_file.print_info())
     save_file.save()
 

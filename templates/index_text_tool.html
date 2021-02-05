@@ -413,8 +413,6 @@
             add_to_array(scene_features, key);
         }
         set_val('features_box', scene_features.join("\n"));
-        log("sw: " + scene_wordcount);
-        log("pw: " + page_wordcount);
         scene_wordcount += page_wordcount;
         page_start = abs_char_count;
         return true;
@@ -529,13 +527,13 @@
 
         var page_words = smart_split(page_text, "[\\s.\"]+");
         page_wordcount = page_words.length;
-        log("last word: " + page_words[page_wordcount - 1]);
         if (page_wordcount == 0) {
             return;
         }
 
         //can maybe be refactored now that i can use break
         for (let p of page_words) {
+            //log("p: " + p);
             if (potential_name != "") {
                 potential_name += " " + /^"*(['A-Za-z]*)/.exec(p)[1];
             } else if (/^"*([A-Z].*)/.test(p)) {
@@ -574,11 +572,12 @@
                 }
             }
         }
+        if (best_matches.length > 0) { add_to_map(page_mentions, best_matches[0]); }
         var name_reg = null;
         var name_rep = "";
         var sorted_pm = new Map([...page_mentions.entries()].sort());
         for (let pm of sorted_pm.keys()) {
-            name_reg = new RegExp("(?<!>)(" + pm + ")(?![<\\w])", "g");
+            name_reg = new RegExp("(?<!>)" + pm + "(?![<\\w])", "g");
             name_rep = "<span class='hgreen'>" + pm + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
 
@@ -586,7 +585,7 @@
         }
         var sorted_pc = new Map([...page_caps.entries()].sort());
         for (let pc of sorted_pc.keys()) {
-            name_reg = new RegExp("(?<!>)(" + pc + ")(?![\\w])", "g");
+            name_reg = new RegExp("(?<!>)" + pc + "(?![\\w])", "g");
             name_rep = "<span class='hyellow'>" + pc + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
         }
