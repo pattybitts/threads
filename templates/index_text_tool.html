@@ -83,7 +83,7 @@
                     <label for="wordcount">Wordcount:</label>
                     <input type="text" id="wordcount" name="wo_form" value="{{wordcount}}"><br />
                     <label for="locations">Locations:</label>
-                    <textarea id="locations" name="lo_form">{{locations}}TODO</textarea><br />
+                    <textarea id="locations" name="lo_form">TODO</textarea><br />
                     <label for="description">Description:</label>
                     <textarea id="description" name="de_form">{{description}}</textarea><br />
                     <label for="mentions">Mentions:</label>
@@ -794,7 +794,7 @@
             add_to_array(char_events, [ce_name, ce_aliases, ce_joins, ce_tags]);
         }
         scene_features = smart_split(get_val('features'), "[\\v\\r\\n]+");
-        known_names = smart_split(get_val('known_names'), "[\\v\\r\\n]+");
+        known_names = smart_split(get_val('known_names'), ",");
     }
 
     function save_scene() {
