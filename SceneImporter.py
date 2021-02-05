@@ -65,9 +65,12 @@ class SceneImporter:
         scene_placement = len(chapter.scenes)+1
         scene_name = chapter.name.lower().replace(" ", "_") + "_" + str(scene_placement)
         scene = Scene(scene_name, scene_placement, wo_form, de_form)
+        '''
+        Removing location tracking for now, until we add universe + locations
         scene_locations = util.split(lo_form, "\\n")
         for sl in scene_locations:
             scene.add_location(Location(sl.strip()))
+        '''
         chapter.add_scene(scene)
         #updating characters with character events
         char_events = util.split(ce_form, "\\n")
@@ -187,11 +190,12 @@ class SceneImporter:
         self.log("Save Info: " + self.library_file + "; " + self.save_file)
         self.log("Series Info: " + series.name + "; " + book.name + " (" + str(book.placement) + ")")
         self.log("Chapter: " + chapter.name + " (" + str(chapter.placement) + "); Scene: " + scene.name)
+        #NOTE: not using locations until universe update
         loc_str = ""
         for l in scene.locations:
             loc_str += l.name + ", "
         loc_str = loc_str.rstrip(", ")
-        self.log("Perspective: " + scene.primary.name + "; Words: " + str(scene.wordcount) + "\nLocations: " + loc_str)
+        self.log("Perspective: " + scene.primary.name + "; Words: " + str(scene.wordcount)) #+ "\nLocations: " + loc_str)
         self.log("Description: " + scene.description + "\n")
         self.log("<b>Included Characters:</b>")
         for i in scene.included:

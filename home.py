@@ -103,6 +103,8 @@ def edit_char():
 @app.route('/generate_summary', methods = ['POST'])
 def generate_summary():
     #there's room to do this more sanely with ONE output stream
+    #have I done this now? or did I mean even MORE sanely
+    #noting here that lo-form isn't used for now, until we formally add universes and locations
     importer = SceneImporter()
     status = importer.process_save_file(request.form['sf_form'])
     if status == ret.SUCCESS:
