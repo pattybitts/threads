@@ -116,6 +116,11 @@
         outline: none;
     }
 
+    pre {
+        white-space: pre-line;
+        word-wrap: normal;
+    }
+
     div {
         position: relative;
         top: 0px;
@@ -360,17 +365,20 @@
     }
 
     function diagnostic() {
+        if (confirm("Also Clear Log?")) {
+            log("Cleared log", true);
+        }
         log("***");
         log("Diagnostic:");
         log("***");
-        log("Features Info: ");
-        log("Length: " + String(scene_features.length));
-        log("Terms:");
-        for (let sf of scene_features) {
-            log(sf);
+        log("Stored Features:")
+        for (let f of scene_features) {
+            log(f);
         }
-        log("Features Box: " + get_val('features_box'));
-        log("Features Form: " + get_val('features'));
+        /*log("Known Names: ");
+        for (let k of known_names) {
+            log(k);
+        }*/
     }
 
     function read_text(data, status) {
@@ -577,7 +585,8 @@
         var name_rep = "";
         var sorted_pm = new Map([...page_mentions.entries()].sort());
         for (let pm of sorted_pm.keys()) {
-            name_reg = new RegExp("(?<!>)" + pm + "(?![<\\w])", "g");
+            var reg_pm = pm.replace(/\s+/, "\\s+");
+            name_reg = new RegExp("(?<!>)" + reg_pm + "(?![<\\w<])", "g");
             name_rep = "<span class='hgreen'>" + pm + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
 
@@ -585,7 +594,7 @@
         }
         var sorted_pc = new Map([...page_caps.entries()].sort());
         for (let pc of sorted_pc.keys()) {
-            name_reg = new RegExp("(?<!>)" + pc + "(?![\\w])", "g");
+            name_reg = new RegExp("(?<!>)" + pc + "(?![\\w<])", "g");
             name_rep = "<span class='hyellow'>" + pc + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
         }
@@ -719,6 +728,9 @@
         checked_fields = get_val('primary_box') != "" & checked_fields;
         checked_fields = get_val('locations_box') != "" & checked_fields;
         checked_fields = get_val('description_box') != "" & checked_fields;
+        for (let fe of smart_split(get_val('features_box'), "[\\v\\r\\n]+")) {
+            add_to_array(scene_features, fe);
+        }
         if (!checked_fields) {
             log("ERROR: Scene fields empty");
             return;
@@ -775,19 +787,19 @@
         set_val('description_box', get_val('description'));
         set_val('features_box', get_val('features'));
         scene_wordcount = Number(get_val('wordcount'));
-        scene_mentions.clear;
+        scene_mentions = new Map();
         var sm_strings = smart_split(get_val('mentions'), "[\\v\\r\\n]+");
         for (let sm of sm_strings) {
             var sm_fields = sm.split(",");
             add_to_map(scene_mentions, sm_fields[0], sm_fields[1]);
         }
-        scene_quotes.clear;
+        scene_quotes = new Map();
         var sq_strings = smart_split(get_val('quotes'), "[\\v\\r\\n]+");
         for (let sq of sq_strings) {
             var sq_fields = sq.split(",");
             add_to_map(scene_quotes, sq_fields[0], sq_fields[1]);
         }
-        char_events.clear;
+        char_events = []
         var ce_strings = smart_split(get_val('char_events'), "[\\v\\r\\n]+");
         for (let ce of ce_strings) {
             var ce_fields = ce.split(";");
@@ -798,7 +810,7 @@
             add_to_array(char_events, [ce_name, ce_aliases, ce_joins, ce_tags]);
         }
         scene_features = smart_split(get_val('features'), "[\\v\\r\\n]+");
-        known_names = smart_split(get_val('known_names'), ",");
+        known_names = smart_split(get_val('known_names'), "[\\v\\r\\n]+");
     }
 
     function save_scene() {

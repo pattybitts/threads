@@ -63,7 +63,7 @@ def new_cmd_in():
             save_file=importer.save_file, \
             book_file=importer.book_file, \
             position=importer.position, \
-            known_names=util.join(importer.known_names))
+            known_names=util.join(importer.known_names, "\n"))
     elif not ret.success(action):
         return render_template('index_home.html', cmd_out=importer.print_log(), cmd_in=cmd_str)
     error_msg = "INTERNAL ERROR:\nInvalid return from processing"

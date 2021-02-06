@@ -80,10 +80,6 @@ class Character:
         for t in self.tags:
             tag_str = tag_str + "  " + t[0] + ": " + t[1].name + "\n"
         tag_str = tag_str.rstrip()
-        featured_str = ""
-        for f in self.featured:
-            featured_str = featured_str + " " + f.name + "\n"
-        featured_str = featured_str.rstrip()
         color_str = "  R: " + str(self.color["r"]) + "\n"
         color_str = color_str + "  G: " + str(self.color["g"]) + "\n"
         color_str = color_str + "  B: " + str(self.color["b"])
@@ -93,7 +89,6 @@ class Character:
             + "Aliases:\n" + alias_str + "\n" \
             + "Joins:\n" + join_str + "\n" \
             + "Tags:\n" + tag_str + "\n" \
-            + "Featured:\n" + featured_str
 
     #all methods below here are before the 1-19 object rebuild and are suspect
     
