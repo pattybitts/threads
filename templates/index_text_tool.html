@@ -443,15 +443,13 @@
 
         page_quotes.clear();
         var quotes = [];
-        var lines = 0;
         var char_inc = 0;
         var in_quote = false;
+        var in_word = false;
         var quote_start = 0;
-        while ((quotes.length < 5 && lines < 17) || in_quote) {
+        while ((quotes.length < 5 && char_inc < 2000) || in_quote || !in_word) {
             next_char = full_text.charAt(abs_char_count + char_inc++);
-            if (next_char == "\n") {
-                lines++;
-            }
+            in_word = /\s/.test(next_char);
             if (next_char == "\"") {
                 if (!in_quote) {
                     in_quote = true;

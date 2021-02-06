@@ -21,8 +21,8 @@ if 0:
     log.out(save_file.print())
 
 #creating a new save file
-if 0:
-    save_file = SaveFile("data\\eotw.sav", "static/eotw_shortened.txt", "data\\library_2_5_1", "The Wheel of Time", "The Eye of the World", 12977)
+if 1:
+    save_file = SaveFile("data\\hobbit.sav", "static/the_hobbit.txt", "data\\library_2_5_1", "The Lord of the Rings", "The Hobbit", 0)
     log.out(save_file.print_info())
     save_file.save()
 
@@ -66,12 +66,11 @@ if 0:
 
 #parsing eotw txt to remove extra whitespace
 #NOTE: modified again to reformat two in stunning_journey
-if 1:
-    input = open("input_files\\the_hobbit", 'r')
+if 0:
+    input = open("input_files\\the_hobbit.txt", 'r')
     full_text = input.read()
     mod_text = re.sub("\s*\n\n+\s*", "\n", full_text, 1000000)
-    mod_text = re.sub("[.?!]\s+", ".\n", full_text, 1000000)
-    output = open("input_files\\the_hobit", 'wb')
+    output = open("static\\the_hobbit.txt", 'wb')
     output.write(bytearray(mod_text, 'utf-8'))
     output.close()
 
