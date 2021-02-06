@@ -531,7 +531,7 @@
         page_mentions.clear();
         page_quotes.clear();
 
-        var page_words = smart_split(page_text, "[\\s.\"]+");
+        var page_words = smart_split(page_text, "[\\s\"]+");
         page_wordcount = page_words.length;
         if (page_wordcount == 0) {
             return;
@@ -541,20 +541,19 @@
         for (let p of page_words) {
             //log("p: " + p);
             if (potential_name != "") {
-                potential_name += " " + /^"*(['A-Za-z]*)/.exec(p)[1];
+                potential_name += " " + /^"*([\-'A-Za-z]*\.?)/.exec(p)[1];
             } else if (/^"*([A-Z].*)/.test(p)) {
-                potential_name = /^"*(['A-Za-z]*)/.exec(p)[1];
+                potential_name = /^"*([\-'A-Za-z]*\.?)/.exec(p)[1];
             }
             if (potential_name != "") {
-                //log("pm: " + potential_name);
-                potential_name = potential_name.replace("'s", "");
-                var pm_reg = new RegExp(potential_name + "(\\s*$|\\s+)");
+                //log("pot_name: " + potential_name);
+                var pm_reg = new RegExp(potential_name.replace("'s", "").replace(".", "\\.?") + "(\\s*$|\\s+)");
                 potential_matches = potential_matches.filter(pm => pm.search(pm_reg) >= 0);
                 if (potential_matches.length > 0) {
-                    best_matches = potential_matches.filter(pm => pm == potential_name);
+                    best_matches = potential_matches.filter(pm => pm.search(pm_reg) >= 0);
                 } else {
                     if (best_matches.length > 0) {
-                        //log("bm: " + best_matches);
+                        //log("best_matches: " + best_matches);
                         add_to_map(page_mentions, best_matches[0]);
                         best_matches = [];
                         potential_matches = known_names;
@@ -565,7 +564,7 @@
                         potential_matches = known_names;
                     }
                     if (/^"*([A-Z].*)/.test(p)) {
-                        potential_name = /^"*(['A-Za-z]*)/.exec(p)[1];
+                        potential_name = /^"*([\-'A-Za-z]*\.?)/.exec(p)[1];
                         potential_name = potential_name.replace("'s", "");
                         pm_reg = new RegExp(potential_name + "(\\s*$|\\s+)");
                         potential_matches = potential_matches.filter(pm => pm.search(pm_reg) >= 0);
@@ -581,8 +580,9 @@
         if (best_matches.length > 0) { add_to_map(page_mentions, best_matches[0]); }
         var name_reg = null;
         var name_rep = "";
-        var sorted_pm = new Map([...page_mentions.entries()].sort());
+        var sorted_pm = new Map([...page_mentions.entries()].sort(longer_name));
         for (let pm of sorted_pm.keys()) {
+            //log("page_mentions: " + pm + " : " + sorted_pm.get(pm));
             var reg_pm = pm.replace(/\s+/, "\\s+");
             name_reg = new RegExp("(?<!>)" + reg_pm + "(?![<\\w<])", "g");
             name_rep = "<span class='hgreen'>" + pm + "</span>";
@@ -590,7 +590,7 @@
 
             add_to_hot_names(pm);
         }
-        var sorted_pc = new Map([...page_caps.entries()].sort());
+        var sorted_pc = new Map([...page_caps.entries()].sort(longer_name));
         for (let pc of sorted_pc.keys()) {
             name_reg = new RegExp("(?<!>)" + pc + "(?![\\w<])", "g");
             name_rep = "<span class='hyellow'>" + pc + "</span>";
@@ -601,6 +601,10 @@
 
         $('#page_text').empty;
         $('#page_text').html(html_text.trim());
+    }
+
+    function longer_name(a, b) {
+        return a.length - b.length;
     }
 
     function add_to_hot_names(name) {
