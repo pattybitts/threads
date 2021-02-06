@@ -22,7 +22,7 @@ if 0:
 
 #creating a new save file
 if 1:
-    save_file = SaveFile("data\\hobbit.sav", "static/the_hobbit.txt", "data\\library_2_5_1", "The Lord of the Rings", "The Hobbit", 0)
+    save_file = SaveFile("data\\hobbit.sav", "static/the_hobbit.txt", "data\\library_2_6", "The Lord of the Rings", "The Hobbit", 0)
     log.out(save_file.print_info())
     save_file.save()
 
