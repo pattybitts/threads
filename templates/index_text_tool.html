@@ -238,7 +238,7 @@
     //page utilities
     var active_hotkeys = new Map();
     var input_focus = false;
-    var last_page = false;
+    var page_length = 2000;
 
     var full_text = "";
     var abs_char_count = 0;
@@ -283,7 +283,7 @@
         $('#translate_button').click(translate_summary);
         $('#save_button').click(save_scene);
 
-        active_hotkeys.set(110, ["next_page", []]); //n
+        active_hotkeys.set(110, ["next_page", [true, 0]]); //n
         active_hotkeys.set(97, ["add_name", []]); //a
         active_hotkeys.set(103, ["generate_summary", []]); //g
         active_hotkeys.set(115, ["save_scene", []]); //s
@@ -293,6 +293,7 @@
         active_hotkeys.set(116, ["translate_summary", []]); //t
         active_hotkeys.set(45, ["set_quote", ["Not a Quote"]]); //-
         active_hotkeys.set(113, ["new_quote", []]); //q
+        active_hotkeys.set(101, ["expand_page", []]); //e
 
         $.get(get_val('book_file'), read_text);
         for (var i = 0; i < 10; i++) {
@@ -429,7 +430,15 @@
         return true;
     }
 
-    function next_page() {
+    function next_page(args) {
+        let commit_page = (typeof args[0] === 'undefined' || args[0] === null) ? true : args[0];
+        let page_length_mod = (typeof args[1] === 'undefined' || args[1] === null) ? 0 : args[1];
+        log("Next Page: " + String(commit_page) + " : " + String(page_length_mod));
+        if (page_length_mod == 0) {
+            page_length = 2000;
+        } else if (page_length_mod > 0) {
+            page_length += page_length_mod;
+        }
         var save_status = get_val('save_status');
         if (save_status == "saved") {
             set_val('save_status', "parsing");
@@ -437,7 +446,7 @@
             log("ERROR: cannot continue until previous scene is saved");
             return;
         }
-        if (!last_page) {
+        if (commit_page) {
             if (!save_page_to_scene()) {
                 log("ERROR: Cannot start until all quotes on previous page are assigned");
                 return;
@@ -450,7 +459,7 @@
         var in_quote = false;
         var in_word = false;
         var quote_start = 0;
-        while ((quotes.length < 5 && char_inc < 2000) || in_quote || !in_word) {
+        while ((quotes.length < 5 && char_inc < page_length) || in_quote || !in_word) {
             next_char = full_text.charAt(abs_char_count + char_inc++);
             in_word = /\s/.test(next_char);
             if (next_char == "\"") {
@@ -479,7 +488,7 @@
 
         process_page_text();
         update_hotkeys();
-        if (!last_page) {
+        if (commit_page) {
             for (let [key, value] of hot_names.entries()) {
                 hot_names.set(key, [value[0], value[1] + 1]);
             }
@@ -584,19 +593,20 @@
             }
         }
         if (best_matches.length > 0) { add_to_map(page_mentions, best_matches[0]); }
-        var name_reg = null;
-        var name_rep = "";
-        var sorted_pm = new Map([...page_mentions.entries()].sort(longer_name));
+
+        let name_reg = null;
+        let name_rep = "";
+        let sorted_pm = new Map([...page_mentions.entries()].sort(sort_length));
         for (let pm of sorted_pm.keys()) {
             //log("page_mentions: " + pm + " : " + sorted_pm.get(pm));
-            var reg_pm = pm.replace(/\s+/g, "\\s+");
-            name_reg = new RegExp("(?<!>)" + reg_pm + "(?![<\\w<])", "g");
+            let reg_str = pm.replace(/\s+/g, "\\s+");
+            name_reg = new RegExp("(?<!>)" + reg_str + "(?![<\\w<])", "g");
             name_rep = "<span class='hgreen'>" + pm + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
 
             add_to_hot_names(pm);
         }
-        var sorted_pc = new Map([...page_caps.entries()].sort(longer_name));
+        let sorted_pc = new Map([...page_caps.entries()].sort(sort_length));
         for (let pc of sorted_pc.keys()) {
             //log("page_caps: " + pc);
             name_reg = new RegExp("(?<!>)" + pc + "(?![\\w<])", "g");
@@ -610,7 +620,7 @@
         $('#page_text').html(html_text.trim());
     }
 
-    function longer_name(a, b) {
+    function sort_length(a, b) {
         return a.length - b.length;
     }
 
@@ -739,23 +749,20 @@
     }
 
     function mark_scene() {
-        var next_words = prompt("Enter first words of next scene:", "");
-        if (next_words === null) {
-            log("ERROR: null prompt - need to refresh for hotkey functionality");
-            return;
+        let next_words = smart_prompt("Enter first words of next scene:", "");
+        let endpoint = page_text.indexOf(next_words);
+        if (endpoint >= 0) {
+            scene_end = endpoint;
+            abs_char_count = page_start;
+            next_page([false, 0]);
+            set_val('save_status', "reviewing");
         }
-        if (next_words === "") {
-            log("No Prompt Entry");
-        } else {
-            var endpoint = page_text.indexOf(next_words);
-            if (endpoint >= 0) {
-                scene_end = endpoint;
-                abs_char_count = page_start;
-                last_page = true;
-                next_page();
-                set_val('save_status', "reviewing");
-            }
-        }
+
+    }
+
+    function expand_page() {
+        abs_char_count = page_start;
+        next_page([false, 1000]);
     }
 
     function generate_summary() {
