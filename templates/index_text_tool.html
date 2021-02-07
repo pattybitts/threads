@@ -291,6 +291,8 @@
         active_hotkeys.set(109, ["mark_scene", []]); //m
         active_hotkeys.set(100, ["diagnostic", []]); //d
         active_hotkeys.set(116, ["translate_summary", []]); //t
+        active_hotkeys.set(45, ["set_quote", ["Not a Quote"]]); //-
+        active_hotkeys.set(113, ["new_quote", []]); //q
 
         $.get(get_val('book_file'), read_text);
         for (var i = 0; i < 10; i++) {
@@ -304,7 +306,8 @@
 
         $('#page_text').text("Page text will appear here:");
         $('#page_quotes').text("Page quotes will appear here:");
-        $('#char_hotkeys').html("<b>Character Hotkeys:</b>");
+        $('#char_hotkeys').html("<b>Character Hotkeys:</b>"
+            + "[-] If Not a Quote");
 
         if (get_val("save_status") == "saved") {
             $('#report_text').html("");
@@ -511,6 +514,7 @@
 
     function update_hotkeys() {
         var char_hotkey_text = "<b>Character Hotkeys:</b>";
+        char_hotkey_text += "[-] If Not a Quote</br>";
         for (let [key, value] of hot_names.entries()) {
             var name_val = value[0];
             if (name_val != "") {
@@ -585,7 +589,7 @@
         var sorted_pm = new Map([...page_mentions.entries()].sort(longer_name));
         for (let pm of sorted_pm.keys()) {
             //log("page_mentions: " + pm + " : " + sorted_pm.get(pm));
-            var reg_pm = pm.replace(/\s+/, "\\s+");
+            var reg_pm = pm.replace(/\s+/g, "\\s+");
             name_reg = new RegExp("(?<!>)" + reg_pm + "(?![<\\w<])", "g");
             name_rep = "<span class='hgreen'>" + pm + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
@@ -634,7 +638,8 @@
             if (high_key != null) {
                 hot_names.set(high_key, [name, 0]);
             } else {
-                log("ERROR: Too many fresh names, no countermeasure yet");
+                log("ERROR: Too many fresh names, assigning to key 9");
+                hot_names.set(9, [name, 0]);
             }
         }
     }
@@ -656,21 +661,47 @@
         }
     }
 
-    function add_name() {
+    function smart_prompt(msg = "", def = "") {
         //There's a bug here where if the user cancels the prompt, it prevents other hotkeys from functioning
         //ignoring for now
-        var alias = prompt("Enter new name:", "").trim();
-        if (alias === null) {
+        //may be solved by manually opening another entry and properly handling it?
+        let ret = prompt(msg, def);
+        if (ret === null) {
             log("ERROR: null prompt - need to refresh for hotkey functionality");
             return;
         }
-        if (alias == "") {
+        ret = ret.trim();
+        if (ret == "") {
             log("No Prompt Entry");
         } else {
-            add_to_array(known_names, alias);
-            add_to_hot_names(alias);
-            process_page_text();
+            return ret;
         }
+    }
+
+    function new_quote() {
+        let quote_set = smart_prompt("Enter the first two words and last two words of the quote:", "");
+        quote_parts = smart_split(quote_set, "\\s+");
+        if (quote_parts.length != 4) {
+            log("Requires 4 words for quote determination");
+            return;
+        }
+        let quote_reg_str = quote_parts[0] + "\\s+" + quote_parts[1] + "[\\w\\W]*" + quote_parts[2] + "\\s+" + quote_parts[3];
+        let quote_reg = new RegExp(quote_reg_str);
+        let quote_match = page_text.match(quote_reg);
+        if (quote_match === null) {
+            log("ERROR: unable to find quote in page text");
+            return;
+        }
+        let quote_text = quote_match[0];
+        let quote_html = "<div onclick='select_quote(this)' class='quote_div'>\"" + quote_text + "\"</div>";
+        $('#page_quotes').append(quote_html);
+    }
+
+    function add_name() {
+        let alias = smart_prompt("Enter new name:", "");
+        add_to_array(known_names, alias);
+        add_to_hot_names(alias);
+        process_page_text();
     }
 
     function set_quote(args) {
@@ -680,9 +711,11 @@
         for (var i = 0, len = all_quotes.length | 0; i < len; i = i + 1) {
             quote_div = all_quotes[i];
             if (quote_div.classList.contains("selected")) {
-                add_to_hot_names(speaker);
                 var quote_text = quote_div.textContent;
-                add_to_map(page_quotes, speaker, smart_split(quote_text).length);
+                if (speaker != "Not a Quote") {
+                    add_to_hot_names(speaker);
+                    add_to_map(page_quotes, speaker, smart_split(quote_text).length);
+                }
                 quote_div.setAttribute("class", "quote_div assigned");
                 quote_div.innerHTML = quote_div.innerHTML + "<br /><br />Assigned: " + speaker;
                 if (i + 1 < len) {
