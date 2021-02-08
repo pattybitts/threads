@@ -611,18 +611,26 @@
 
         let name_reg = null;
         let name_rep = "";
-        let sorted_pm = new Map([...page_mentions.entries()].sort(sort_length));
-        for (let pm of sorted_pm.keys()) {
-            //log("page_mentions: " + pm + " : " + sorted_pm.get(pm));
-            let reg_str = pm.replace(/\s+/g, "\\s+");
+        let sorted_pm = [];
+        for (let key of page_mentions.keys()) {
+            sorted_pm.push(key);
+        }
+        sorted_pm.sort(function (a, b) {return b.length - a.length});
+        for (let spm of sorted_pm) {
+            //log("page_mentions: " + spm);
+            let reg_str = spm.replace(/\s+/g, "\\s+");
             name_reg = new RegExp("(?<!>)" + reg_str + "(?![<\\w<])", "g");
-            name_rep = "<span class='hgreen'>" + pm + "</span>";
+            name_rep = "<span class='hgreen'>" + spm + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
 
-            add_to_hot_names(pm);
+            add_to_hot_names(spm);
         }
-        let sorted_pc = new Map([...page_caps.entries()].sort(sort_length));
-        for (let pc of sorted_pc.keys()) {
+        let sorted_pc = [];
+        for (let key of page_caps.keys()) {
+            sorted_pc.push(key);
+        }
+        sorted_pc.sort(function (a, b) { return b.length - a.length });
+        for (let pc of sorted_pc) {
             //log("page_caps: " + pc);
             name_reg = new RegExp("(?<!>)" + pc + "(?![\\w<])", "g");
             name_rep = "<span class='hyellow'>" + pc + "</span>";
@@ -635,10 +643,6 @@
 
         $('#page_text').empty;
         $('#page_text').html(html_text.trim());
-    }
-
-    function sort_length(a, b) {
-        return a.length - b.length;
     }
 
     function add_to_hot_names(name) {
