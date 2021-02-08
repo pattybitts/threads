@@ -44,7 +44,7 @@ class SceneImporter:
             self.library.save(self.library_file)
         return ret.SUCCESS
 
-    def process_scene_data(self, ch_form: str, pr_form: str, lo_form: str, de_form: str, \
+    def process_scene_data(self, ch_form: str, pe_form: str, lo_form: str, de_form: str, \
         wo_form: str, me_form: str, qu_form: str, fe_form: str, ce_form: str):
         #finding series
         series = self.library.get_series(self.series_name)
@@ -101,13 +101,14 @@ class SceneImporter:
             for ce_t in ce_tags:
                 if ce_t == "": continue
                 ce_char.add_tag(ce_t, scene)
-        #adding primary character
-        pr_char = series.match_or_make_char(pr_form, scene)
-        if not ret.success(pr_char):
-            self.log("Failed to match or make character: " + pr_form)
-            scene.set_primary(Character("null"))
-        else:
-            scene.set_primary(pr_char)
+        #adding perspectives
+        perspectives = util.split(pe_form, "\\n")
+        for p in perspectives:
+            pe_char = series.match_or_make_char(p, scene)
+            if not ret.success(pe_char):
+                self.log("Failed to match or make character: " + p)
+                continue
+            scene.add_perspective(pe_char)
         #populating scene included
         #scene quotes
         scene_quotes = util.split(qu_form, "\\n")
@@ -190,12 +191,16 @@ class SceneImporter:
         self.log("Save Info: " + self.library_file + "; " + self.save_file)
         self.log("Series Info: " + series.name + "; " + book.name + " (" + str(book.placement) + ")")
         self.log("Chapter: " + chapter.name + " (" + str(chapter.placement) + "); Scene: " + scene.name)
+        per_str = ""
+        for p in scene.perspectives:
+            per_str += p.name + ", "
+        per_str = per_str.rstrip(", ")
         #NOTE: not using locations until universe update
         loc_str = ""
         for l in scene.locations:
             loc_str += l.name + ", "
         loc_str = loc_str.rstrip(", ")
-        self.log("Perspective: " + scene.primary.name + "; Words: " + str(scene.wordcount)) #+ "\nLocations: " + loc_str)
+        self.log("Perspectives: " + per_str + "; Words: " + str(scene.wordcount)) #+ "\nLocations: " + loc_str)
         self.log("Description: " + scene.description + "\n")
         self.log("<b>Included Characters:</b>")
         for i in scene.included:

@@ -108,7 +108,7 @@ def generate_summary():
     importer = SceneImporter()
     status = importer.process_save_file(request.form['sf_form'])
     if status == ret.SUCCESS:
-        status = importer.process_scene_data(request.form['ch_form'], request.form['pr_form'], \
+        status = importer.process_scene_data(request.form['ch_form'], request.form['pe_form'], \
             request.form['lo_form'], request.form['de_form'], \
             request.form['wo_form'], request.form['me_form'], \
             request.form['qu_form'], request.form['fe_form'], \
@@ -136,7 +136,7 @@ def generate_summary():
         log=request.form['lg_form'], \
         position=request.form['po_form'], \
         chapter=request.form['ch_form'], \
-        primary=request.form['pr_form'], \
+        perspectives=request.form['pe_form'], \
         locations=request.form['lo_form'], \
         description=request.form['de_form'], \
         wordcount=request.form['wo_form'], \

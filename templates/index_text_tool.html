@@ -43,12 +43,12 @@
                         Scene Info:<br /><br />
                         <label for="chapter_box">Chapter Name:</label>
                         <input type="text" id="chapter_box" name="chapter_box"><br />
-                        <label for="primary_box">Primary Character Name:</label>
-                        <input type="text" id="primary_box" name="primary_box"><br />
-                        <label for="locations_box">Location Names:</label>
-                        <textarea id="locations_box" name="locations_box">TODO</textarea><br />
+                        <label for="perspectives_box">Perspective Names:</label>
+                        <textarea id="perspectives_box" name="perspectives_box"></textarea><br />
                         <label for="description_box">Brief Description:</label>
                         <textarea id="description_box" name="description_box"></textarea><br />
+                        <label for="locations_box">Location Names:</label>
+                        <textarea id="locations_box" name="locations_box">TODO</textarea><br />
                         <label for="features_box">Featuring:</label>
                         <textarea id="features_box" name="features_box"></textarea><br />
                     </div>
@@ -79,7 +79,7 @@
                     <label for="chapter">Chapter:</label>
                     <input type="text" id="chapter" name="ch_form" value="{{chapter}}"><br />
                     <label for="primary">Primary:</label>
-                    <input type="text" id="primary" name="pr_form" value="{{primary}}"><br />
+                    <input type="text" id="perspectives" name="pe_form" value="{{perspectives}}"><br />
                     <label for="wordcount">Wordcount:</label>
                     <input type="text" id="wordcount" name="wo_form" value="{{wordcount}}"><br />
                     <label for="locations">Locations:</label>
@@ -235,10 +235,13 @@
     //imports
     //import {default as get_val, set_val, add_to_array, add_to_map} from "./util"
 
+    //constants
+    const DEF_PAGE_LENGTH = 1500;
+
     //page utilities
     var active_hotkeys = new Map();
     var input_focus = false;
-    var page_length = 2000;
+    var page_length = DEF_PAGE_LENGTH;
     var stored_character = "";
 
     var full_text = "";
@@ -284,7 +287,7 @@
         $('#translate_button').click(translate_summary);
         $('#save_button').click(save_scene);
 
-        active_hotkeys.set(110, ["next_page", [true, 0]]); //n
+        active_hotkeys.set(110, ["next_page", [true, DEF_PAGE_LENGTH]]); //n
         active_hotkeys.set(97, ["add_name", []]); //a
         active_hotkeys.set(103, ["generate_summary", []]); //g
         active_hotkeys.set(115, ["save_scene", []]); //s
@@ -363,7 +366,7 @@
         return true;
     }
 
-    function log(string, clear = false) {
+    function log(string, clear=false) {
         if (clear) {
             set_val('log_box', "");
         }
@@ -433,14 +436,10 @@
     }
 
     function next_page(args) {
+        //these lines handle if the method is called via button and args aren't passed properly
         let commit_page = (typeof args[0] === 'undefined' || args[0] === null) ? true : args[0];
-        let page_length_mod = (typeof args[1] === 'undefined' || args[1] === null) ? 0 : args[1];
-        log("Next Page: " + String(commit_page) + " : " + String(page_length_mod));
-        if (page_length_mod == 0) {
-            page_length = 2000;
-        } else if (page_length_mod > 0) {
-            page_length += page_length_mod;
-        }
+        page_length = (typeof args[1] === 'undefined' || args[1] === null) ? DEF_PAGE_LENGTH : args[1];
+        log("Next Page: " + String(commit_page) + " : " + String(page_length));
         var save_status = get_val('save_status');
         if (save_status == "saved") {
             set_val('save_status', "parsing");
@@ -454,14 +453,13 @@
                 return;
             }
         }
-
         page_quotes.clear();
         var quotes = [];
         var char_inc = 0;
         var in_quote = false;
         var in_word = false;
         var quote_start = 0;
-        while ((quotes.length < 5 && char_inc < page_length) || in_quote || !in_word) {
+        while (char_inc < page_length || in_quote || !in_word) {
             next_char = full_text.charAt(abs_char_count + char_inc++);
             in_word = /\s/.test(next_char);
             if (next_char == "\"") {
@@ -655,8 +653,10 @@
             }
             if (high_key != null) {
                 hot_names.set(high_key, [name, 0]);
+                return high_key;
             } else {
                 log("ERROR: More than 10 fresh names this page, use [A] and [=]");
+                return null;
             }
         }
     }
@@ -725,17 +725,19 @@
     function set_quote(args) {
         var all_quotes = document.getElementsByClassName('quote_div');
         var quote_div = null;
+        let hotkey_num = null;
         var speaker = args[0];
         for (var i = 0, len = all_quotes.length | 0; i < len; i = i + 1) {
             quote_div = all_quotes[i];
             if (quote_div.classList.contains("selected")) {
                 var quote_text = quote_div.textContent;
                 if (speaker != "Not a Quote") {
-                    add_to_hot_names(speaker);
+                    hotkey_num = add_to_hot_names(speaker);
                     add_to_map(page_quotes, speaker, smart_split(quote_text).length);
                 }
                 quote_div.setAttribute("class", "quote_div assigned");
-                quote_div.innerHTML = quote_div.innerHTML + "<br /><br />Assigned: " + speaker;
+                let hotkey_str = (hotkey_num !== null) ? " [" + String(hotkey_num) + "]" : "";
+                quote_div.innerHTML = quote_div.innerHTML + "<br /><br />Assigned: " + speaker + hotkey_str;
                 if (i + 1 < len) {
                     all_quotes[i + 1].setAttribute("class", "quote_div selected");
                 }
@@ -762,7 +764,7 @@
         if (endpoint >= 0) {
             scene_end = endpoint;
             abs_char_count = page_start;
-            next_page([false, 0]);
+            next_page([false, page_length]);
             set_val('save_status', "reviewing");
         }
 
@@ -770,7 +772,7 @@
 
     function expand_page() {
         abs_char_count = page_start;
-        next_page([false, 1000]);
+        next_page([false, page_length+1000]);
     }
 
     function generate_summary() {
@@ -778,9 +780,8 @@
         //checking form fields
         var checked_fields = true;
         checked_fields = get_val('chapter_box') != "" & checked_fields;
-        checked_fields = get_val('primary_box') != "" & checked_fields;
-        checked_fields = get_val('locations_box') != "" & checked_fields;
         checked_fields = get_val('description_box') != "" & checked_fields;
+        checked_fields = get_val('locations_box') != "" & checked_fields;
         for (let fe of smart_split(get_val('features_box'), "[\\v\\r\\n]+")) {
             add_to_array(scene_features, fe);
         }
@@ -797,7 +798,7 @@
         //transferring data to gen_form
         set_val('position', page_start);
         set_val('chapter', get_val('chapter_box'));
-        set_val('primary', get_val('primary_box'));
+        set_val('perspectives', get_val('perspectives_box'));
         set_val('locations', get_val('locations_box'));
         set_val('description', get_val('description_box'));
         set_val('features', get_val('features_box'));
@@ -835,7 +836,7 @@
         log("Translating summary data back into page");
         abs_char_count = Number(get_val('position'));
         set_val('chapter_box', get_val('chapter'));
-        set_val('primary_box', get_val('primary'));
+        set_val('perspectives_box', get_val('perspectives'));
         set_val('locations_box', get_val('locations'));
         set_val('description_box', get_val('description'));
         set_val('features_box', get_val('features'));

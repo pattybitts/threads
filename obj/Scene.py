@@ -11,12 +11,12 @@ class Scene:
         self.placement = num
         self.wordcount = wordcount
         self.description = description
-        self.primary = None
+        self.perspectives = []
         self.locations = []
         self.included = []
 
-    def set_primary(self, p_character: Character):
-        self.primary = p_character
+    def add_perspective(self, new_perspective: Character):
+        self.perspectives.append(new_perspective)
 
     def get_location(self, loc_name: str):
         for l in self.locations:
@@ -28,6 +28,10 @@ class Scene:
         self.locations.append(new_loc)
 
     def print_info(self):
+        per_str = ""
+        for p in self.perspectives:
+            per_str += p.name + ", "
+        per_str = per_str.rstrip(", ")
         loc_str = ""
         for l in self.locations:
             loc_str += l.name + ", "
@@ -48,7 +52,7 @@ class Scene:
                     inc_str += "  New Tag: " + t[0] + "\n"
             inc_str += "\n"
         return "(Scene) " + self.name + "\n" \
-            + "Perspective: " + self.primary.name + "; Words: " + str(self.wordcount) + "\n" \
+            + "Perspectives: " + per_str + "; Words: " + str(self.wordcount) + "\n" \
             + "Locations: " + loc_str + "\n" \
             + "Description: " + self.description + "\n" \
             + "Included Characters:\n" + inc_str
