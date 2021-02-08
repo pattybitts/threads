@@ -266,6 +266,7 @@
 
     function init() {
         $(document).keypress(hotkey);
+        $(document).keydown(esc_blur);
         $("input").focus(function () {
             input_focus = true;
         });
@@ -404,6 +405,16 @@
             func = String(active_hotkeys.get(key.which)[0]);
             args = active_hotkeys.get(key.which)[1];
             window[func](args);
+        }
+    }
+
+    function esc_blur(key) {
+        //log(key.which);
+        if (key.which == 27) { //esc key
+            let focused = document.activeElement;
+            if (focused.tagName == 'INPUT' || focused.tagName == 'TEXTAREA') {
+                focused.blur();
+            }
         }
     }
 
