@@ -71,7 +71,8 @@ class SceneImporter:
         for sl in scene_locations:
             scene.add_location(Location(sl.strip()))
         '''
-        chapter.add_scene(scene)
+        if chapter.add_scene(scene) == ret.DUPLICATE:
+            self.log("NOTE: Duplicate Information in Chapter. Will not add scene.")
         #updating characters with character events
         char_events = util.split(ce_form, "\\n")
         for ce in char_events:
