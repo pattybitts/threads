@@ -11,7 +11,7 @@ class Chapter:
 
     def add_scene(self, new_scene: Scene):
         for s in self.scenes:
-            if s.wordcount == new_scene.wordcount and s.description == new_scene.wordcount:
+            if s.wordcount == new_scene.wordcount and s.description == new_scene.description:
                 return ret.DUPLICATE
         self.scenes.append(new_scene)
         return ret.SUCCESS    

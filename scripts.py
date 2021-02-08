@@ -10,20 +10,20 @@ from obj.Character import Character
 from SaveFile import SaveFile
 
 #editing library objects (Gandalf_featured)
-if 0:
+if 1:
     library = Library.load("data\\library_2_8")
     series = library.get_series("The Lord of the Rings")
     book = series.get_book("The Hobbit")
     chapter = book.find_chapter("An Unexpected Party")
-    scene = chapter.scenes[2]
     '''
+    scene = chapter.scenes[2]
     for i in scene.included:
         if i["character"].name == "Gandalf": i["featured"] = True
+    log.out(scene.print_info())
     '''
     chapter.scenes.pop()
     chapter.scenes.pop()
     chapter.scenes.pop()
-    log.out(scene.print_info())
     library.save("data\\library_2_8")
 
 #testing new util.strip method
@@ -38,7 +38,7 @@ if 0:
     log.out(save_file.print())
 
 #creating a new save file
-if 1:
+if 0:
     save_file = SaveFile("data\\hobbit.sav", "static/the_hobbit.txt", "data\\library_2_8", "The Lord of the Rings", "The Hobbit", 21616)
     log.out(save_file.print_info())
     save_file.save()
