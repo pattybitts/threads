@@ -239,6 +239,7 @@
     var active_hotkeys = new Map();
     var input_focus = false;
     var page_length = 2000;
+    var stored_character = "";
 
     var full_text = "";
     var abs_char_count = 0;
@@ -308,7 +309,8 @@
         $('#page_text').text("Page text will appear here:");
         $('#page_quotes').text("Page quotes will appear here:");
         $('#char_hotkeys').html("<b>Character Hotkeys:</b>"
-            + "[-] If Not a Quote");
+            + "If Not a Quote: [-]</br>"
+            + "For Stored Character: [=]");
 
         if (get_val("save_status") == "saved") {
             $('#report_text').html("");
@@ -523,12 +525,16 @@
 
     function update_hotkeys() {
         var char_hotkey_text = "<b>Character Hotkeys:</b>";
-        char_hotkey_text += "[-] If Not a Quote</br>";
+        char_hotkey_text += "If Not a Quote: [-]</br>";
+        if (stored_character !== "") {
+            char_hotkey_text += stored_character + ": [=]</br>";
+            active_hotkeys.set(61, ["set_quote", [stored_character]]);
+        }
         for (let [key, value] of hot_names.entries()) {
             var name_val = value[0];
             if (name_val != "") {
                 active_hotkeys.set(48 + key, ["set_quote", [name_val]]); //48 is the 0 key, 49->1, etc 
-                char_hotkey_text += name_val + ": " + key + "<br />";
+                char_hotkey_text += name_val + ": [" + key + "]</br>";
             }
         }
         $('#char_hotkeys').html(char_hotkey_text);
@@ -614,6 +620,8 @@
             html_text = html_text.replace(name_reg, name_rep);
         }
 
+        html_text = html_text.replace(/"/g, "<span class='hred'>\"</span>");
+
         update_hotkeys();
 
         $('#page_text').empty;
@@ -648,8 +656,7 @@
             if (high_key != null) {
                 hot_names.set(high_key, [name, 0]);
             } else {
-                log("ERROR: Too many fresh names, assigning to key 9");
-                hot_names.set(9, [name, 0]);
+                log("ERROR: More than 10 fresh names this page, use [A] and [=]");
             }
         }
     }
@@ -695,7 +702,7 @@
             log("Requires 4 words for quote determination");
             return;
         }
-        let quote_reg_str = quote_parts[0] + "\\s+" + quote_parts[1] + "[\\w\\W]*" + quote_parts[2] + "\\s+" + quote_parts[3];
+        let quote_reg_str = quote_parts[0] + "\\s+" + quote_parts[1] + "[\\w\\W]*?" + quote_parts[2] + "\\s+" + quote_parts[3];
         let quote_reg = new RegExp(quote_reg_str);
         let quote_match = page_text.match(quote_reg);
         if (quote_match === null) {
@@ -709,6 +716,7 @@
 
     function add_name() {
         let alias = smart_prompt("Enter new name:", "");
+        stored_character = alias;
         add_to_array(known_names, alias);
         add_to_hot_names(alias);
         process_page_text();
