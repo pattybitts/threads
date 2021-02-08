@@ -646,33 +646,29 @@
     }
 
     function add_to_hot_names(name) {
-        var in_hot_names = false;
-        for (let value of hot_names.values()) {
+        for (let [key, value] of hot_names.entries()) {
             if (value[0] === name) {
                 value[1] = 0;
-                in_hot_names = true;
-                break;
+                return key;
             }
         }
-        if (!in_hot_names) {
-            var high_val = 0;
-            var high_key = null;
-            for (let key of hot_names.keys()) {
-                if (hot_names.get(key)[0] == "") {
-                    high_key = key;
-                    break;
-                } else if (hot_names.get(key)[1] > high_val) {
-                    high_key = key;
-                    high_val = hot_names.get(key)[1];
-                }
+        let high_val = 0;
+        let high_key = null;
+        for (let key of hot_names.keys()) {
+            if (hot_names.get(key)[0] == "") {
+                high_key = key;
+                break;
+            } else if (hot_names.get(key)[1] > high_val) {
+                high_key = key;
+                high_val = hot_names.get(key)[1];
             }
-            if (high_key != null) {
-                hot_names.set(high_key, [name, 0]);
-                return high_key;
-            } else {
-                log("ERROR: More than 10 fresh names this page, use [A] and [=]");
-                return null;
-            }
+        }
+        if (high_key != null) {
+            hot_names.set(high_key, [name, 0]);
+            return high_key;
+        } else {
+            log("ERROR: More than 10 fresh names this page, use [A] and [=]");
+            return null;
         }
     }
 
@@ -738,14 +734,14 @@
     }
 
     function set_quote(args) {
-        var all_quotes = document.getElementsByClassName('quote_div');
-        var quote_div = null;
+        let all_quotes = document.getElementsByClassName('quote_div');
+        let quote_div = null;
         let hotkey_num = null;
-        var speaker = args[0];
-        for (var i = 0, len = all_quotes.length | 0; i < len; i = i + 1) {
+        let speaker = args[0];
+        for (let i = 0, len = all_quotes.length | 0; i < len; i = i + 1) {
             quote_div = all_quotes[i];
             if (quote_div.classList.contains("selected")) {
-                var quote_text = quote_div.textContent;
+                let quote_text = quote_div.textContent;
                 if (speaker != "Not a Quote") {
                     hotkey_num = add_to_hot_names(speaker);
                     add_to_map(page_quotes, speaker, smart_split(quote_text).length);
