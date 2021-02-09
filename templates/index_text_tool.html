@@ -612,23 +612,16 @@
         for (let spm of sorted_pm) {
             //log("page_mentions: " + spm);
             let reg_str = spm.replace(/\s+/g, "\\s+");
-            name_reg = new RegExp("(?<!>)" + reg_str + "(?![<\\w<])", "g");
+            name_reg = new RegExp("(?<!>)" + reg_str + "(?![<\\w])", "g");
             name_rep = "<span class='hgreen'>" + spm + "</span>";
             html_text = html_text.replace(name_reg, name_rep);
 
             add_to_hot_names(spm);
         }
-        let sorted_pc = [];
-        for (let key of page_caps.keys()) {
-            sorted_pc.push(key);
-        }
-        sorted_pc.sort(function (a, b) { return b.length - a.length });
-        for (let pc of sorted_pc) {
-            //log("page_caps: " + pc);
-            name_reg = new RegExp("(?<!>)" + pc + "(?![\\w<])", "g");
-            name_rep = "<span class='hyellow'>" + pc + "</span>";
-            html_text = html_text.replace(name_reg, name_rep);
-        }
+
+        html_text = html_text.replace(/(?<!>)[A-Z]['A-Za-z]*[\.,]?(?![<\w<])/g, function (match) {
+            return "<span class='hyellow'>" + match + "</span>";
+        });
 
         html_text = html_text.replace(/"/g, "<span class='hred'>\"</span>");
 
