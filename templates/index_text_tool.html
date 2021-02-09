@@ -79,7 +79,7 @@
                     <label for="chapter">Chapter:</label>
                     <input type="text" id="chapter" name="ch_form" value="{{chapter}}"><br />
                     <label for="perspectives">Perspectives:</label>
-                    <textarea type="text" id="perspectives" name="pe_form" value="{{perspectives}}"></textarea><br />
+                    <textarea id="perspectives" name="pe_form">{{perspectives}}</textarea><br />
                     <label for="wordcount">Wordcount:</label>
                     <input type="text" id="wordcount" name="wo_form" value="{{wordcount}}"><br />
                     <label for="locations">Locations:</label>
@@ -442,8 +442,6 @@
         let commit_page = (typeof args[0] === 'undefined' || args[0] === null) ? true : args[0];
         page_length = (typeof args[1] === 'undefined' || args[1] === null) ? DEF_PAGE_LENGTH : args[1];
         log("Next Page: " + String(commit_page) + " : " + String(page_length));
-        log("page_start: " + String(page_start));
-        log("page_end: " + String(page_end));
         var scene_status = get_val('scene_status');
         if (scene_status == "saved") {
             set_val('scene_status', "parsing");
@@ -457,12 +455,11 @@
                 return;
             }
         }
-        page_quotes.clear();
-        var quotes = [];
-        var char_inc = 0;
-        var in_quote = false;
-        var in_word = false;
-        var quote_start = 0;
+        let quotes = [];
+        let char_inc = 0;
+        let in_quote = false;
+        let in_word = false;
+        let quote_start = 0;
         while (char_inc < page_length || in_quote || !in_word) {
             next_char = full_text.charAt(page_start + char_inc++);
             in_word = /\s/.test(next_char);
@@ -472,7 +469,7 @@
                     quote_start = page_start + char_inc;
                 } else {
                     in_quote = false;
-                    var quote = full_text.substring(quote_start, page_start + char_inc - 1);
+                    let quote = full_text.substring(quote_start, page_start + char_inc - 1);
                     quote.replace("\n", " ");
                     quotes.push(quote);
                 }
@@ -483,7 +480,7 @@
         }
         $('#page_quotes').empty();
         for (let q of quotes) {
-            var quote_html = "<div onclick='select_quote(this)' class='quote_div'>\"" + String(q) + "\"</div>";
+            let quote_html = "<div onclick='select_quote(this)' class='quote_div'>\"" + String(q) + "\"</div>";
             $('#page_quotes').append(quote_html);
         }
         $(".quote_div:first").addClass('selected');
@@ -543,11 +540,10 @@
     }
 
     function process_page_text() {
-        var html_text = page_text;
-        var potential_matches = known_names;
-        var potential_name = "";
-        var best_matches = [];
-        var page_caps = new Map();
+        let html_text = page_text;
+        let potential_matches = known_names;
+        let potential_name = "";
+        let best_matches = [];
 
         page_mentions.clear();
         page_quotes.clear();
@@ -578,11 +574,9 @@
                     if (best_matches.length > 0) {
                         //log("best_matches: " + best_matches);
                         add_to_map(page_mentions, best_matches[0]);
-                        best_matches = [];
+                        best_matches.splice(0, best_matches.length);
                         potential_matches = known_names;
                     } else {
-                        potential_name = smart_split(potential_name, "\\s+")[0];
-                        add_to_map(page_caps, potential_name);
                         potential_name = "";
                         potential_matches = known_names;
                     }
@@ -740,7 +734,7 @@
                 let hotkey_str = (hotkey_num !== null) ? " [" + String(hotkey_num) + "]" : "";
                 quote_div.innerHTML = quote_div.innerHTML + "<br /><br />Assigned: " + speaker + hotkey_str;
                 if (i + 1 < len) {
-                    all_quotes[i + 1].setAttribute("class", "quote_div selected");
+                    select_quote(all_quotes[i + 1]);
                 }
                 break;
             }
@@ -844,29 +838,31 @@
         set_val('description_box', get_val('description'));
         set_val('features_box', get_val('features'));
         scene_wordcount = Number(get_val('wordcount'));
-        scene_mentions = new Map();
-        var sm_strings = smart_split(get_val('mentions'), "[\\v\\r\\n]+");
+        scene_mentions.clear();
+        let sm_strings = smart_split(get_val('mentions'), "[\\v\\r\\n]+");
         for (let sm of sm_strings) {
-            var sm_fields = sm.split(",");
+            let sm_fields = sm.split(",");
             add_to_map(scene_mentions, sm_fields[0], sm_fields[1]);
         }
-        scene_quotes = new Map();
-        var sq_strings = smart_split(get_val('quotes'), "[\\v\\r\\n]+");
+        scene_quotes.clear();
+        let sq_strings = smart_split(get_val('quotes'), "[\\v\\r\\n]+");
         for (let sq of sq_strings) {
-            var sq_fields = sq.split(",");
+            let sq_fields = sq.split(",");
             add_to_map(scene_quotes, sq_fields[0], sq_fields[1]);
         }
-        char_events = []
-        var ce_strings = smart_split(get_val('char_events'), "[\\v\\r\\n]+");
+        char_events.splice(0, char_events.length);
+        let ce_strings = smart_split(get_val('char_events'), "[\\v\\r\\n]+");
         for (let ce of ce_strings) {
-            var ce_fields = ce.split(";");
-            var ce_name = ce_fields[0];
-            var ce_aliases = ce_fields[1].split(",");
-            var ce_joins = ce_fields[2].split(",");
-            var ce_tags = ce_fields[3].split(",");
+            let ce_fields = ce.split(";");
+            let ce_name = ce_fields[0];
+            let ce_aliases = ce_fields[1].split(",");
+            let ce_joins = ce_fields[2].split(",");
+            let ce_tags = ce_fields[3].split(",");
             add_to_array(char_events, [ce_name, ce_aliases, ce_joins, ce_tags]);
         }
+        scene_features.splice(0, scene_features.length);
         scene_features = smart_split(get_val('features'), "[\\v\\r\\n]+");
+        known_names.splice(0, known_names.length);
         known_names = smart_split(get_val('known_names'), "[\\v\\r\\n]+");
     }
 

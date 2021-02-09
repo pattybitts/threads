@@ -67,6 +67,12 @@ class Character:
     def add_tag(self, tag: str, scene: Scene):
         self.tags.append([tag, scene])
 
+    def intro_scene(self):
+        for a in self.aliases:
+            if a[0] == self.name:
+                return a[1]
+        return ret.NOT_FOUND
+
     def print_info(self):
         alias_str = ""
         for a in self.aliases:
