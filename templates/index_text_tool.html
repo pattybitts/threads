@@ -375,12 +375,11 @@
     }
 
     function diagnostic() {
-        if (confirm("Also Clear Log?")) {
-            log("Cleared log", true);
-        }
         log("***");
         log("Diagnostic:");
         log("***");
+        log("page_start: " + String(page_start));
+        log("page_end: " + String(page_end));
     }
 
     function read_text(data, status) {
@@ -443,6 +442,8 @@
         let commit_page = (typeof args[0] === 'undefined' || args[0] === null) ? true : args[0];
         page_length = (typeof args[1] === 'undefined' || args[1] === null) ? DEF_PAGE_LENGTH : args[1];
         log("Next Page: " + String(commit_page) + " : " + String(page_length));
+        log("page_start: " + String(page_start));
+        log("page_end: " + String(page_end));
         var scene_status = get_val('scene_status');
         if (scene_status == "saved") {
             set_val('scene_status', "parsing");
@@ -599,7 +600,7 @@
                 }
             }
         }
-        if (best_matches.length > 0) { add_to_map(page_mentions, best_matches[0]); }
+        if (best_matches.length > 0) {add_to_map(page_mentions, best_matches[0]);}
 
         let name_reg = null;
         let name_rep = "";
@@ -686,13 +687,15 @@
         //ignoring for now
         //may be solved by manually opening another entry and properly handling it?
         let ret = prompt(msg, def);
-        if (ret === null) {
+        log("sp ret type: " + typeof ret);
+        if (typeof ret === 'undefined' || ret === null) {
             log("ERROR: null prompt - need to refresh for hotkey functionality");
-            return;
+            return "";
         }
         ret = ret.trim();
         if (ret == "") {
             log("No Prompt Entry");
+            return "";
         } else {
             return ret;
         }
@@ -700,6 +703,7 @@
 
     function new_quote() {
         let quote_set = smart_prompt("Enter the first two words and last two words of the quote:", "");
+        if (quote_set == "") { return; }
         quote_parts = smart_split(quote_set, "\\s+");
         if (quote_parts.length != 4) {
             log("Requires 4 words for quote determination");
@@ -719,6 +723,7 @@
 
     function add_name() {
         let alias = smart_prompt("Enter new name:", "");
+        if (alias == "") { return; }
         stored_character = alias;
         add_to_array(known_names, alias);
         add_to_hot_names(alias);
@@ -763,6 +768,7 @@
 
     function mark_scene() {
         let next_words = smart_prompt("Enter first words of next scene:", "");
+        if (next_words == "") { return; }
         let endpoint = page_text.indexOf(next_words);
         if (endpoint >= 0) {
             scene_end = endpoint;
