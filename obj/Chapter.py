@@ -18,4 +18,4 @@ class Chapter:
 
     def print_info(self):
         return "(Chapter) " + self.name + " (" + str(self.placement) + "):\n" \
-            + "Contains (" + str(len(self.scenes)) + ") Scenes"
+            + "Contains (" + str(len(self.scenes)) + ") Scenes\n"

@@ -10,7 +10,7 @@ from obj.Character import Character
 from SaveFile import SaveFile
 
 #editing library objects (Gandalf_featured)
-if 1:
+if 0:
     library = Library.load("data\\library_2_8")
     series = library.get_series("The Lord of the Rings")
     book = series.get_book("The Hobbit")
@@ -38,8 +38,8 @@ if 0:
     log.out(save_file.print())
 
 #creating a new save file
-if 0:
-    save_file = SaveFile("data\\hobbit.sav", "static/the_hobbit.txt", "data\\library_2_8", "The Lord of the Rings", "The Hobbit", 21616)
+if 1:
+    save_file = SaveFile("data\\hobbit.sav", "static/the_hobbit.txt", "data\\library_2_8", "The Lord of the Rings", "The Hobbit", 0)
     log.out(save_file.print_info())
     save_file.save()
 

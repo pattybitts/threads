@@ -17,7 +17,7 @@
                 <pre id="report_text">{{report}}</pre>
             </div>
         </div>
-        <div id="utils_gen_div">
+        <div id="utils_data_div">
             <div id="utils_div">
                 <div id="hotkeys_log_div">
                     <div id="hotkeys">
@@ -25,11 +25,11 @@
                             <button id="next_page_button" class="button">Next Page (N)</button>
                             <button id="event_button" class="button">Char Event (C)</button>
                             <button id="add_button" class="button">Add Name (A)</button>
-                            <button id="summary_button" class="button">Generate Summary (G)</button>
+                            <button id="upload_button" class="button">Upload Data (U)</button>
                             <button id="mark_button" class="button">Mark Scene End (M)</button>
                             <button id="save_button" class="button">Save Scene (S)</button>
                             <button id="diagnostic_button" class="button">Diagnostic (D)</button>
-                            <button id="translate_button" class="button">Translate Summary (T)</button>
+                            <button id="translate_button" class="button">Translate Raw Data (T)</button>
                         </div>
                         <div id="char_hotkeys"></div>
                     </div>
@@ -47,10 +47,10 @@
                         <textarea id="perspectives_box" name="perspectives_box"></textarea><br />
                         <label for="description_box">Brief Description:</label>
                         <textarea id="description_box" name="description_box"></textarea><br />
-                        <label for="locations_box">Location Names:</label>
-                        <textarea id="locations_box" name="locations_box">TODO</textarea><br />
                         <label for="features_box">Featuring:</label>
                         <textarea id="features_box" name="features_box"></textarea><br />
+                        <label for="locations_box">Location Names:</label>
+                        <textarea id="locations_box" name="locations_box">TODO</textarea><br />
                     </div>
                     <div id="char_div">
                         Character Update:<br /><br />
@@ -65,21 +65,21 @@
                     </div>
                 </div>
             </div>
-            <div id="gen_div">
-                <form id="gen_form" action="/generate_summary" method="post">
+            <div id="data_div">
+                <form id="data_form" action="/upload_data" method="post">
                     Raw Data:<br />
-                    <label for="save_status">Save Status:</label>
-                    <input readonly type="text" id="save_status" name="ss_form" value="{{save_status}}" /><br />
+                    <label for="scene_status">Scene Status:</label>
+                    <input readonly type="text" id="scene_status" name="ss_form" value="{{scene_status}}" /><br />
                     <label for="save_file">Save File:</label>
                     <input type="text" id="save_file" name="sf_form" value="{{save_file}}"><br />
                     <label for="book_file">Book File:</label>
                     <input type="text" id="book_file" name="bf_form" value="{{book_file}}"><br />
-                    <label for="position">Position:</label>
-                    <input type="text" id="position" name="po_form" value="{{position}}"><br />
+                    <label for="page_start">Page Start:</label>
+                    <input type="text" id="page_start" name="ps_form" value="{{page_start}}"><br />
                     <label for="chapter">Chapter:</label>
                     <input type="text" id="chapter" name="ch_form" value="{{chapter}}"><br />
-                    <label for="primary">Primary:</label>
-                    <input type="text" id="perspectives" name="pe_form" value="{{perspectives}}"><br />
+                    <label for="perspectives">Perspectives:</label>
+                    <textarea type="text" id="perspectives" name="pe_form" value="{{perspectives}}"></textarea><br />
                     <label for="wordcount">Wordcount:</label>
                     <input type="text" id="wordcount" name="wo_form" value="{{wordcount}}"><br />
                     <label for="locations">Locations:</label>
@@ -140,7 +140,7 @@
         min-height: 750px;
         flex-direction: column;
     }
-    #utils_gen_div {
+    #utils_data_div {
         width: 50%;
         flex-direction: column;
     }
@@ -186,7 +186,7 @@
         overflow-x: scroll;
         font-family: 'Lucida Console';
     }
-    #gen_div {
+    #data_div {
         flex-direction: column;
     }
 
@@ -245,9 +245,9 @@
     var stored_character = "";
 
     var full_text = "";
-    var abs_char_count = 0;
-
     var page_start = 0;
+    var page_end = 0;
+
     var page_text = "";
     var page_wordcount = 0;
     var page_mentions = new Map();
@@ -281,21 +281,21 @@
         });
         $('#next_page_button').click(next_page);
         $('#add_button').click(add_name);
-        $('#summary_button').click(generate_summary);
+        $('#upload_button').click(upload_data);
         $('#event_button').click(character_event);
         $('#mark_button').click(mark_scene);
         $('#diagnostic_button').click(diagnostic);
-        $('#translate_button').click(translate_summary);
+        $('#translate_button').click(translate_data);
         $('#save_button').click(save_scene);
 
         active_hotkeys.set(110, ["next_page", [true, DEF_PAGE_LENGTH]]); //n
         active_hotkeys.set(97, ["add_name", []]); //a
-        active_hotkeys.set(103, ["generate_summary", []]); //g
+        active_hotkeys.set(117, ["upload_data", []]); //u
         active_hotkeys.set(115, ["save_scene", []]); //s
         active_hotkeys.set(99, ["character_event", []]); //c
         active_hotkeys.set(109, ["mark_scene", []]); //m
         active_hotkeys.set(100, ["diagnostic", []]); //d
-        active_hotkeys.set(116, ["translate_summary", []]); //t
+        active_hotkeys.set(116, ["translate_data", []]); //t
         active_hotkeys.set(45, ["set_quote", ["Not a Quote"]]); //-
         active_hotkeys.set(113, ["new_quote", []]); //q
         active_hotkeys.set(101, ["expand_page", []]); //e
@@ -304,9 +304,9 @@
         for (var i = 0; i < 10; i++) {
             hot_names.set(i, ["", 0]);
         }
-        if (get_val("save_status") == "") {
-            set_val("save_status", "saved");
-        } else if (get_val("save_status") == "reviewing") {
+        if (get_val("scene_status") == "") {
+            set_val("scene_status", "saved");
+        } else if (get_val("scene_status") == "reviewing") {
             $('#page_div').hide();
         }
 
@@ -316,13 +316,13 @@
             + "If Not a Quote: [-]</br>"
             + "For Stored Character: [=]");
 
-        if (get_val("save_status") == "saved") {
+        if (get_val("scene_status") == "saved") {
             $('#report_text').html("");
         } else {
             $('#report_text').html($('#report_text').text());
         }
 
-        translate_summary();
+        translate_data();
     }
 
     function add_to_map(list, term, count = 1) {
@@ -381,14 +381,6 @@
         log("***");
         log("Diagnostic:");
         log("***");
-        log("Stored Features:")
-        for (let f of scene_features) {
-            log(f);
-        }
-        /*log("Known Names: ");
-        for (let k of known_names) {
-            log(k);
-        }*/
     }
 
     function read_text(data, status) {
@@ -442,7 +434,7 @@
         }
         set_val('features_box', scene_features.join("\n"));
         scene_wordcount += page_wordcount;
-        page_start = abs_char_count;
+        page_start = page_end;
         return true;
     }
 
@@ -451,10 +443,10 @@
         let commit_page = (typeof args[0] === 'undefined' || args[0] === null) ? true : args[0];
         page_length = (typeof args[1] === 'undefined' || args[1] === null) ? DEF_PAGE_LENGTH : args[1];
         log("Next Page: " + String(commit_page) + " : " + String(page_length));
-        var save_status = get_val('save_status');
-        if (save_status == "saved") {
-            set_val('save_status', "parsing");
-        } else if (save_status == "reviewing") {
+        var scene_status = get_val('scene_status');
+        if (scene_status == "saved") {
+            set_val('scene_status', "parsing");
+        } else if (scene_status == "reviewing") {
             log("ERROR: cannot continue until previous scene is saved");
             return;
         }
@@ -471,15 +463,15 @@
         var in_word = false;
         var quote_start = 0;
         while (char_inc < page_length || in_quote || !in_word) {
-            next_char = full_text.charAt(abs_char_count + char_inc++);
+            next_char = full_text.charAt(page_start + char_inc++);
             in_word = /\s/.test(next_char);
             if (next_char == "\"") {
                 if (!in_quote) {
                     in_quote = true;
-                    quote_start = abs_char_count + char_inc;
+                    quote_start = page_start + char_inc;
                 } else {
                     in_quote = false;
-                    var quote = full_text.substring(quote_start, abs_char_count + char_inc - 1);
+                    var quote = full_text.substring(quote_start, page_start + char_inc - 1);
                     quote.replace("\n", " ");
                     quotes.push(quote);
                 }
@@ -495,7 +487,7 @@
         }
         $(".quote_div:first").addClass('selected');
 
-        page_text = full_text.substr(abs_char_count, char_inc);
+        page_text = full_text.substr(page_start, char_inc);
 
         process_page_text();
         update_hotkeys();
@@ -505,7 +497,7 @@
             }
         }
 
-        abs_char_count += char_inc;
+        page_end = page_start + char_inc;
     }
 
     function character_event() {
@@ -774,40 +766,40 @@
         let endpoint = page_text.indexOf(next_words);
         if (endpoint >= 0) {
             scene_end = endpoint;
-            abs_char_count = page_start;
             next_page([false, page_length]);
-            set_val('save_status', "reviewing");
+            set_val('scene_status', "reviewing");
         }
-
     }
 
     function expand_page() {
-        abs_char_count = page_start;
         next_page([false, page_length+1000]);
     }
 
-    function generate_summary() {
-        log("Generating Summary");
-        //checking form fields
-        var checked_fields = true;
-        checked_fields = get_val('chapter_box') != "" & checked_fields;
-        checked_fields = get_val('description_box') != "" & checked_fields;
-        checked_fields = get_val('locations_box') != "" & checked_fields;
-        for (let fe of smart_split(get_val('features_box'), "[\\v\\r\\n]+")) {
-            add_to_array(scene_features, fe);
-        }
-        if (!checked_fields) {
-            log("ERROR: Scene fields empty");
-            return;
-        }
-        //checking and updating last page
-        if (!save_page_to_scene()) {
-            log("ERROR: Quotes unassigned");
-            return;
+    function upload_data() {
+        log("Uploading Data");
+        let scene_status = get_val('scene_status');
+        if (scene_status == 'saved' || scene_status == 'reviewing') {
+            //checking form fields
+            let checked_fields = true;
+            checked_fields = get_val('chapter_box') != "" & checked_fields;
+            checked_fields = get_val('description_box') != "" & checked_fields;
+            checked_fields = get_val('locations_box') != "" & checked_fields;
+            for (let fe of smart_split(get_val('features_box'), "[\\v\\r\\n]+")) {
+                add_to_array(scene_features, fe);
+            }
+            if (!checked_fields) {
+                log("ERROR: Scene fields empty");
+                return;
+            }
+            //checking and updating last page
+            if (!save_page_to_scene()) {
+                log("ERROR: Quotes unassigned");
+                return;
+            }
         }
 
-        //transferring data to gen_form
-        set_val('position', page_start);
+        //transferring data to data_form
+        set_val('page_start', page_start);
         set_val('chapter', get_val('chapter_box'));
         set_val('perspectives', get_val('perspectives_box'));
         set_val('locations', get_val('locations_box'));
@@ -839,13 +831,14 @@
         set_val('known_names', kn_string);
 
         set_val('log', get_val('log_box'));
-        $("#gen_form").submit();
+        $("#data_form").submit();
     }
 
-    function translate_summary() {
+    function translate_data() {
         set_val('log_box', get_val('log'));
-        log("Translating summary data back into page");
-        abs_char_count = Number(get_val('position'));
+        log("Translating raw data back into page");
+        page_start = Number(get_val('page_start'));
+        page_end = page_start;
         set_val('chapter_box', get_val('chapter'));
         set_val('perspectives_box', get_val('perspectives'));
         set_val('locations_box', get_val('locations'));
@@ -879,14 +872,14 @@
     }
 
     function save_scene() {
-        if (get_val('save_status') != "reviewing") {
+        if (get_val('scene_status') != "reviewing") {
             log("ERROR: cannot save until scene is parsed and reviewed!");
             return;
         }
         if (confirm("Are you sure you are ready to upload scene data?")) {
             log("Saving Scene Data to Database!");
-            set_val('save_status', 'saved');
-            generate_summary();
+            set_val('scene_status', 'saved');
+            upload_data();
         }
     }
 </script>

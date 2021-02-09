@@ -22,7 +22,7 @@ class SceneImporter:
         self.book_file = ""
         self.series_name = ""
         self.book_name = ""
-        self.position = 0
+        self.page_start = 0
         self.known_names = []
         self.summary_characters = []
         self.outputs = []
@@ -37,7 +37,7 @@ class SceneImporter:
         self.book_file = save_data.book_file
         self.series_name = save_data.series_name
         self.book_name = save_data.book_name
-        self.position = save_data.position
+        self.page_start = save_data.page_start
         self.library = Library.load(self.library_file)
         if not ret.success(self.library):
             self.library = Library()
@@ -220,13 +220,13 @@ class SceneImporter:
             self.log("")
         return ret.SUCCESS
 
-    def save_library(self, new_position):
+    def save_library(self, new_page_start):
         self.library.save(self.library_file)
         save_file = SaveFile.load(self.save_file)
         if not ret.success(save_file):
             self.log("Unable to load save file: " + self.save_file)
             return ret.ERROR
-        save_file.position = new_position
+        save_file.page_start = new_page_start
         save_file.save()
         self.log("Successfully updated library and save file with new scene!")
         return ret.SUCCESS

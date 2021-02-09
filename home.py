@@ -62,7 +62,7 @@ def new_cmd_in():
         return render_template('index_text_tool.html', \
             save_file=importer.save_file, \
             book_file=importer.book_file, \
-            position=importer.position, \
+            page_start=importer.page_start, \
             known_names=util.join(importer.known_names, "\n"))
     elif not ret.success(action):
         return render_template('index_home.html', cmd_out=importer.print_log(), cmd_in=cmd_str)
@@ -100,8 +100,8 @@ def edit_char():
     return render_template('index_home.html', cmd_out=resp)
     """
 
-@app.route('/generate_summary', methods = ['POST'])
-def generate_summary():
+@app.route('/upload_data', methods = ['POST'])
+def upload_data():
     #there's room to do this more sanely with ONE output stream
     #have I done this now? or did I mean even MORE sanely
     #noting here that lo-form isn't used for now, until we formally add universes and locations
@@ -117,24 +117,24 @@ def generate_summary():
         status = importer.generate_summary()
 
     if request.form['ss_form'] == "saved":
-        status = importer.save_library(request.form['po_form'])
+        status = importer.save_library(request.form['ps_form'])
         if status == ret.SUCCESS:
             return render_template('index_text_tool.html', \
-                save_status="saved", \
+                scene_status="saved", \
                 save_file=request.form['sf_form'], \
                 book_file=request.form['bf_form'], \
                 known_names=request.form['kn_form'], \
                 log=request.form['lg_form'], \
-                position=request.form['po_form'], \
+                page_start=request.form['ps_form'], \
                 report=importer.print_log())
 
     return render_template('index_text_tool.html', \
-        save_status="reviewing", \
+        scene_status=request.form['ss_form'], \
         save_file=request.form['sf_form'], \
         book_file=request.form['bf_form'], \
         known_names=request.form['kn_form'], \
         log=request.form['lg_form'], \
-        position=request.form['po_form'], \
+        page_start=request.form['ps_form'], \
         chapter=request.form['ch_form'], \
         perspectives=request.form['pe_form'], \
         locations=request.form['lo_form'], \

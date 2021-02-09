@@ -3,13 +3,13 @@ import util.ret as ret
 
 class SaveFile:
 
-    def __init__(self, name="", book_file="", library_file="", series_name="", book_name="", position=0):
+    def __init__(self, name="", book_file="", library_file="", series_name="", book_name="", page_start=0):
         self.name  = name
         self.book_file = book_file
         self.library_file = library_file
         self.series_name = series_name
         self.book_name = book_name
-        self.position = position
+        self.page_start = page_start
 
     def save(self, save_str=""):
         if save_str == "": save_str = self.name
@@ -28,5 +28,5 @@ class SaveFile:
         resp += "Library File: " + self.library_file + "\n"
         resp += "Series Name: " + self.series_name + "\n"
         resp += "Book Name: " + self.book_name + "\n"
-        resp += "Position: " + str(self.position)
+        resp += "Page Start: " + str(self.page_start)
         return resp    
