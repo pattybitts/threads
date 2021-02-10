@@ -424,6 +424,7 @@
         if (!checked_quotes) {
             return false;
         }
+        extract_quote_data();
         //adding previous page info to scene_arrays
         for (let [key, value] of page_mentions.entries()) {
             add_to_map(scene_mentions, key, value);
@@ -556,6 +557,7 @@
             return;
         }
 
+        page_mentions.clear();
         //can maybe be refactored now that i can use break
         for (let p of page_words) {
             //log("p: " + p);
@@ -655,17 +657,17 @@
     }
 
     function select_quote(quote) {
-        var classes = quote.classList;
+        let classes = quote.classList;
         $('.quote_div').removeClass("selected");
         $(quote).addClass("selected");
         if (classes.contains("assigned")) {
             $(quote).removeClass("assigned");
             //this nonsense works for now, but I should extract quote text somewhere/somehow else i think
             //now I have get_val working stably, but i'm scared to touch this
-            var quote_text = quote.textContent;
-            var quote_reg = new RegExp("\".*\"", "s");
-            var quote_matches = quote_text.match(quote_reg);
-            if (quote_matches != null) {
+            let quote_text = quote.textContent;
+            let quote_reg = new RegExp("\".*\"", "s");
+            let quote_matches = quote_text.match(quote_reg);
+            if (quote_matches !== null) {
                 quote.textContent = quote_matches[0];
             }
         }
@@ -729,8 +731,7 @@
                 let quote_text = quote_div.textContent;
                 if (speaker != "Not a Quote") {
                     hotkey_num = add_to_hot_names(speaker);
-                    add_to_map(page_quotes, speaker, smart_split(quote_text).length);
-                    log("Added Quote: " + quote_text + " (" + String(smart_split(quote_text).length) + ") : " + speaker);
+                    log("Assigned Quote to: " + speaker + " (" + String(smart_split(quote_text).length) + " Words)");
                 }
                 quote_div.setAttribute("class", "quote_div assigned");
                 let hotkey_str = (hotkey_num !== null) ? " [" + String(hotkey_num) + "]" : "";
@@ -739,6 +740,23 @@
                     select_quote(all_quotes[i + 1]);
                 }
                 break;
+            }
+        }
+    }
+
+    function extract_quote_data() {
+        let all_quotes = document.getElementsByClassName('quote_div');
+        for (let i = 0, len = all_quotes.length | 0; i < len; i += 1) {
+            quote_div = all_quotes[i];
+            let quote_text = quote_div.textContent;
+            let quote_reg = new RegExp("\"(.*)\".*Assigned:\\s+([\\w\\W+]*?)(\\s+\\[.\\]|\\s*$)");
+            let quote_exec = quote_reg.exec(quote_text);
+            if (quote_exec !== null) {
+                let num_words = smart_split(quote_exec[1]).length;
+                let speaker = quote_exec[2];
+                if (speaker != "Not a Quote") { add_to_map(page_quotes, speaker, num_words); }
+            } else {
+                log("ERROR: failed to find quote data in: " + quote_text);
             }
         }
     }

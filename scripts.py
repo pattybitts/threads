@@ -9,8 +9,24 @@ from obj.Series import Series
 from obj.Character import Character
 from SaveFile import SaveFile
 
-#editing library objects (Gandalf_featured)
+#editing library objects
 if 1:
+    library = Library.load("data\\library_2_8")
+    series = library.get_series("The Lord of the Rings")
+    book = series.get_book("The Hobbit")
+    chapter = book.find_chapter("An Unexpected Party")
+    scene = chapter.scenes[3]
+    for i in scene.included:
+        c_name = i["character"].name
+        if c_name == "Bilbo": i["quotes"] = 77
+        if c_name == "Balin": i["quotes"] = 40
+        if c_name == "Fili": i["quotes"] = 21
+        if c_name == "Gandalf": i["quotes"] = 100
+
+
+
+#editing library objects (Gandalf_featured)
+if 0:
     library = Library.load("data\\library_2_8")
     series = library.get_series("The Lord of the Rings")
     book = series.get_book("The Hobbit")
@@ -43,8 +59,8 @@ if 0:
     log.out(save_file.print())
 
 #creating a new save file
-if 0:
-    save_file = SaveFile("data\\hobbit.sav", "static/the_hobbit_edited.txt", "data\\library_2_8", "The Lord of the Rings", "The Hobbit", 46119)
+if 1:
+    save_file = SaveFile("data\\hobbit.sav", "static/the_hobbit_edited.txt", "data\\library_2_8", "The Lord of the Rings", "The Hobbit", 0)
     log.out(save_file.print_info())
     save_file.save()
 
