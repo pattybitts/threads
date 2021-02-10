@@ -206,9 +206,9 @@ class SceneImporter:
         self.log("<b>Included Characters:</b>")
         for i in scene.included:
             character = i["character"]
-            new_str = " (New) " if ret.success(character.intro_scene()) and character.intro_scene() == scene else ""
+            new_str = "(New) " if ret.success(character.intro_scene()) and character.intro_scene() == scene else ""
             featured_str = "Featured" if i["featured"] else "Mentioned"
-            self.log(character.name + new_str + " (" + featured_str + ", Words: " + str(i["quotes"]) + ", Calls: " + str(i["mentions"]) + ")")
+            self.log(new_str + character.name + " (" + featured_str + ", Words: " + str(i["quotes"]) + ", Calls: " + str(i["mentions"]) + ")")
             for a in character.aliases:
                 if a[1] == scene:
                     self.log("New Alias: " + a[0])

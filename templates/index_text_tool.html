@@ -325,14 +325,14 @@
         translate_data();
     }
 
-    function add_to_map(list, term, count = 1) {
-        for (let key of list.keys()) {
+    function add_to_map(list, term, count=1) {
+        for (let [key, value] of list.entries()) {
             if (key == term) {
-                list.set(key, list.get(key) + count);
+                list.set(key, value + Number(count));
                 return;
             }
         }
-        list.set(term, count);
+        list.set(term, Number(count));
     }
 
     function add_to_array(list, term) {
@@ -372,6 +372,7 @@
             set_val('log_box', "");
         }
         set_val('log_box', get_val('log_box') + "\n" + string);
+        $('#log_box').scrollTop($('#log_box')[0].scrollHeight);
     }
 
     function diagnostic() {
@@ -411,10 +412,10 @@
 
     function save_page_to_scene() {
         //checking that all previous quotes are assigned
-        var checked_quotes = true;
-        var all_quotes = document.getElementsByClassName('quote_div');
-        for (var i = 0, len = all_quotes.length | 0; i < len; i = i + 1) {
-            var quote_div = all_quotes[i];
+        let checked_quotes = true;
+        let all_quotes = document.getElementsByClassName('quote_div');
+        for (let i = 0, len = all_quotes.length | 0; i < len; i = i + 1) {
+            let quote_div = all_quotes[i];
             if (!quote_div.classList.contains("assigned")) {
                 checked_quotes = false;
                 break;
@@ -424,11 +425,11 @@
             return false;
         }
         //adding previous page info to scene_arrays
-        for (let key of page_mentions.keys()) {
-            add_to_map(scene_mentions, key, page_mentions.get(key));
+        for (let [key, value] of page_mentions.entries()) {
+            add_to_map(scene_mentions, key, value);
         }
-        for (let key of page_quotes.keys()) {
-            add_to_map(scene_quotes, key, page_quotes.get(key));
+        for (let [key, value] of page_quotes.entries()) {
+            add_to_map(scene_quotes, key, value);
             add_to_array(scene_features, key);
         }
         set_val('features_box', scene_features.join("\n"));
@@ -548,8 +549,8 @@
         page_mentions.clear();
         page_quotes.clear();
 
-        //characters in this regex are ones that may be contained within the whitespace of a word but shouldn't be included
-        var page_words = smart_split(page_text, "[\\s\"\\-]+");
+        //characters in this regex are ones that may be contained within the whitespace of a word but shouldn't be included in it
+        let page_words = smart_split(page_text, "[\\s\"\\-\\(\\);\\?\\!]+");
         page_wordcount = page_words.length;
         if (page_wordcount == 0) {
             return;
@@ -565,7 +566,7 @@
             }
             if (potential_name != "") {
                 //log("pot_name: " + potential_name);
-                var pm_reg = new RegExp("^" + potential_name.replace(/'s/g, "").replace(/\./g, "\\.?").replace(/,/g, ",?") + "(\\s*$|\\s+)");
+                let pm_reg = new RegExp("^" + potential_name.replace(/'s/g, "").replace(/\./g, "\\.?").replace(/,/g, ",?") + "(\\s*$|\\s+)");
                 potential_matches = potential_matches.filter(pm => pm.search(pm_reg) >= 0);
                 if (potential_matches.length > 0) {
                     pm_reg = new RegExp("^" + potential_name.replace(/'s/g, "").replace(/\./g, "\\.?").replace(/,/g, ",?") + "\\s*$");
@@ -647,7 +648,6 @@
             hot_names.set(high_key, [name, 0]);
             return high_key;
         } else {
-            log("ERROR: More than 10 fresh names this page, use [A] and [=]");
             return null;
         }
     }
@@ -799,24 +799,24 @@
         set_val('description', get_val('description_box'));
         set_val('features', get_val('features_box'));
         set_val('wordcount', scene_wordcount);
-        var sm_string = "";
+        let sm_string = "";
         for (let [key, value] of scene_mentions.entries()) {
             sm_string = sm_string + key + "," + String(value) + "\n";
         }
         sm_string = sm_string.trim();
         set_val('mentions', sm_string);
-        var sq_string = "";
+        let sq_string = "";
         for (let [key, value] of scene_quotes.entries()) {
             sq_string = sq_string + key + "," + String(value) + "\n";
         }
         set_val('quotes', sq_string.trim());
-        var ce_string = "";
+        let ce_string = "";
         for (let ce of char_events) {
             ce_string = ce_string + [ce[0], ce[1].join(), ce[2].join(), ce[3].join()].join(";") + "\n";
         }
         ce_string = ce_string.trim();
         set_val('char_events', ce_string);
-        var kn_string = "";
+        let kn_string = "";
         for (let kn of known_names) {
             kn_string = kn_string + kn + "\n";
         }
@@ -828,8 +828,8 @@
     }
 
     function translate_data() {
+        set_val('log', get_val('log') + "\nTranslating raw data back into page. Logs since last upload may be lost");
         set_val('log_box', get_val('log'));
-        log("Translating raw data back into page");
         page_start = Number(get_val('page_start'));
         page_end = page_start;
         set_val('chapter_box', get_val('chapter'));
