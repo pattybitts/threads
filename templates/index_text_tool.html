@@ -456,6 +456,9 @@
                 return;
             }
         }
+        page_mentions.clear();
+        //this is where we'd put a smart quote attribution after an expand_page
+        page_quotes.clear();
         let quotes = [];
         let char_inc = 0;
         let in_quote = false;
@@ -546,9 +549,6 @@
         let potential_name = "";
         let best_matches = [];
 
-        page_mentions.clear();
-        page_quotes.clear();
-
         //characters in this regex are ones that may be contained within the whitespace of a word but shouldn't be included in it
         let page_words = smart_split(page_text, "[\\s\"\\-\\(\\);\\?\\!]+");
         page_wordcount = page_words.length;
@@ -617,7 +617,9 @@
         html_text = html_text.replace(/(?<!>)[A-Z]['A-Za-z]*[\.,]?(?![<\w<])/g, function (match) {
             return "<span class='hyellow'>" + match + "</span>";
         });
-
+        html_text = html_text.replace(/"[\w\W]*?"/g, function (match) {
+            return "<u>" + match + "</u>";
+        });
         html_text = html_text.replace(/"/g, "<span class='hred'>\"</span>");
 
         update_hotkeys();
@@ -674,7 +676,6 @@
         //ignoring for now
         //may be solved by manually opening another entry and properly handling it?
         let ret = prompt(msg, def);
-        log("sp ret type: " + typeof ret);
         if (typeof ret === 'undefined' || ret === null) {
             log("ERROR: null prompt - need to refresh for hotkey functionality");
             return "";
@@ -729,6 +730,7 @@
                 if (speaker != "Not a Quote") {
                     hotkey_num = add_to_hot_names(speaker);
                     add_to_map(page_quotes, speaker, smart_split(quote_text).length);
+                    log("Added Quote: " + quote_text + " (" + String(smart_split(quote_text).length) + ") : " + speaker);
                 }
                 quote_div.setAttribute("class", "quote_div assigned");
                 let hotkey_str = (hotkey_num !== null) ? " [" + String(hotkey_num) + "]" : "";
@@ -741,13 +743,13 @@
         }
     }
 
-    function smart_split(input_text, separator = "\\s+", flags = "") {
-        var input_trimmed = input_text.trim(separator);
+    function smart_split(input_text, separator="\\s+", flags = "") {
+        let input_trimmed = input_text.trim();
         if (input_trimmed == "") {
             return []
         }
-        var re = new RegExp(separator, flags);
-        var ret_arr = input_trimmed.split(re);
+        let re = new RegExp(separator, flags);
+        let ret_arr = input_trimmed.split(re);
         if (ret_arr[0] == "") { ret_arr.shift(); }
         if (ret_arr[ret_arr.length - 1] == "") { ret_arr.pop(); }
         return ret_arr

@@ -204,21 +204,32 @@ class SceneImporter:
         self.log("Perspectives: " + per_str + "; Words: " + str(scene.wordcount)) #+ "\nLocations: " + loc_str)
         self.log("Description: " + scene.description + "\n")
         self.log("<b>Included Characters:</b>")
+        featured_char_strs = []
+        mentioned_char_strs = []
         for i in scene.included:
+            inc_str = ""
             character = i["character"]
             new_str = "(New) " if ret.success(character.intro_scene()) and character.intro_scene() == scene else ""
-            featured_str = "Featured" if i["featured"] else "Mentioned"
-            self.log(new_str + character.name + " (" + featured_str + ", Words: " + str(i["quotes"]) + ", Calls: " + str(i["mentions"]) + ")")
+            inc_str += new_str + character.name + ", Words: " + str(i["quotes"]) + ", Calls: " + str(i["mentions"]) + ")\n"
             for a in character.aliases:
                 if a[1] == scene:
-                    self.log("New Alias: " + a[0])
+                    inc_str += "New Alias: " + a[0] + "\n"
             for j in character.joins:
                 if j[1] == scene:
-                    self.log("New Join: " + j[0].name)
+                    inc_str += "New Join: " + j[0].name + "\n"
             for t in character.tags:
                 if t[1] == scene:
-                    self.log("New Tag: " + t[0])
-            self.log("")
+                    inc_str += "New Tag: " + t[0] + "\n"
+            if i["featured"]:
+                featured_char_strs.append(inc_str)
+            else:
+                mentioned_char_strs.append(inc_str)
+        self.log("<b>Featured:</b>\n")
+        for fcs in featured_char_strs:
+            self.log(fcs)
+        self.log("<b>Mentioned:</b>\n")
+        for mcs in mentioned_char_strs:
+            self.log(mcs)
         return ret.SUCCESS
 
     def save_library(self, new_page_start):
