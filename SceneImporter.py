@@ -210,7 +210,7 @@ class SceneImporter:
             inc_str = ""
             character = i["character"]
             new_str = "(New) " if ret.success(character.intro_scene()) and character.intro_scene() == scene else ""
-            inc_str += new_str + character.name + ", Words: " + str(i["quotes"]) + ", Calls: " + str(i["mentions"]) + ")\n"
+            inc_str += new_str + character.name + "; Words: " + str(i["quotes"]) + ", Calls: " + str(i["mentions"]) + ")\n"
             for a in character.aliases:
                 if a[1] == scene:
                     inc_str += "New Alias: " + a[0] + "\n"

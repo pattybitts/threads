@@ -648,7 +648,7 @@
                 high_val = hot_names.get(key)[1];
             }
         }
-        if (high_key != null) {
+        if (high_key !== null) {
             hot_names.set(high_key, [name, 0]);
             return high_key;
         } else {
@@ -731,7 +731,7 @@
                 let quote_text = quote_div.textContent;
                 if (speaker != "Not a Quote") {
                     hotkey_num = add_to_hot_names(speaker);
-                    log("Assigned Quote to: " + speaker + " (" + String(smart_split(quote_text).length) + " Words)");
+                    log("Assigned Quote to: " + speaker + " (Words: " + String(smart_split(quote_text).length) + ")");
                 }
                 quote_div.setAttribute("class", "quote_div assigned");
                 let hotkey_str = (hotkey_num !== null) ? " [" + String(hotkey_num) + "]" : "";
@@ -749,7 +749,7 @@
         for (let i = 0, len = all_quotes.length | 0; i < len; i += 1) {
             quote_div = all_quotes[i];
             let quote_text = quote_div.textContent;
-            let quote_reg = new RegExp("\"(.*)\".*Assigned:\\s+([\\w\\W+]*?)(\\s+\\[.\\]|\\s*$)");
+            let quote_reg = new RegExp("\\s*([\\w\\W]*?)\\s*Assigned:\\s+([\\w\\W]*?)(\\s+\\[.\\]|\\s*$)");
             let quote_exec = quote_reg.exec(quote_text);
             if (quote_exec !== null) {
                 let num_words = smart_split(quote_exec[1]).length;
@@ -850,6 +850,7 @@
     function translate_data() {
         set_val('log', get_val('log') + "\nTranslating raw data back into page. Logs since last upload may be lost");
         set_val('log_box', get_val('log'));
+        $('#log_box').scrollTop($('#log_box')[0].scrollHeight);
         page_start = Number(get_val('page_start'));
         page_end = page_start;
         set_val('chapter_box', get_val('chapter'));
