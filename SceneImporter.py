@@ -76,7 +76,6 @@ class SceneImporter:
         #updating characters with character events
         char_events = util.split(ce_form, "\\n")
         for ce in char_events:
-            ce = ce.strip()
             ce_fields = ce.split(";")
             if len(ce_fields) != 4: 
                 self.log("Invalid CE: " + ce)
@@ -105,16 +104,15 @@ class SceneImporter:
         #adding perspectives
         perspectives = util.split(pe_form, "\\n")
         for p in perspectives:
-            pe_char = series.match_or_make_char(p, scene)
+            pe_char = Character.match_character(series.characters, p)
             if not ret.success(pe_char):
-                self.log("Failed to match or make character: " + p)
+                self.log("Cannot find character for perspective: " + p)
                 continue
             scene.add_perspective(pe_char)
         #populating scene included
         #scene quotes
         scene_quotes = util.split(qu_form, "\\n")
         for sq in scene_quotes:
-            sq = sq.strip()
             sq_fields = sq.split(",")
             if len(sq_fields) != 2:
                 self.log("Invalid SQ: " + sq)
@@ -136,7 +134,6 @@ class SceneImporter:
         #scene features
         scene_features = util.split(fe_form, "\\n")
         for sf in scene_features:
-            sf = sf.strip()
             sf_char = series.match_or_make_char(sf, scene)
             if not ret.success(sf_char):
                 self.log("Failed to match or make character: " + sf)
@@ -151,7 +148,6 @@ class SceneImporter:
         #scene mentions
         scene_mentions = util.split(me_form, "\\n")
         for sm in scene_mentions:
-            sm = sm.strip()
             sm_fields = sm.split(",")
             if len(sm_fields) != 2:
                 self.log("Invalid SM: " + sm)
@@ -192,44 +188,7 @@ class SceneImporter:
         self.log("Save Info: " + self.library_file + "; " + self.save_file)
         self.log("Series Info: " + series.name + "; " + book.name + " (" + str(book.placement) + ")")
         self.log("Chapter: " + chapter.name + " (" + str(chapter.placement) + "); Scene: " + scene.name)
-        per_str = ""
-        for p in scene.perspectives:
-            per_str += p.name + ", "
-        per_str = per_str.rstrip(", ")
-        #NOTE: not using locations until universe update
-        loc_str = ""
-        for l in scene.locations:
-            loc_str += l.name + ", "
-        loc_str = loc_str.rstrip(", ")
-        self.log("Perspectives: " + per_str + "; Words: " + str(scene.wordcount)) #+ "\nLocations: " + loc_str)
-        self.log("Description: " + scene.description + "\n")
-        self.log("<b>Included Characters:</b>")
-        featured_char_strs = []
-        mentioned_char_strs = []
-        for i in scene.included:
-            inc_str = ""
-            character = i["character"]
-            new_str = "(New) " if ret.success(character.intro_scene()) and character.intro_scene() == scene else ""
-            inc_str += new_str + character.name + "; Words: " + str(i["quotes"]) + ", Calls: " + str(i["mentions"]) + ")\n"
-            for a in character.aliases:
-                if a[1] == scene:
-                    inc_str += "New Alias: " + a[0] + "\n"
-            for j in character.joins:
-                if j[1] == scene:
-                    inc_str += "New Join: " + j[0].name + "\n"
-            for t in character.tags:
-                if t[1] == scene:
-                    inc_str += "New Tag: " + t[0] + "\n"
-            if i["featured"]:
-                featured_char_strs.append(inc_str)
-            else:
-                mentioned_char_strs.append(inc_str)
-        self.log("<b>Featured:</b>\n")
-        for fcs in featured_char_strs:
-            self.log(fcs)
-        self.log("<b>Mentioned:</b>\n")
-        for mcs in mentioned_char_strs:
-            self.log(mcs)
+        self.log(scene.print_info())
         return ret.SUCCESS
 
     def save_library(self, new_page_start):

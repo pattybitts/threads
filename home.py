@@ -161,6 +161,10 @@ def process_cmd(cmd_str, save_str):
             importer.log("No character name provided in: " + cmd_str)
             return ret.BAD_INPUT, importer
         series = importer.library.get_series(importer.series_name)
+        if cmd_parts[1] == "all":
+            for c in series.characters:
+                importer.log(c.print_info())
+            return ret.HOME, importer
         character = Character.match_character(series.characters, cmd_parts[1])
         #and now this is where loose is needed (future TODO)
         if not ret.success(character):

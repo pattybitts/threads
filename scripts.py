@@ -9,7 +9,34 @@ from obj.Series import Series
 from obj.Character import Character
 from SaveFile import SaveFile
 
+#checking perspective info
 if 1:
+    library = Library.load("data\\library_2_8")
+    series = library.get_series("The Lord of the Rings")
+    book = series.get_book("The Hobbit")
+    chapter = book.find_chapter("Riddles in the Dark")
+    scene = chapter.scenes[1]
+    for p in scene.perspectives:
+        log.out("p: " + p.name)
+        log.out(p.print_info())
+
+#correcting scene reference for Trolls in RM_5
+if 0:
+    library = Library.load("data\\library_2_8")
+    series = library.get_series("The Lord of the Rings")
+    book = series.get_book("The Hobbit")
+    chapter = book.find_chapter("Roast Mutton")
+    scene = chapter.scenes[4]
+    for c in ["Bill", "Tom", "Bert", "Company of Trolls", "Company of Bert Tom"]:
+        character = series.match_or_make_char(c, scene)
+        for a in character.aliases:
+            a[1] = scene
+        for t in character.tags:
+            t[1] = scene
+    library.save("data\\library_2_8")
+
+#editing library objects
+if 0:
     library = Library.load("data\\library_2_8")
     series = library.get_series("The Lord of the Rings")
     book = series.get_book("The Hobbit")

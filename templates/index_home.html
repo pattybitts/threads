@@ -5,30 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Threads of the Pattern</title>
 </head>
-<body class="default">
+<body class="default" onload="init()">
     <h2>Welcome to Threads of the Pattern! Enter a command below.</h2>
-    <p>
-        <b>Valid commands:</b><br />
-        add_char=&lt;Character Name&gt;: Presents form to add new character to library<br />
-        edit_char=&lt;Character Name&gt;: Presents form to edit character info in library. Accepts aliases.<br />
-        disp_save: Displays save file info.<br />
-        disp_book: Displays database info for book in save file.<br />
-        disp_chapter=&lt;Chapter Name&gt;: Displays database info on named chapter for book in save file.<br />
-        disp_char=&lt;Character Name&gt;: Displays databse info for named character. Accepts aliases.<br />
-        text_tool: Opens text parsing tool for current save file.
-    </p>
-    <form action="/cmd_in" method="post">
-        <label for="save_box">Save File:</label>
-        <input type="text" name="save_box" value="data\hobbit.sav"><br />
-        <label for="cmd_box">Command:</label>
-        <input type="text" name="cmd_box"><br />
-        <input type="submit" value="Submit">
-    </form>
-    <br />
-    <label for="prev_cmd">Previous Command:</label><br/>
-    <input readonly value="{{cmd_in}}"/>
-    <p><b>Command Output:</b></p>
-    <textarea readonly>{{cmd_out}}</textarea>
+    <div id="main_div">
+        <div id="cmd_div">
+            <p>
+                <b>Valid commands:</b><br />
+                add_char=&lt;Character Name&gt;: Presents form to add new character to library.<br />
+                edit_char=&lt;Character Name&gt;: Presents form to edit character info in library. Accepts aliases.<br />
+                disp_save: Displays save file info.<br />
+                disp_book: Displays database info for book in save file.<br />
+                disp_chapter=&lt;Chapter Name&gt;: Displays database info on named chapter for book in save file.<br />
+                disp_char=&lt;Character Name&gt;: Displays databse info for named character. Accepts aliases.<br />
+                text_tool: Opens text parsing tool for current save file.
+            </p>
+            <form action="/cmd_in" method="post">
+                <label for="save_box">Save File:</label>
+                <input type="text" name="save_box" value="data\hobbit.sav"><br />
+                <label for="cmd_box">Command:</label>
+                <input type="text" id="cmd_box" name="cmd_box"><br />
+                <input type="submit" value="Submit">
+            </form>
+            <br />
+            <label for="prev_cmd">Previous Command:</label>
+            <input readonly value="{{cmd_in}}" />
+        </div>
+        <div id="out_div">
+            Command Output:
+            <pre id="cmd_out">{{cmd_out}}</pre>
+        </div>
+    </div>
 </body>
 </html>
 <style>
@@ -37,11 +43,46 @@
         background-color: lightgrey;
         color: black;
     }
-    textarea {
-        overflow-y: scroll;
-        overflow-x: scroll;
-        height: 500px;
-        width: 90%;
-        resize: none;
+
+    *:focus {
+        outline: none;
     }
+
+    pre {
+        white-space: pre-line;
+        word-wrap: normal;
+        overflow-y: scroll;
+        height: 700px;
+        width: 100%
+    }
+    div {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        display: flex;
+        align-items: flex-start;
+        /*border-radius: 5px;*/
+        border: 1px solid white;
+        width: 100%;
+        flex-direction: row;
+    }
+
+    #cmd_div {
+        min-width: 300px;
+        flex-direction: column;
+    }
+    #out_div {
+        min-height: 750px;
+        flex-direction: column;
+    }
+
+
 </style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function init() {
+        $('#cmd_box').focus();
+        $('#cmd_out').html($('#cmd_out').text());
+    }
+</script>

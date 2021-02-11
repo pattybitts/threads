@@ -28,34 +28,46 @@ class Scene:
         self.locations.append(new_loc)
 
     def print_info(self):
+        out = "(Scene) " + self.name + "\n"
         per_str = ""
         for p in self.perspectives:
             per_str += p.name + ", "
         per_str = per_str.rstrip(", ")
+        #NOTE: not using locations until universe update
         loc_str = ""
         for l in self.locations:
             loc_str += l.name + ", "
-        loc_str  = loc_str.rstrip(", ")
-        inc_str = ""
+        loc_str = loc_str.rstrip(", ")
+        out += "Perspectives: " + per_str + "; Words: " + str(self.wordcount) + "\n"
+        out += "Description: " + self.description + "\n\n"
+        out += "<b>Included Characters:</b>\n"
+        featured_char_strs = []
+        mentioned_char_strs = []
         for i in self.included:
+            inc_str = ""
             character = i["character"]
-            featured_str = "Featured" if i["featured"] else "Mentioned"
-            inc_str += "  " + character.name + " (" + featured_str + ", Words: " + str(i["quotes"]) + ", Calls: " + str(i["mentions"]) + ")\n"
+            new_str = "(New) " if ret.success(character.intro_scene()) and character.intro_scene() == self else ""
+            inc_str += new_str + character.name + "; Words: " + str(i["quotes"]) + ", Calls: " + str(i["mentions"]) + ")\n"
             for a in character.aliases:
                 if a[1] == self:
-                    inc_str += "  New Alias: " + a[0] + "\n"
+                    inc_str += "New Alias: " + a[0] + "\n"
             for j in character.joins:
                 if j[1] == self:
-                    inc_str += "  New Join: " + j[0].name + "\n"
+                    inc_str += "New Join: " + j[0].name + "\n"
             for t in character.tags:
                 if t[1] == self:
-                    inc_str += "  New Tag: " + t[0] + "\n"
-            inc_str += "\n"
-        return "(Scene) " + self.name + "\n" \
-            + "Perspectives: " + per_str + "; Words: " + str(self.wordcount) + "\n" \
-            + "Locations: " + loc_str + "\n" \
-            + "Description: " + self.description + "\n" \
-            + "Included Characters:\n" + inc_str
+                    inc_str += "New Tag: " + t[0] + "\n"
+            if i["featured"]:
+                featured_char_strs.append(inc_str)
+            else:
+                mentioned_char_strs.append(inc_str)
+        out += "<b>Featured:</b>\n\n"
+        for fcs in featured_char_strs:
+            out += fcs
+        out += "<b>Mentioned:</b>\n\n"
+        for mcs in mentioned_char_strs:
+            out += mcs
+        return out
 
     #all methods below here are before the 1-19 object rework
 

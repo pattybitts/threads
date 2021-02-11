@@ -31,7 +31,7 @@ class Book:
     def print_info(self):
         ch_str = ""
         for c in self.chapters:
-            ch_str += "  " + str(c.placement) + ": " + c.name + "\n"
+            ch_str += "  " + str(c.placement) + ": " + c.name + ": " + len(c.scenes) + " scenes\n"
         ch_str = ch_str.rstrip()
         return "(Book) " + self.name + " (" + str(self.placement) + "):\n" \
             + "Contains (" + str(len(self.chapters)) + ") Chapters:\n" \
