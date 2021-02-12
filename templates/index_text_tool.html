@@ -237,6 +237,8 @@
 
     //constants
     const DEF_PAGE_LENGTH = 1500;
+    //characters in this regex are ones that may be contained within the whitespace of a word but shouldn't be included in it
+    const WORD_SEPARATOR = "[\\s\"\\-\\(\\);\\?\\!]+"
 
     //page utilities
     var active_hotkeys = new Map();
@@ -551,7 +553,7 @@
         let best_matches = [];
 
         //characters in this regex are ones that may be contained within the whitespace of a word but shouldn't be included in it
-        let page_words = smart_split(page_text, "[\\s\"\\-\\(\\);\\?\\!]+");
+        let page_words = smart_split(page_text, WORD_SEPARATOR);
         page_wordcount = page_words.length;
         if (page_wordcount == 0) {
             return;
@@ -709,7 +711,7 @@
         let quote_text = quote_match[0];
         let quote_html = "<div onclick='select_quote(this)' class='quote_div'>\"" + quote_text + "\"</div>";
         $('#page_quotes').append(quote_html);
-        log("Added new quote to page; words: " + String(quote_text.length));
+        log("Added new quote to page; words: " + String(smart_split(quote_text, WORD_SEPARATOR).length));
     }
 
     function add_name() {
@@ -753,7 +755,7 @@
             let quote_reg = new RegExp("\\s*([\\w\\W]*?)\\s*Assigned:\\s+([\\w\\W]*?)(\\s+\\[.\\]|\\s*$)");
             let quote_exec = quote_reg.exec(quote_text);
             if (quote_exec !== null) {
-                let num_words = smart_split(quote_exec[1]).length;
+                let num_words = smart_split(quote_exec[1], WORD_SEPARATOR).length;
                 let speaker = quote_exec[2];
                 if (speaker != "Not a Quote") { add_to_map(page_quotes, speaker, num_words); }
             } else {

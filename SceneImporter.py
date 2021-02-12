@@ -213,10 +213,24 @@ class SceneImporter:
     def script(self):
         series = self.library.get_series(self.series_name)
         book = series.get_book(self.book_name)
-        scene = book.find_chapter("Riddles").scenes[1]
-        for p in scene.perspectives:
-            if p.name == "Gollum\r":
-                scene.perspectives.remove(p)
-        scene.perspectives.append(Character.match_character(series.characters, "Gollum"))
-        self.log(scene.print_info())
-        self.library.save(self.library_file)
+        scene = book.find_chapter("Under Hill").scenes[2]
+        character = Character.match_character(series.characters, "Unnamed Elf")
+        if 1:
+            scene.perspectives.pop()
+            self.log(scene.print_info())
+        if 0:
+            character.tags.pop();
+            self.log(character.print_info())
+        if 0:
+            series = self.library.get_series(self.series_name)
+            book = series.get_book(self.book_name)
+            scene = book.find_chapter("Unexpected").scenes[4]
+            character = Character.match_character(series.characters, "BIlbo")
+            series.characters.remove(character)
+            self.log(character.name)
+            for c in book.chapters:
+                for s in c.scenes:
+                    for i in s.included:
+                        if i["character"] == character:
+                            self.log(s.name + " words: " + i["quotes"] + " mentions: " + i["mentions"])
+        #self.library.save(self.library_file)

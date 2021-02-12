@@ -156,6 +156,7 @@ def process_cmd(cmd_str, save_str):
     if not ret.success(status):
         importer.log("Unable to import save file: " + save_str)
         return ret.ERROR, importer
+    #disp_char
     if cmd_parts[0] == 'disp_char':
         if len(cmd_parts) < 2: 
             importer.log("No character name provided in: " + cmd_str)
@@ -172,6 +173,7 @@ def process_cmd(cmd_str, save_str):
             return ret.ERROR, importer
         importer.log(character.print_info())
         return ret.HOME, importer
+    #disp_chapter
     if cmd_parts[0] == 'disp_chapter':
         if len(cmd_parts) < 2: 
             importer.log("No chapter name provided in: " + cmd_str)
@@ -191,10 +193,12 @@ def process_cmd(cmd_str, save_str):
         for s in chapter.scenes:
             importer.log(s.print_info())
         return ret.HOME, importer
+    #disp_book
     if cmd_parts[0] == 'disp_book':
         book = importer.library.get_series(importer.series_name).get_book(importer.book_name)
         importer.log(book.print_info())
         return ret.HOME, importer
+    #disp_save
     if cmd_parts[0] == 'disp_save':
         save_data = SaveFile.load(importer.save_file)
         if not ret.success(save_data):
@@ -202,9 +206,40 @@ def process_cmd(cmd_str, save_str):
             return ret.HOME, importer
         importer.log(save_data.print_info())
         return ret.HOME, importer
+    #text_tool
     if cmd_parts[0] == 'text_tool':
         status = importer.generate_known_names()
         return ret.TEXT_TOOL, importer
+    #find_pos
+    if cmd_parts[0] == 'find_pos':
+        if len(cmd_parts) < 2: 
+            importer.log("No valid search text provided in: " + cmd_str)
+            return ret.BAD_INPUT, importer
+        try:
+            input = open(importer.book_file, 'r')
+            book_text = input.read()
+        except:
+            importer.log("Failed to read input file")
+            return ret.BAD_INPUT, importer
+        position = book_text.find(cmd_parts[1])
+        if position >= 0:
+            importer.log("Text Position: " + str(position))
+            importer.log("Next 100 chars:\n" + book_text[position:position+100])
+        else: importer.log("Unable to find input string: " + cmd_parts[1])
+        return ret.HOME, importer
+    #set_pos
+    if cmd_parts[0] == "set_pos":
+        if len(cmd_parts) < 2: 
+            importer.log("No position provided in: " + cmd_str)
+            return ret.BAD_INPUT, importer
+        position = int(cmd_parts[1])
+        save_data = SaveFile.load(importer.save_file)
+        save_data.page_start = position
+        save_data.save()
+        importer.log("Set new save position to: " + str(position))
+        importer.log(save_data.print_info())
+        return ret.HOME, importer
+    #script
     if cmd_parts[0] == "script":
         importer.script()
         return ret.HOME, importer
