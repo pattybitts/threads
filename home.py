@@ -199,6 +199,9 @@ def process_cmd(cmd_str, save_str):
     if cmd_parts[0] == 'text_tool':
         status = importer.generate_known_names()
         return ret.TEXT_TOOL, importer
+    if cmd_parts[0] == "script":
+        importer.script()
+        return ret.HOME, importer
     importer.log("Unsupported command entry: " +  cmd_str)
     return ret.ERROR, importer
     """

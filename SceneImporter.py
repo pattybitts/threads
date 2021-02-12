@@ -73,6 +73,7 @@ class SceneImporter:
         '''
         if chapter.add_scene(scene) == ret.DUPLICATE:
             self.log("NOTE: Duplicate Information in Chapter. Will not add scene.")
+            return ret.DUPLICATE
         #updating characters with character events
         char_events = util.split(ce_form, "\\n")
         for ce in char_events:
@@ -207,3 +208,16 @@ class SceneImporter:
 
     def print_log(self):
         return util.join(self.outputs, "\n")
+
+    #this is a convenience. be quite careful whenever saving data, as it can cause back pain.
+    def script(self):
+        series = self.library.get_series(self.series_name)
+        book = series.get_book(self.book_name)
+        character = Character.match_character(series.characters, "Bilbo")
+        for a in character.aliases:
+            if a[0] == "Mister Baggins" and a[1].name == "a_short_rest_3":
+                self.log(a[1].print_info())
+                self.log(str(character.aliases.index(a)))
+                character.aliases.pop(character.aliases.index(a))
+                break;
+        self.library.save(self.library_file)

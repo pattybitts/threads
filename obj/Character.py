@@ -75,26 +75,30 @@ class Character:
 
     def print_info(self):
         alias_str = ""
-        for a in self.aliases:
-            alias_str = alias_str + "  " + a[0] + ": " + a[1].name + "\n"
-        alias_str = alias_str.rstrip()
+        if len(self.aliases) > 0:
+            alias_str += "\n<u>Aliases:</u>\n"
+            for a in self.aliases:
+                alias_str = alias_str + "  " + a[0] + ": " + a[1].name + "\n"
+            alias_str = alias_str.rstrip()
         join_str = ""
-        for j in self.joins:
-            join_str = join_str + "  " + j[0].name + ": " + j[1].name + "\n"
-        join_str = join_str.rstrip()
+        if len(self.joins) > 0:
+            join_str += "\n<u>Joins:</u>\n"
+            for j in self.joins:
+                join_str = join_str + "  " + j[0].name + ": " + j[1].name + "\n"
+            join_str = join_str.rstrip()
         tag_str = ""
-        for t in self.tags:
-            tag_str = tag_str + "  " + t[0] + ": " + t[1].name + "\n"
-        tag_str = tag_str.rstrip()
-        color_str = "  R: " + str(self.color["r"]) + "\n"
-        color_str = color_str + "  G: " + str(self.color["g"]) + "\n"
-        color_str = color_str + "  B: " + str(self.color["b"])
-        return "(Character) " + self.name + "\n" \
+        if len(self.tags) > 0:
+            tag_str += "\n<u>Tags:</u>\n"
+            for t in self.tags:
+                tag_str = tag_str + "  " + t[0] + ": " + t[1].name + "\n"
+            tag_str = tag_str.rstrip()
+        color_str = "Color: R: " + str(self.color["r"])
+        color_str = color_str + " G: " + str(self.color["g"])
+        color_str = color_str + " B: " + str(self.color["b"])
+        return "<b>(Character) " + self.name + "</b>\n" \
             + "Gender: " + self.gender + "\n" \
-            + "Color:\n" + color_str + "\n" \
-            + "Aliases:\n" + alias_str + "\n" \
-            + "Joins:\n" + join_str + "\n" \
-            + "Tags:\n" + tag_str + "\n" \
+            + color_str + alias_str + join_str + tag_str + "\n"
+            
 
     #all methods below here are before the 1-19 object rebuild and are suspect
     

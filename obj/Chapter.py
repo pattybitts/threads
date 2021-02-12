@@ -17,5 +17,5 @@ class Chapter:
         return ret.SUCCESS    
 
     def print_info(self):
-        return "(Chapter) " + self.name + " (" + str(self.placement) + "):\n" \
+        return "<b>(Chapter) " + self.name + " (" + str(self.placement) + "):</b>\n" \
             + "Contains (" + str(len(self.scenes)) + ") Scenes\n"

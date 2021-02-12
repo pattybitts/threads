@@ -3,14 +3,20 @@ import copy, re
 import util.data_storage as ds
 import util.log as log
 import util.util as util
+import util.ret as ret
 
 from obj.Library import Library
 from obj.Series import Series
 from obj.Character import Character
 from SaveFile import SaveFile
 
+if 0:
+    save_file = SaveFile.load("data\\eotw.sav")
+    library = Library.load("data\\library_2_8")
+    log.out(save_file.print_info())
+
 #checking perspective info
-if 1:
+if 0:
     library = Library.load("data\\library_2_8")
     series = library.get_series("The Lord of the Rings")
     book = series.get_book("The Hobbit")

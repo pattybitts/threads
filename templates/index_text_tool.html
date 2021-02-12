@@ -42,7 +42,7 @@
                     <div id="scene_div">
                         Scene Info:<br /><br />
                         <label for="chapter_box">Chapter Name:</label>
-                        <input type="text" id="chapter_box" name="chapter_box"><br />
+                        <input type="text" id="chapter_box" name="chapter_box" value="{{chapter}}"><br />
                         <label for="perspectives_box">Perspective Names:</label>
                         <textarea id="perspectives_box" name="perspectives_box"></textarea><br />
                         <label for="description_box">Brief Description:</label>
@@ -709,6 +709,7 @@
         let quote_text = quote_match[0];
         let quote_html = "<div onclick='select_quote(this)' class='quote_div'>\"" + quote_text + "\"</div>";
         $('#page_quotes').append(quote_html);
+        log("Added new quote to page; words: " + String(quote_text.length));
     }
 
     function add_name() {
