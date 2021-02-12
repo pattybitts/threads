@@ -177,6 +177,12 @@ def process_cmd(cmd_str, save_str):
             importer.log("No chapter name provided in: " + cmd_str)
             return ret.BAD_INPUT, importer
         book = importer.library.get_series(importer.series_name).get_book(importer.book_name)
+        if cmd_parts[1] == "all":
+            for c in book.chapters:
+                importer.log(c.print_info())
+                for s in c.scenes:
+                    importer.log(s.print_info())
+            return ret.HOME, importer
         chapter = book.find_chapter(cmd_parts[1])
         if not ret.success(chapter):
             importer.log("Unable to find chapter: " + cmd_parts[1])
