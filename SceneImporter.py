@@ -57,10 +57,7 @@ class SceneImporter:
             book = Book(self.book_name, len(series.books)+1)
             series.add_book(book)
         #finding chapter
-        chapter = book.find_chapter(ch_form)
-        if chapter == ret.NOT_FOUND:
-            chapter = Chapter(ch_form, len(book.chapters)+1)
-            book.add_chapter(chapter)
+        chapter = book.get_chapter(ch_form)
         #making new scene
         scene_placement = len(chapter.scenes)+1
         scene_name = chapter.name.lower().replace(" ", "_") + "_" + str(scene_placement)
@@ -213,9 +210,23 @@ class SceneImporter:
     def script(self):
         series = self.library.get_series(self.series_name)
         book = series.get_book(self.book_name)
-        scene = book.find_chapter("Under Hill").scenes[2]
+        chapter = Chapter.match(book.chapters, "Riddles", False)
+        scene = chapter.scenes[5]
         character = Character.match_character(series.characters, "Unnamed Elf")
+        if 0:
+            book.chapters.pop()
+            book.chapters.pop()
+            Chapter.match(book.chapters, "Unexpected", False).scenes.pop()
         if 1:
+            book.chapters.append(Chapter("Out of the Frying-Pan into the Fire", 6))
+            scene.name = "out_of_the_frying-pan_into_the_fire_1"
+            for i in scene.included:
+                if i["character"].name == "Unspecific Dwarf":
+                    for a in i["character"].aliases:
+                        a[1] = scene
+            book.chapters[5].scenes.append(scene)
+            book.chapters[4].scenes.pop()
+        if 0:
             scene.perspectives.pop()
             self.log(scene.print_info())
         if 0:
@@ -233,4 +244,4 @@ class SceneImporter:
                     for i in s.included:
                         if i["character"] == character:
                             self.log(s.name + " words: " + i["quotes"] + " mentions: " + i["mentions"])
-        #self.library.save(self.library_file)
+        self.library.save(self.library_file)

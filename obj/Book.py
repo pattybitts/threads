@@ -11,16 +11,12 @@ class Book:
         self.chapters = []
         self.milestones = []
 
-    def find_chapter(self, ch_name: str):
-        for c in self.chapters:
-            if c.name == ch_name: return c
-        ch_name_parts = ch_name.lower().split(" ")
-        for cn in ch_name_parts:
-            for c in self.chapters:
-                c_parts = c.name.lower().split(" ")
-                for cp in c_parts:
-                    if cn == cp: return c
-        return ret.NOT_FOUND
+    def get_chapter(self, ch_name):
+        chapter = Chapter.match(self.chapters, ch_name)
+        if not ret.success(chapter):
+            chapter = Chapter(ch_name, len(self.chapters)+1)
+            self.chapters.append(chapter)
+        return chapter
 
     def add_chapter(self, new_chapter: Chapter):
         self.chapters.append(new_chapter)
@@ -31,7 +27,7 @@ class Book:
     def print_info(self):
         ch_str = ""
         for c in self.chapters:
-            ch_str += "  " + str(c.placement) + ": " + c.name + ": " + len(c.scenes) + " scenes\n"
+            ch_str += "  " + str(c.placement) + ": " + c.name + ": " + str(len(c.scenes)) + " scenes\n"
         ch_str = ch_str.rstrip()
         return "(Book) " + self.name + " (" + str(self.placement) + "):\n" \
             + "Contains (" + str(len(self.chapters)) + ") Chapters:\n" \

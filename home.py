@@ -10,6 +10,7 @@ from obj.Library import Library
 from obj.Series import Series
 from obj.Book import Book
 from obj.Character import Character
+from obj.Chapter import Chapter
 from SaveFile import SaveFile
 app = Flask(__name__)
 
@@ -126,6 +127,7 @@ def upload_data():
                 known_names=request.form['kn_form'], \
                 log=request.form['lg_form'], \
                 page_start=request.form['ps_form'], \
+                chapter=request.form['ch_form'], \
                 report=importer.print_log())
 
     return render_template('index_text_tool.html', \
@@ -185,7 +187,7 @@ def process_cmd(cmd_str, save_str):
                 for s in c.scenes:
                     importer.log(s.print_info())
             return ret.HOME, importer
-        chapter = book.find_chapter(cmd_parts[1])
+        chapter = Chapter.match(book.chapters, cmd_parts[1], False)
         if not ret.success(chapter):
             importer.log("Unable to find chapter: " + cmd_parts[1])
             return ret.ERROR, importer
