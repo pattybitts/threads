@@ -82,7 +82,7 @@ class SceneImporter:
             ce_aliases = ce_fields[1].split(",")
             ce_joins = ce_fields[2].split(",")
             ce_tags = ce_fields[3].split(",")
-            ce_char = series.match_or_make_char(ce_name, scene)
+            ce_char = series.get_character(ce_name, scene)
             if not ret.success(ce_char):
                 self.log("Failed to match or make character: " + ce_name)
                 continue
@@ -91,7 +91,7 @@ class SceneImporter:
                 ce_char.add_alias(ce_a, scene)
             for ce_j in ce_joins:
                 if ce_j == "": continue
-                join_character = Character.match_character(series.characters, ce_j)
+                join_character = Character.match(series.characters, ce_j)
                 if not ret.success(join_character):
                     self.log("Cannot find Join for CE: " + ce)
                     continue
@@ -102,7 +102,7 @@ class SceneImporter:
         #adding perspectives
         perspectives = util.split(pe_form, "\\n")
         for p in perspectives:
-            pe_char = Character.match_character(series.characters, p)
+            pe_char = Character.match(series.characters, p)
             if not ret.success(pe_char):
                 self.log("Cannot find character for perspective: " + p)
                 continue
@@ -117,7 +117,7 @@ class SceneImporter:
                 continue
             sq_name = sq_fields[0]
             sq_count = int(sq_fields[1])
-            sq_char = series.match_or_make_char(sq_name, scene)
+            sq_char = series.get_character(sq_name, scene)
             if not ret.success(sq_char):
                 self.log("Failed to match or make character: " + sq_name)
                 continue
@@ -132,7 +132,7 @@ class SceneImporter:
         #scene features
         scene_features = util.split(fe_form, "\\n")
         for sf in scene_features:
-            sf_char = series.match_or_make_char(sf, scene)
+            sf_char = series.get_character(sf, scene)
             if not ret.success(sf_char):
                 self.log("Failed to match or make character: " + sf)
                 continue
@@ -152,7 +152,7 @@ class SceneImporter:
                 continue
             sm_name = sm_fields[0]
             sm_count = int(sm_fields[1])
-            sm_char = series.match_or_make_char(sm_name, scene)
+            sm_char = series.get_character(sm_name, scene)
             if not ret.success(sm_char):
                 self.log("Failed to match or make character: " + sm_name)
                 continue
@@ -210,15 +210,35 @@ class SceneImporter:
     def script(self):
         series = self.library.get_series(self.series_name)
         book = series.get_book(self.book_name)
-        chapter = Chapter.match(book.chapters, "Riddles", False)
-        scene = chapter.scenes[5]
-        character = Character.match_character(series.characters, "Unnamed Elf")
+        chapter = Chapter.match(book.chapters, "Doorstep", False)
+        scene = chapter.scenes[2]
+        character = Character.match(series.characters, "Unnamed Spider")
+        if 1:
+            character = series.get_character("The Thrush", scene)
+            scene.included.append({"character":character, "featured":True, "quotes":0, "mentions":0})
+        if 0:
+            for i in scene.included:
+                if i["character"] == character:
+                    i["quotes"] -= 7
+        if 0:
+            book.chapters.append(Chapter("On the Doorstep", 11))
+            new_chapter = Chapter.match(book.chapters, "Doorstep", False)
+            for s in chapter.scenes:
+                if s.placement >= 7:
+                    s.placement -= 6
+                    s.name = "on_the_doorstep_" + str(s.placement)
+                    new_chapter.scenes.append(s)
+            chapter.scenes.pop()
+            chapter.scenes.pop()
+            chapter.scenes.pop()
+            self.log(chapter.print_info())
+            self.log(new_chapter.print_info())
         if 0:
             book.chapters.pop()
             book.chapters.pop()
             Chapter.match(book.chapters, "Unexpected", False).scenes.pop()
-        if 1:
-            book.chapters.append(Chapter("Out of the Frying-Pan into the Fire", 6))
+        if 0:
+            book.chapters.append(Chapter("On the Doorstep", 11))
             scene.name = "out_of_the_frying-pan_into_the_fire_1"
             for i in scene.included:
                 if i["character"].name == "Unspecific Dwarf":

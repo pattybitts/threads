@@ -24,6 +24,26 @@ class Book:
     def add_milestone(self, new_milestone: Milestone):
         self.milestones.append(new_milestone)
 
+    @staticmethod
+    def match(books, match_str: str, exact_match=True):
+        books = list(filter(lambda b: (isinstance(b, Book)), books))
+        if len(books) <= 0: return ret.ERROR
+        for b in books:
+            if b.name == match_str: return b
+        if exact_match: return ret.NOT_FOUND
+        best_score = 100
+        best_match = ret.NOT_FOUND
+        for b in books:
+            score = 0
+            b_parts = util.split(b.name)
+            match_parts = util.split(match_str)
+            for bp in b_parts:
+                for mp in match_parts:
+                    if bp == mp: score += 100
+            score += b.placement
+            if score >= best_score: best_match = b
+        return best_match
+
     def print_info(self):
         ch_str = ""
         for c in self.chapters:

@@ -168,7 +168,7 @@ def process_cmd(cmd_str, save_str):
             for c in series.characters:
                 importer.log(c.print_info())
             return ret.HOME, importer
-        character = Character.match_character(series.characters, cmd_parts[1])
+        character = Character.match(series.characters, cmd_parts[1])
         #and now this is where loose is needed (future TODO)
         if not ret.success(character):
             importer.log("Unable to match character: " + cmd_parts[1])

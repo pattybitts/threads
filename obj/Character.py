@@ -17,7 +17,7 @@ class Character:
         #self.featured = []
 
     @staticmethod
-    def match_character(list, search_str: str, scene=None):
+    def match(list, search_str: str, scene=None):
         #first, matches all characters with this alias
         matches = []
         for c in list:

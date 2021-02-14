@@ -220,7 +220,7 @@ if 0:
     for line in lines:
         cells = line.split(",")
         num_cells = len(cells)
-        character = Character.match_character(series.characters, cells[1])
+        character = Character.match(series.characters, cells[1])
         ch_name = cells[0]
         if ch_name != '':
             vp_count = 1
@@ -234,7 +234,7 @@ if 0:
             char_name = cells[i]
             if char_name == '':
                 break
-            character = Character.match_character(series.characters, char_name)
+            character = Character.match(series.characters, char_name)
             if character == ret.ERROR:
                 log.out("Unable to locate character: " + cells[i])
                 continue

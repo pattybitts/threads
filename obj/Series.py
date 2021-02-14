@@ -28,19 +28,20 @@ class Series:
         #TODO
         #self.characters.sort(key=self.char_place)
 
-    def get_book(self, book_name: str):
-        for b in self.books:
-            if b.name == book_name:
-                return b
-        return ret.NOT_FOUND
+    def get_book(self, bo_name):
+        book = Book.match(self.books, bo_name)
+        if not ret.success(book):
+            book = Book(bo_name, len(self.books)+1)
+            self.books.append(book)
+        return book
 
-    def match_or_make_char(self, search_str: str, scene: Scene):
-        character = Character.match_character(self.characters, search_str, scene)
+    def get_character(self, ch_name, scene):
+        character = Character.match(self.characters, ch_name, scene)
         if character == ret.ERROR:
             return ret.ERROR
         if character == ret.NOT_FOUND:
-            character = Character(search_str)
-            character.add_alias(search_str, scene)
+            character = Character(ch_name)
+            character.add_alias(ch_name, scene)
             self.add_character(character)
         return character
 
