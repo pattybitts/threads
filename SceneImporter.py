@@ -213,9 +213,14 @@ class SceneImporter:
         chapter = Chapter.match(book.chapters, "Doorstep", False)
         scene = chapter.scenes[2]
         character = Character.match(series.characters, "Unnamed Spider")
+        if 0:
+            chapter.scenes.pop()
+            self.log(chapter.print_info())
         if 1:
             character = series.get_character("The Thrush", scene)
-            scene.included.append({"character":character, "featured":True, "quotes":0, "mentions":0})
+            #scene.included.append({"character":character, "featured":True, "quotes":0, "mentions":0})
+            scene.included.pop()
+            self.log(chapter.print_info())
         if 0:
             for i in scene.included:
                 if i["character"] == character:

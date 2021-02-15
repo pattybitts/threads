@@ -470,6 +470,7 @@
         let quote_start = 0;
         while (char_inc < page_length || in_quote || !in_word) {
             next_char = full_text.charAt(page_start + char_inc++);
+            if (next_char == "") { break; }
             in_word = /\s/.test(next_char);
             if (next_char == "\"") {
                 if (!in_quote) {
@@ -780,6 +781,10 @@
     function mark_scene() {
         let next_words = smart_prompt("Enter first words of next scene:", "");
         if (next_words == "") { return; }
+        if (next_words == "end_of_page") {
+            set_val('scene_status', "reviewing");
+            return;
+        }
         let endpoint = page_text.indexOf(next_words);
         if (endpoint >= 0) {
             scene_end = endpoint;
