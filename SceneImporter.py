@@ -32,9 +32,11 @@ class SceneImporter:
         if not ret.success(save_data):
             self.log("ERROR: unable to open save file: " + save_file_name)
             return ret.ERROR
+        #try/catch here for checking data translation?
         self.save_file = save_data.name
         self.library_file = save_data.library_file
         self.book_file = save_data.book_file
+        self.universe_name = save_data.universe_name
         self.series_name = save_data.series_name
         self.book_name = save_data.book_name
         self.page_start = save_data.page_start
@@ -46,17 +48,10 @@ class SceneImporter:
 
     def process_scene_data(self, ch_form: str, pe_form: str, lo_form: str, de_form: str, \
         wo_form: str, me_form: str, qu_form: str, fe_form: str, ce_form: str):
-        #finding series
-        series = self.library.get_series(self.series_name)
-        if series == ret.NOT_FOUND:
-            series = Series(self.series_name)
-            self.library.add_series(series)
-        #finding book
+        #finding universe, series, book, chapter
+        universe = self.library.get_universe(self.universe_name)
+        series = universe.get_series(self.series_name)
         book = series.get_book(self.book_name)
-        if book == ret.NOT_FOUND:
-            book = Book(self.book_name, len(series.books)+1)
-            series.add_book(book)
-        #finding chapter
         chapter = book.get_chapter(ch_form)
         #making new scene
         scene_placement = len(chapter.scenes)+1
@@ -167,7 +162,7 @@ class SceneImporter:
 
     def generate_known_names(self):
         try:
-            character_list = self.library.get_series(self.series_name).characters
+            character_list = self.library.get_universe(self.universe_name).characters
         except:
             self.log("Failed to find character list for series: " + self.series_name)
             return ret.ERROR
@@ -177,14 +172,15 @@ class SceneImporter:
         return ret.SUCCESS
 
     def generate_summary(self):
-        series = self.library.get_series(self.series_name)
+        universe = self.library.get_universe(self.universe_name)
+        series = universe.get_series(self.series_name)
         book = series.get_book(self.book_name)
         chapter = book.chapters[len(book.chapters)-1]
         scene = chapter.scenes[len(chapter.scenes)-1]
         self.log("<b>SUMMARY REPORT:</b>")
         self.log("\n<b>Scene Info:</b>")
         self.log("Save Info: " + self.library_file + "; " + self.save_file)
-        self.log("Series Info: " + series.name + "; " + book.name + " (" + str(book.placement) + ")")
+        self.log("Universe Info: " + universe.name + "; " + series.name + " (" + str(series.placement) + "); " + book.name + " (" + str(book.placement) + ")")
         self.log("Chapter: " + chapter.name + " (" + str(chapter.placement) + "); Scene: " + scene.name)
         self.log(scene.print_info())
         return ret.SUCCESS
@@ -216,7 +212,7 @@ class SceneImporter:
         if 0:
             chapter.scenes.pop()
             self.log(chapter.print_info())
-        if 1:
+        if 0:
             character = series.get_character("The Thrush", scene)
             #scene.included.append({"character":character, "featured":True, "quotes":0, "mentions":0})
             scene.included.pop()
@@ -269,4 +265,4 @@ class SceneImporter:
                     for i in s.included:
                         if i["character"] == character:
                             self.log(s.name + " words: " + i["quotes"] + " mentions: " + i["mentions"])
-        self.library.save(self.library_file)
+        #self.library.save(self.library_file)

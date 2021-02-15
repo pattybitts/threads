@@ -10,6 +10,38 @@ from obj.Series import Series
 from obj.Character import Character
 from SaveFile import SaveFile
 
+#remaking library objects to include universe structure, other incremental changes for analysis
+if 1:
+    old_library = Library.load("data\\library_2_8")
+    new_library = Library()
+    new_uni = new_library.get_universe("Middle Earth")
+    new_characters = []
+    old_series = old_library.series[0]
+    new_series = Series("The Hobbit", 1)
+    old_book = old_series.books[0]
+    for c in old_series.characters:
+        new_c = Character(c.name, new_uni)
+        new_c.aliases = c.aliases
+        new_c.joins = c.joins
+        new_c.tags = c.tags
+        new_uni.characters.append(copy.copy(new_c))   
+        for ch in old_book.chapters:
+            for s in ch.scenes:
+                for i in s.included:
+                    if i["character"].name == new_c.name:
+                        i["character"] = copy.copy(new_c)
+    new_series.books.append(old_book)
+    new_uni.series.append(new_series)
+    log.out(new_library.print_info())
+    log.out(new_uni.print_info())
+    log.out(new_series.print_info())
+    new_library.save("data\\library_2_15")
+
+    save_file = SaveFile("data\\hobbit.sav", "", "data\\library_2_15", "Middle Earth", "The Hobbit", "The Hobbit", 0)
+    log.out(save_file.print_info())
+    save_file.save()
+
+#corrective save data after a bad save
 if 0:
     save_file = SaveFile.load("data\\eotw.sav")
     library = Library.load("data\\library_2_8")

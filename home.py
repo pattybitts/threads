@@ -163,12 +163,12 @@ def process_cmd(cmd_str, save_str):
         if len(cmd_parts) < 2: 
             importer.log("No character name provided in: " + cmd_str)
             return ret.BAD_INPUT, importer
-        series = importer.library.get_series(importer.series_name)
+        universe = importer.library.get_universe(importer.universe_name)
         if cmd_parts[1] == "all":
-            for c in series.characters:
+            for c in universe.characters:
                 importer.log(c.print_info())
             return ret.HOME, importer
-        character = Character.match(series.characters, cmd_parts[1])
+        character = Character.match(universe.characters, cmd_parts[1])
         #and now this is where loose is needed (future TODO)
         if not ret.success(character):
             importer.log("Unable to match character: " + cmd_parts[1])
@@ -180,7 +180,7 @@ def process_cmd(cmd_str, save_str):
         if len(cmd_parts) < 2: 
             importer.log("No chapter name provided in: " + cmd_str)
             return ret.BAD_INPUT, importer
-        book = importer.library.get_series(importer.series_name).get_book(importer.book_name)
+        book = importer.library.get_universe(importer.universe_name).get_series(importer.series_name).get_book(importer.book_name)
         if cmd_parts[1] == "all":
             for c in book.chapters:
                 importer.log(c.print_info())
@@ -197,7 +197,7 @@ def process_cmd(cmd_str, save_str):
         return ret.HOME, importer
     #disp_book
     if cmd_parts[0] == 'disp_book':
-        book = importer.library.get_series(importer.series_name).get_book(importer.book_name)
+        book = importer.library.get_universe(importer.universe_name).get_series(importer.series_name).get_book(importer.book_name)
         importer.log(book.print_info())
         return ret.HOME, importer
     #disp_save

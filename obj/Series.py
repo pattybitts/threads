@@ -9,11 +9,31 @@ from obj.Scene import Scene
 
 class Series:
 
-    def __init__(self, name:str):
+    def __init__(self, name: str, num: int):
         self.characters = []
         self.books = []
         self.arcs = []
         self.name = name
+        self.placement = num
+
+    @staticmethod
+    def match(series, match_str: str, exact_match=True):
+        series = list(filter(lambda s: (isinstance(s, Series)), series))
+        if len(series) <= 0: return ret.ERROR
+        for s in series:
+            if s.name == match_str: return s
+        if exact_match: return ret.NOT_FOUND
+        best_score = 1
+        best_match = ret.NOT_FOUND
+        for s in series:
+            score = 0
+            s_parts = util.split(s.name)
+            match_parts = util.split(match_str)
+            for sp in s_parts:
+                for mp in match_parts:
+                    if sp == mp: score += 1
+            if score >= best_score: best_match = s
+        return best_match
 
     def add_book(self, new_book: Book):
         self.books.append(new_book)
@@ -21,12 +41,8 @@ class Series:
     def add_arc(self, new_arc: Arc):
         self.arcs.append(new_arc)
 
-    def add_character(self, new_char: Character):
-        #this used to contain a sceondary match_character to doublecheck for missed additions
-        #I'm removing that for now as the system is more procedural    
+    def add_character(self, new_char: Character): 
         self.characters.append(new_char)
-        #TODO
-        #self.characters.sort(key=self.char_place)
 
     def get_book(self, bo_name):
         book = Book.match(self.books, bo_name)
@@ -44,6 +60,15 @@ class Series:
             character.add_alias(ch_name, scene)
             self.add_character(character)
         return character
+
+    def print_info(self):
+        bo_str = ""
+        for b in self.books:
+            bo_str += "  " + str(b.placement) + ": " + b.name + ": " + str(len(b.chapters)) + " chapters\n"
+        bo_str = bo_str.rstrip()
+        return "(Series) " + self.name + " (" + str(self.placement) + "):\n" \
+            + "Contains (" + str(len(self.books)) + ") Books:\n" \
+            + bo_str + "\n" 
 
     #all methods below here are from before the 1-19 obj rework and are therefore suspect
 

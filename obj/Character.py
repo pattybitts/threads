@@ -2,10 +2,11 @@ import util.ret as ret
 import util.log as log
 
 from obj.Scene import Scene
+import obj.Universe as Universe
 
 class Character:
 
-    def __init__(self, name_str: str, gender_str: str="", r_val: int=0, g_val: int=0, b_val: int=0):
+    def __init__(self, name_str: str, uni=None, gender_str: str="", r_val: int=0, g_val: int=0, b_val: int=0):
         self.name  = str(name_str)
         self.gender = gender_str
         self.tier = ""
@@ -13,15 +14,17 @@ class Character:
         self.aliases = []
         self.joins = []
         self.tags = []
+        self.universe = uni
         #not yet. see notes
         #self.featured = []
 
     @staticmethod
-    def match(list, search_str: str, scene=None):
+    def match(characters, search_str: str, scene=None):
+        characters = list(filter(lambda c: (isinstance(c, Character)), characters))
+        if len(characters) <= 0: return ret.ERROR
         #first, matches all characters with this alias
         matches = []
-        for c in list:
-            if not isinstance(c, Character): continue
+        for c in characters:
             for a in c.aliases:
                 if a[0] == search_str:
                     matches.append(c)
@@ -55,6 +58,11 @@ class Character:
                     return included_matches[0]
                 else:
                     return ret.ERROR
+
+    def common_name(scene=None):
+        #find character's series (later universe)
+        #might methodize or variablize this later
+        pass  
 
     def add_alias(self, alias: str, scene: Scene):
         self.aliases.append([alias, scene])
@@ -95,10 +103,9 @@ class Character:
         color_str = "Color: R: " + str(self.color["r"])
         color_str = color_str + " G: " + str(self.color["g"])
         color_str = color_str + " B: " + str(self.color["b"])
-        return "<b>(Character) " + self.name + "</b>\n" \
+        return "<b>(Character) " + self.name + "</b> from: " + self.universe.name + "\n" \
             + "Gender: " + self.gender + "\n" \
-            + color_str + alias_str + join_str + tag_str + "\n"
-            
+            + color_str + alias_str + join_str + tag_str + "\n"        
 
     #all methods below here are before the 1-19 object rebuild and are suspect
     

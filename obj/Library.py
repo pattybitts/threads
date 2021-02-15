@@ -3,12 +3,12 @@ import datetime
 import util.ret as ret
 import util.data_storage as ds
 
-from obj.Series import Series
+from obj.Universe import Universe
 
 class Library:
 
     def __init__(self):
-        self.series = []
+        self.universes = []
         self.last_updated = datetime.datetime.now()
 
     def save(self, dump_file):
@@ -21,18 +21,16 @@ class Library:
             return ret.ERROR
         return library
 
-    def add_series(self, new_series: Series):
-        self.series.append(new_series)
+    def get_universe(self, uni_name):
+        universe = Universe.match(self.universes, uni_name)
+        if not ret.success(universe):
+            universe = Universe(uni_name)
+            self.universes.append(universe)
+        return universe
 
-    def get_series(self, series_name: str):
-        for s in self.series:
-            if s.name == series_name:
-                return s
-        return ret.NOT_FOUND
-
-    def get_info(self):
-        resp = "Created: " + self.last_updated.strftime("%m_%d_%y_%H%M")
-        resp += "\nSeries:\n"
-        for s in self.series:
-            resp += s.name + "\n"
+    def print_info(self):
+        resp = "(Library) Created: " + self.last_updated.strftime("%m_%d_%y_%H%M")
+        resp += "\nUniverses:\n"
+        for u in self.universes:
+            resp += u.name + "\n"
         return resp
