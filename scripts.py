@@ -6,12 +6,40 @@ import util.util as util
 import util.ret as ret
 
 from obj.Library import Library
+from obj.Universe import Universe
 from obj.Series import Series
 from obj.Character import Character
+from obj.Book import Book
 from SaveFile import SaveFile
 
-#remaking library objects to include universe structure, other incremental changes for analysis
+def most_quotes(q):
+    return q["quotes"]
+
+#listing companies, unnamed, unspecific
 if 1:
+    library = Library.load("data\\library_2_15")
+    universe = Universe.match(library.universes, "Middle Earth")
+    series = Series.match(universe.series, "The Hobbit")
+    book = Book.match(series.books, "The Hobbit")
+    quoted_list = []
+    for ch in book.chapters:
+        for s in ch.scenes:
+            for i in s.included:
+                if not ("Company" in i["character"].name or "Unspecific" in i["character"].name or "Unnamed" in i["character"].name):
+                    if i["quotes"] > 0:
+                        found = False
+                        for q in quoted_list:
+                            if q["name"] == i['character'].name:
+                                q["quotes"] += i["quotes"]
+                                found = True
+                                break
+                        if not found: quoted_list.append({"name": i["character"].name, "quotes": i["quotes"]})
+    quoted_list.sort(reverse=True, key=most_quotes)
+    for q in quoted_list:
+        log.out(q["name"] + ": " + str(q["quotes"]))
+    
+#remaking library objects to include universe structure, other incremental changes for analysis
+if 0:
     old_library = Library.load("data\\library_2_8")
     new_library = Library()
     new_uni = new_library.get_universe("Middle Earth")
