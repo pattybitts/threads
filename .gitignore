@@ -1,0 +1,7 @@
+#folders
+*\logs
+*\__pycache__
+*\input_files
+
+#file extensions
+*.vs
