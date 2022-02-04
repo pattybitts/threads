@@ -1,4 +1,5 @@
 import util.ret as ret
+import util.util as util
 
 from obj.Series import Series
 from obj.Character import Character
@@ -41,6 +42,7 @@ class Universe:
 
     def get_character(self, ch_name, scene):
         character = Character.match(self.characters, ch_name, scene)
+        return character
         if character == ret.ERROR:
             return ret.ERROR
         if character == ret.NOT_FOUND:

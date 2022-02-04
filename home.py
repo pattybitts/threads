@@ -148,6 +148,8 @@ def upload_data():
         char_events=request.form['ce_form'], \
         report=importer.print_log())
 
+#this is fffffffed
+#error handling? modularization? hellooooo?
 def process_cmd(cmd_str, save_str):
     importer = SceneImporter()
     cmd_parts = util.split(cmd_str, '=')
@@ -158,6 +160,25 @@ def process_cmd(cmd_str, save_str):
     if not ret.success(status):
         importer.log("Unable to import save file: " + save_str)
         return ret.ERROR, importer
+    #book_chars
+    if cmd_parts[0] == 'book_chars':
+        book = importer.library.get_universe(importer.universe_name).get_series(importer.series_name).get_book(importer.book_name)
+        c_dict = {}
+        for c in book.chapters:
+            for s in c.scenes:
+                for i in s.included:
+                    ch = i['character']
+                    if ch.intro_scene() == s:
+                        c_dict[ch.name] = {'qw': i['quotes'], 'sw': int(s.wordcount), 'm': i['mentions']}
+                    else:
+                        c_dict[ch.name]['qw'] += i['quotes']
+                        c_dict[ch.name]['sw'] += int(s.wordcount)
+                        c_dict[ch.name]['m'] += i['mentions']
+        for cd in c_dict:
+            importer.log(str(c_dict[cd]))
+            break
+        return ret.HOME, importer
+
     #disp_char
     if cmd_parts[0] == 'disp_char':
         if len(cmd_parts) < 2: 

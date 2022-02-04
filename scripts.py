@@ -12,10 +12,38 @@ from obj.Character import Character
 from obj.Book import Book
 from SaveFile import SaveFile
 
+#tracking down a certain unspecific man
+if 0:
+    library = Library.load("data\\library_2_15")
+    universe = Universe.match(library.universes, "Middle Earth")
+    series = Series.match(universe.series, "The Hobbit")
+    book = Book.match(series.books, "The Hobbit")
+    the_man = universe.get_character("Unspecifc Man", None)
+    log.out(the_man.print_info())
+    universe.characters.remove(the_man)
+    the_real_man = universe.get_character("Unspecific Man", None)
+    log.out(the_real_man.print_info())
+    for ch in book.chapters:
+        for s in ch.scenes:
+            for i in s.included:
+                if i["character"].name == "Unspecifc Man":
+                    log.out(s.print_info())
+                    i["character"] = the_real_man
+    the_man = universe.get_character("Unspecifc Man", None)
+    log.out(str(the_man))
+    the_real_man = universe.get_character("Unspecific Man", None)
+    log.out(the_real_man.print_info())
+    for ch in book.chapters:
+        for s in ch.scenes:
+            for i in s.included:
+                if i["character"].name == "Unspecific Man":
+                    log.out(s.print_info())
+    library.save("data\\library_2_15")                    
+
+#listing companies, unnamed, unspecific
 def most_quotes(q):
     return q["quotes"]
 
-#listing companies, unnamed, unspecific
 if 1:
     library = Library.load("data\\library_2_15")
     universe = Universe.match(library.universes, "Middle Earth")
@@ -25,15 +53,18 @@ if 1:
     for ch in book.chapters:
         for s in ch.scenes:
             for i in s.included:
-                if not ("Company" in i["character"].name or "Unspecific" in i["character"].name or "Unnamed" in i["character"].name):
-                    if i["quotes"] > 0:
-                        found = False
-                        for q in quoted_list:
-                            if q["name"] == i['character'].name:
-                                q["quotes"] += i["quotes"]
-                                found = True
-                                break
-                        if not found: quoted_list.append({"name": i["character"].name, "quotes": i["quotes"]})
+                #if not ("Company" in i["character"].name or "Unspecific" in i["character"].name or "Unnamed" in i["character"].name):
+                if i["character"].name == 'Unspecifc Man':
+                    log.out(i["character"].print_info())
+                    log.out(s.print_info())
+                if i["quotes"] > 0:
+                    found = False
+                    for q in quoted_list:
+                        if q["name"] == i['character'].name:
+                            q["quotes"] += i["quotes"]
+                            found = True
+                            break
+                    if not found: quoted_list.append({"name": i["character"].name, "quotes": i["quotes"]})
     quoted_list.sort(reverse=True, key=most_quotes)
     for q in quoted_list:
         log.out(q["name"] + ": " + str(q["quotes"]))

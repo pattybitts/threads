@@ -251,7 +251,7 @@ class SceneImporter:
             scene.perspectives.pop()
             self.log(scene.print_info())
         if 0:
-            character.tags.pop();
+            character.tags.pop()
             self.log(character.print_info())
         if 0:
             series = self.library.get_series(self.series_name)
